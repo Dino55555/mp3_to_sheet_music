@@ -10,7 +10,7 @@ class Note:
     offset: float
     magnitude: float
 
-    voice: Optional[object] = None
+    voice: Optional["Voice"] = None
     is_ornament: bool = False
     graphy: Optional[object] = None
     signal: Optional[object] = None
