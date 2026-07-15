@@ -51,8 +51,8 @@ class Compass:
     
 
     def __post_init__(self):
-        if self.numerator <= 0:
+        if self.formula.numerator <= 0:
             raise ValueError("O numerador deve ser maior que zero")
         
-        if self.denominator <= 0:
+        if self.formula.denominator <= 0:
             raise ValueError("O denominador deve ser maior que 0")
