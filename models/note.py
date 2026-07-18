@@ -2,6 +2,7 @@ from __future__ import annotations
 from copy import deepcopy
 from dataclasses import dataclass
 from typing import Optional
+from models.signaling import Signaling
 
 @dataclass
 class Note:
@@ -13,7 +14,7 @@ class Note:
     voice: Optional["Voice"] = None
     is_ornament: bool = False
     graphy: Optional[object] = None
-    signal: Optional[object] = None
+    signal: Optional["Signaling"] = None
 
     reliability_existence: float = 1.0
     reliability_highness: float = 1.0
