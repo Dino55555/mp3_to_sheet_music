@@ -46,3 +46,13 @@ class Piece:
             for note in self.all_notes()
             if compass.has_time(note.onset)
             ]
+    
+    def summary(self) -> str:
+        total_notes = len(self.all_notes())
+
+        return (
+            f"Peça: {self.instrument.name}, "
+            f"{len(self.compasses)} compassos, "
+            f"{len(self.voices)} voz(es), "
+            f"{total_notes} notas"
+        )
