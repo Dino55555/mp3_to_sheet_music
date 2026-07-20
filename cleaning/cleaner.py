@@ -33,7 +33,7 @@ class Cleaner:
     def _is_harmonic_of(self, candidate: Note, other: Note) -> bool:
         #Verifica se a nota candidata parece ser um harmônico da outra nota
 
-        if not candidate.overlaps(other):
+        if not candidate.overlap(other):
             return False
         
         interval = candidate.interval_in_semitones(other)
