@@ -53,13 +53,98 @@ class StructuralDetector:
         return TimeSignature(numerator=len(group), denominator=4)
 
     def _group_is_free_time(self, group: list[Beat]) -> bool:
-        pass
+        if not group:
+            return True
+        reliable_beats = sum(1 for beat in group if beat.reliability >= CONFIDENCE_BEAT_LIMIT)
+        proportion = reliable_beats/len(group)
+        return (proportion < MIN_PROPORTION_CONFIABLE_BEAT)
 
     def _resolve_formula_changes(self, raw_formulas: list[TimeSignature], free_time_flags: list[bool]) -> list[TimeSignature]:
-        pass
+        if not raw_formulas:
+            return []
+        resolved = [raw_formulas[0]]
+        current_formula = raw_formulas[0]
+        i = 1
+        while i < len(raw_formulas):
+            candidate = raw_formulas[i]
+            if free_time_flags[i]:
+                resolved.append(current_formula)
+                i += 1
+                continue
+            if candidate == current_formula:
+                resolved.append(current_formula)
+                i+=1
+                continue
+            sustained = 0
+            j = 1
+            while j  < len(raw_formulas):
+                if free_time_flags[j]:
+                    j += 1
+                    continue
+                if raw_formulas[j] == candidate:
+                    sustained += 1
+                else:
+                    break
+                j += 1
+            if sustained >= COMPASS_SUSTAIN_LIMIT:
+                current_formula = candidate
+            resolved.append(current_formula)
+            i += 1
+        return resolved
 
     def _build_measures(self, groups: list[list[Beat]], formulas: list[TimeSignature], free_time_flags: list[bool]) -> list[Compass]:
-        pass
+        measures = list[Compass] = []
+        for index, group in enumerate(groups):
+            begin = group[0].instant
+            if index < len(groups) - 1:
+                end = groups[index + 1][0].instant
+            else:
+                if len(group) > 1:
+                    intervals = [
+                        group[i + 1].instant - group[i].instant
+                        for i in range(len(group) - 1)
+                    ]
+                    average_duration = sum(intervals) / len(intervals)
+                else:
+                    average_duration = 1.0
+                end = group[-1].instant + average_duration
+            measure = Compass(
+                index + 1,
+                begin,
+                end,
+                formulas[index],
+                KeySignature(0, "C", TonalMode.MAJOR),
+                free_time_flags[index]
+            )
+            measures.append(measure)
+        return measures
 
     def _detect_and_adjust_pickup(self, piece: Piece, measures: list[Compass]) -> list[Compass]:
-        pass
+        if not measures:
+            return measures
+        
+        notes = piece.all_notes()
+        if not notes:
+            return measures
+        
+        first_note = min(note.onset for note in notes)
+        first_measure = measures[0]
+        if first_note >= first_measure.begin_time:
+            return measures
+        
+        pickup_duration = (first_measure.begin_time - first_note)
+        pickup = Compass(
+            1,
+            first_note,
+            first_measure.begin_time,
+            first_measure.formula,
+            first_measure.KeySignature,
+            first_measure.free_time
+        )
+        new_measures = [pickup]
+        for index, measure in enumerate(measures, start=2):
+            measure.number = index
+            new_measures.append(measure)
+        last_measure = new_measures[-1]
+        last_measure.end_time -= pickup_duration
+        return new_measures
