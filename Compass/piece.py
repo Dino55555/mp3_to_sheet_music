@@ -4,6 +4,7 @@ from models.compass import Compass
 from models.voice import Voice
 from Compass.instrument import Instrument
 from models.note import Note
+from models.raw_signals import RawSignals
 
 
 @dataclass
@@ -11,6 +12,7 @@ class Piece:
     instrument: Instrument
     compasses: list[Compass] = field(default_factory=list)
     voices: list[Voice] = field(default_factory=list)
+    raw_signals: RawSignals | None = None
 
     def add_compass(self, compass: Compass) -> None:
         #Adicionar compasso mantendo lista ordenada pelo índice
