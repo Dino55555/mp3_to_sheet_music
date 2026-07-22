@@ -44,8 +44,10 @@ class StructuralDetector:
             if beat.is_strong_beat and current_group:
                 groups.append(current_group)
                 current_group = []
-            current_group.append(beat)
-        if current_group:
+                current_group.append(beat)
+            else:
+                current_group.append(beat)
+        if current_group and len(current_group) > 1:
             groups.append(current_group)
         return groups
 
@@ -55,7 +57,7 @@ class StructuralDetector:
     def _group_is_free_time(self, group: list[Beat]) -> bool:
         if not group:
             return True
-        reliable_beats = sum(1 for beat in group if beat.reliability >= CONFIDENCE_BEAT_LIMIT)
+        reliable_beats = sum(1 for beat in group if beat.confidence >= CONFIDENCE_BEAT_LIMIT)
         proportion = reliable_beats/len(group)
         return (proportion < MIN_PROPORTION_CONFIABLE_BEAT)
 
@@ -76,8 +78,8 @@ class StructuralDetector:
                 i+=1
                 continue
             sustained = 0
-            j = 1
-            while j  < len(raw_formulas):
+            j = i
+            while j < len(raw_formulas):
                 if free_time_flags[j]:
                     j += 1
                     continue
@@ -93,7 +95,7 @@ class StructuralDetector:
         return resolved
 
     def _build_measures(self, groups: list[list[Beat]], formulas: list[TimeSignature], free_time_flags: list[bool]) -> list[Compass]:
-        measures = list[Compass] = []
+        measures: list[Compass] = []
         for index, group in enumerate(groups):
             begin = group[0].instant
             if index < len(groups) - 1:

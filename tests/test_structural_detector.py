@@ -2,7 +2,7 @@ import pytest
 from tests.fixtures import create_example_piece
 from models.raw_signals import Beat
 from structure.structural_detector import (StructuralDetector, COMPASS_SUSTAIN_LIMIT)
-from models.compass import TimeSignature
+from models.compass import (TimeSignature, KeySignature, TonalMode)
 
 def test_group_into_cadidates_measures_splits_correctly():
     detector = StructuralDetector()
@@ -107,3 +107,124 @@ def test_resolve_formula_changes_free_time_as_evidence():
     assert resolved[1] == TimeSignature(4, 4)
     assert resolved[2] == TimeSignature(4, 4)
     assert resolved[3] == TimeSignature(4, 4)
+
+def test_resolve_formula_changes_keeps_formula_for_isolated_exception():
+    detector = StructuralDetector()
+    raw_formulas = [
+        TimeSignature(4, 4),
+        TimeSignature(4, 4),
+        TimeSignature(2, 4),
+        TimeSignature(4, 4),
+        TimeSignature(4, 4)
+    ]
+    free_time = [False] * 5
+    resolved = detector._resolve_formula_changes(raw_formulas, free_time)
+
+    assert resolved == [
+        TimeSignature(4, 4),
+        TimeSignature(4, 4),
+        TimeSignature(4, 4),
+        TimeSignature(4, 4),
+        TimeSignature(4, 4)
+    ]
+
+def test_resolve_formula_changes_accepts_after_sustained_change():
+    detector = StructuralDetector()
+    raw_formulas = [
+        TimeSignature(4, 4),
+        TimeSignature(4, 4),
+        TimeSignature(3, 4),
+        TimeSignature(3, 4),
+        TimeSignature(3, 4)
+    ]
+    free_time = [False] * 5
+    resolved = detector._resolve_formula_changes(raw_formulas, free_time)
+
+    assert resolved == [
+        TimeSignature(4, 4),
+        TimeSignature(4, 4),
+        TimeSignature(3, 4),
+        TimeSignature(3, 4),
+        TimeSignature(3, 4)
+    ]
+
+def test_resolve_formula_changes_ignores_free_time_groups():
+    detector = StructuralDetector()
+    raw_formulas = [
+        TimeSignature(4, 4),
+        TimeSignature(4, 4),
+        TimeSignature(3, 4),
+        TimeSignature(3, 4),
+        TimeSignature(4, 4)
+    ]
+    free_time = [False, False, True, True, False]
+    resolved = detector._resolve_formula_changes(raw_formulas, free_time)
+
+    assert resolved == [
+        TimeSignature(4, 4),
+        TimeSignature(4, 4),
+        TimeSignature(4, 4),
+        TimeSignature(4, 4),
+        TimeSignature(4, 4)
+    ]
+
+def test_build_measures_calculates_end_from_next_start():
+        detector = StructuralDetector()
+        groups = [
+            [
+                Beat(0.0, True, 1.0),
+                Beat(1.0, False, 1.0),
+                Beat(2.0, False, 1.0),
+                Beat(3.0, False, 1.0)
+            ],
+            [
+                Beat(4.0, True, 1.0),
+                Beat(5.0, False, 1.0),
+                Beat(6.0, False, 1.0),
+                Beat(7.0, False, 1.0)
+            ]
+        ]
+        formulas = [
+            TimeSignature(4, 4),
+            TimeSignature(4, 4)
+        ]
+        free_time = [False, False]
+        measures = detector._build_measures(groups, formulas, free_time)
+
+        assert measures[0].begin_time == 0.0
+        assert measures[0].end_time == 4.0
+
+def test_build_measures_extrapolates_last_measure_end():
+    detector = StructuralDetector()
+    groups = [
+        [
+            Beat(0.0, True, 1.0),
+            Beat(1.0, False, 1.0),
+            Beat(2.0, False, 1.0),
+            Beat(3.0, False, 1.0)
+        ]
+    ]
+    formulas = [TimeSignature(4, 4)]
+    free_time = [False]
+    measures = detector._build_measures(groups, formulas, free_time)
+
+    assert measures[0].begin_time == 0.0
+    assert measures[0].end_time == 4.0
+
+def test_build_measures_uses_neutral_placeholder_key():
+    detector = StructuralDetector()
+    groups = [
+        [
+            Beat(0.0, True, 1.0),
+            Beat(1.0, False, 1.0),
+            Beat(2.0, False, 1.0),
+            Beat(3.0, False, 1.0)
+        ]
+    ]
+    formulas = [TimeSignature(4, 4)]
+    free_time = [False]
+    measures = detector._build_measures(groups, formulas, free_time)
+
+    assert measures[0].armor == KeySignature(0, "C", TonalMode.MAJOR)
+
+
