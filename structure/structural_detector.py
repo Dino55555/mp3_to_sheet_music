@@ -140,7 +140,7 @@ class StructuralDetector:
             first_note,
             first_measure.begin_time,
             first_measure.formula,
-            first_measure.KeySignature,
+            first_measure.armor,
             first_measure.free_time
         )
         new_measures = [pickup]

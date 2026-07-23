@@ -1,8 +1,12 @@
 import pytest
-from tests.fixtures import create_example_piece
-from models.raw_signals import Beat
+from tests.fixtures import (create_example_piece, create_piece_with_spurious_note, regular_4_4_beats)
+from models.raw_signals import (Beat, RawSignals)
+from config import Config
 from structure.structural_detector import (StructuralDetector, COMPASS_SUSTAIN_LIMIT)
-from models.compass import (TimeSignature, KeySignature, TonalMode)
+from models.compass import (Compass, TimeSignature, KeySignature, TonalMode)
+from orchestrator import Orchestrator
+from cleaning.cleaner import Cleaner
+from signaling.signaler import Signaler
 
 def test_group_into_cadidates_measures_splits_correctly():
     detector = StructuralDetector()
@@ -227,4 +231,99 @@ def test_build_measures_uses_neutral_placeholder_key():
 
     assert measures[0].armor == KeySignature(0, "C", TonalMode.MAJOR)
 
+def test_detect_pickup_inserts_partial_measure_at_start():
+    detector = StructuralDetector()
+    piece = create_example_piece()
+    #primeira nota que vai começar antes do primeiro compass
+    piece.all_notes()[0].onset = -0.5
+    measures = [
+        Compass(
+            1,
+            0.0,
+            4.0,
+            TimeSignature(4, 4),
+            KeySignature(0, "C", TonalMode.MAJOR),
+            False
+        )
+    ]
+    adjusted = detector._detect_and_adjust_pickup(piece, measures)
+
+    assert len(adjusted) == 2
+    assert adjusted[0].begin_time == -0.5
+    assert adjusted[0].end_time == 0.0
+
+def test_detect_pickup_shortens_last_measure_by_same_amount():
+    detector = StructuralDetector()
+    piece = create_example_piece()
+    piece.all_notes()[0].onset = -0.5
+    measures = [
+        Compass(
+            1,
+            0.0,
+            4.0,
+            TimeSignature(4, 4),
+            KeySignature(0, "C", TonalMode.MAJOR),
+            False
+        )
+    ]
+    adjusted = detector._detect_and_adjust_pickup(piece, measures)
+
+    assert adjusted[-1].end_time == 3.5
+
+def test_detect_pickup_does_nothing_when_no_pickup():
+    detector = StructuralDetector()
+    piece = create_example_piece()
+    measures = [
+        Compass(
+            1,
+            0.0,
+            4.0,
+            TimeSignature(4, 4),
+            KeySignature(0, "C", TonalMode.MAJOR),
+            False
+        )
+    ]
+    adjusted = detector._detect_and_adjust_pickup(piece, measures)
+
+    assert adjusted == measures
+    assert len(adjusted) == 1
+    assert adjusted[0].begin_time == 0.0
+    assert adjusted[0].end_time == 4.0
+
+def test_process_raises_error_without_raw_signals():
+    detector = StructuralDetector()
+    piece = create_example_piece()
+    config = Config()
+    signaler = Signaler()
+
+    with pytest.raises(ValueError):
+        detector.process(piece, config, signaler)
+
+def test_process_raises_error_with_empty_raw_signals():
+    detector = StructuralDetector()
+    piece = create_example_piece()
+    piece.raw_signals = RawSignals()
+    config = Config()
+    signaler = Signaler()
+
+    with pytest.raises(ValueError):
+        detector.process(piece, config, signaler)
+
+def test_orchestrator_with_cleaner_and_structural_detector_integrates_correctly():
+    config = Config()
+    signaler = Signaler()
+    piece = create_piece_with_spurious_note()
+    piece.raw_signals = RawSignals(regular_4_4_beats(2))
+    orchestrator = Orchestrator(config, signaler)
+    orchestrator.add_stage(Cleaner())
+    orchestrator.add_stage(StructuralDetector())
+    result = orchestrator.process(piece)
+
+    assert result is piece
+    assert len(result.all_notes()) == 1
+    assert len(result.compasses) == 2
+    assert result.compasses[0].formula == TimeSignature(4, 4)
+    assert result.compasses[1].formula == TimeSignature(4, 4)
+    assert result.compasses[0].free_time is False
+    assert result.compasses[1].free_time is False
 

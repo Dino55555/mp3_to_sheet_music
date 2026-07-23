@@ -3,6 +3,7 @@ from models.voice import Voice
 from models.note import Note
 from models.compass import(Compass, TimeSignature, KeySignature, TonalMode)
 from Compass.piece import Piece
+from models.raw_signals import Beat
 
 
 def create_example_piece() -> Piece:
@@ -45,3 +46,18 @@ def create_piece_with_spurious_note() -> Piece:
     )
     piece.add_compass(compass)
     return piece
+
+def regular_4_4_beats(measures: int) -> list[Beat]:
+    beats = []
+    instant = 0.0
+    for _ in range(measures):
+        beats.append(Beat(instant, True, 1.0))
+        instant += 1
+        beats.append(Beat(instant, False, 1.0))
+        instant += 1
+        beats.append(Beat(instant, False, 1.0))
+        instant += 1
+        beats.append(Beat(instant, False, 1.0))
+        instant += 1
+
+    return beats
