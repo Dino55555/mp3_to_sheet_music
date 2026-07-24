@@ -61,3 +61,53 @@ def regular_4_4_beats(measures: int) -> list[Beat]:
         instant += 1
 
     return beats
+
+def notes_in_d_major() -> list[Note]:
+    return [
+        Note(62, 0.00, 0.50, 0.8),   # D
+        Note(63, 0.20, 0.23, 0.8),   # D# - cromatica de passagem, peso pequeno
+        Note(64, 0.50, 1.00, 0.8),   # E
+        Note(66, 1.00, 1.50, 0.8),   # F#
+        Note(67, 1.50, 2.00, 0.8),   # G
+        Note(68, 1.70, 1.73, 0.8),   # G# - cromatica de passagem, peso pequeno
+        Note(69, 2.00, 2.50, 0.8),   # A
+        Note(71, 2.50, 3.00, 0.8),   # B
+        Note(73, 3.00, 3.50, 0.8),   # C#
+        Note(74, 3.50, 4.00, 0.8),   # D
+    ]
+
+def notes_in_c_mixolydian() -> list[Note]:
+    return[
+        Note(60, 0.00, 0.50, 0.8),   # C
+        Note(62, 0.50, 1.00, 0.8),   # D
+        Note(64, 1.00, 1.50, 0.8),   # E
+        Note(65, 1.50, 2.00, 0.8),   # F
+        Note(67, 2.00, 2.50, 0.8),   # G
+        Note(69, 2.50, 3.00, 0.8),   # A
+        Note(70, 3.00, 3.50, 0.8),   # Bb
+        Note(72, 3.50, 4.00, 0.8),   # C
+    ]
+
+def notes_in_a_minor_natural() -> list[Note]:
+    return[
+        Note(57, 0.00, 0.50, 0.8),   # A
+        Note(59, 0.50, 1.00, 0.8),   # B
+        Note(60, 1.00, 1.50, 0.8),   # C
+        Note(62, 1.50, 2.00, 0.8),   # D
+        Note(64, 2.00, 2.50, 0.8),   # E
+        Note(65, 2.50, 3.00, 0.8),   # F
+        Note(67, 3.00, 3.50, 0.8),   # G
+        Note(69, 3.50, 4.00, 0.8),   # A
+    ]
+
+def create_piece_with_isolated_chromatic_note():
+    piece = Piece(instrument=Instrument.piano())
+    voice = Voice()
+    voice.add_note(Note(60, 0.00, 0.50, 0.8))   # C
+    voice.add_note(Note(62, 0.50, 1.00, 0.8))   # D
+    voice.add_note(Note(73, 1.00, 1.08, 0.8))   # C# uma oitava acima - isolada, curta
+    voice.add_note(Note(64, 1.08, 1.58, 0.8))   # E
+    voice.add_note(Note(67, 1.58, 2.08, 0.8))   # G
+    piece.add_voice(voice)
+
+    return piece

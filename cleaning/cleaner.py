@@ -77,7 +77,7 @@ class Cleaner:
                 if note.reliability_existence >= threshold
             ]
 
-    def _estimate_rough_tonality_(self, notes: list[Note]) -> tuple[int, TonalMode]:
+    def _estimate_rough_tonality(self, notes: list[Note]) -> tuple[int, TonalMode]:
         histogram = PitchClassHistogram.from_notes(notes)
         major_tonic = most_likely_major_tonic(histogram)
         last_note_pitch = notes[-1].pitch if notes else None

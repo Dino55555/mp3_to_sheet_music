@@ -4,9 +4,13 @@ from models.raw_signals import (Beat, RawSignals)
 from config import Config
 from structure.structural_detector import (StructuralDetector, COMPASS_SUSTAIN_LIMIT)
 from models.compass import (Compass, TimeSignature, KeySignature, TonalMode)
+from models.note import Note
+from models.voice import Voice
+from Compass.piece import Piece
+from Compass.instrument import Instrument
 from orchestrator import Orchestrator
 from cleaning.cleaner import Cleaner
-from signaling.signaler import Signaler
+from signaling.signaler import (Signaler, SignalingCategory, SeverityLevel)
 
 def test_group_into_cadidates_measures_splits_correctly():
     detector = StructuralDetector()
@@ -326,4 +330,76 @@ def test_orchestrator_with_cleaner_and_structural_detector_integrates_correctly(
     assert result.compasses[1].formula == TimeSignature(4, 4)
     assert result.compasses[0].free_time is False
     assert result.compasses[1].free_time is False
+
+def test_detect_armors_uses_previous_on_ambiguous_case():
+    detector = StructuralDetector()
+    signaler = Signaler()
+    piece = Piece(instrument=Instrument.piano())
+    compass1 = Compass(1, 0.0, 4.0, TimeSignature(4, 4), KeySignature(0, "C", TonalMode.MAJOR), False)
+    compass2 = Compass(2, 4.0, 8.0, TimeSignature(4, 4), KeySignature(0, "C", TonalMode.MAJOR), False)
+    piece.add_compass(compass1)
+    piece.add_compass(compass2)
+    voice = Voice()
+    voice.add_note(Note(62, 0.0, 0.5, 0.8))   # D
+    voice.add_note(Note(64, 0.5, 1.0, 0.8))   # E
+    voice.add_note(Note(66, 1.0, 1.5, 0.8))   # F#
+    voice.add_note(Note(67, 1.5, 2.0, 0.8))   # G
+    voice.add_note(Note(69, 2.0, 2.5, 0.8))   # A
+    voice.add_note(Note(71, 2.5, 3.0, 0.8))   # B
+    voice.add_note(Note(73, 3.0, 3.5, 0.8))   # C#
+    voice.add_note(Note(74, 3.5, 4.0, 0.8))   # D
+    piece.add_voice(voice)
+
+    armors = detector._detect_armors_by_measure(piece, signaler)
+
+    assert armors[1] == armors[0]
+
+def test_detect_armors_first_measure_ambiguous_uses_c_major():
+    detector = StructuralDetector()
+    signaler = Signaler()
+    piece = Piece(Instrument.piano())
+    compass = Compass(1, 0.0, 4.0, TimeSignature(4, 4), KeySignature(0, "C", TonalMode.MAJOR), False)
+    piece.add_compass(compass)
+
+    armors = detector._detect_armors_by_measure(piece, signaler)
+
+    assert armors[0] == KeySignature(0, "C", TonalMode.MAJOR)
+
+def test_detect_armors_generates_ambiguous_key_signaling():
+    detector = StructuralDetector()
+    signaler = Signaler()
+    piece = Piece(instrument=Instrument.piano())
+    compass = Compass(1, 0.0, 4.0, TimeSignature(4, 4), KeySignature(0, "C", TonalMode.MAJOR), False)
+    piece.add_compass(compass)
+
+    detector._detect_armors_by_measure(piece, signaler)
+
+    signals = signaler.all()
+
+    assert len(signals) == 1
+    assert signals[0].category == SignalingCategory.AMBIGUOUS_KEY
+    assert signals[0].level == SeverityLevel.VERIFY
+
+def test_orchestrator_complete_so_far_integrates_correctly():
+    config = Config()
+    signaler = Signaler()
+    piece = Piece(instrument=Instrument.piano())
+    voice = Voice()
+    voice.add_note(Note(62, 0.0, 1.0, 0.8))   # D
+    voice.add_note(Note(66, 1.0, 2.0, 0.8))   # F#
+    voice.add_note(Note(69, 2.0, 3.0, 0.8))   # A
+    voice.add_note(Note(74, 3.0, 4.0, 0.8))   # D (oitava acima)
+    piece.add_voice(voice)
+    piece.raw_signals = RawSignals(regular_4_4_beats(1))
+
+    orchestrator = Orchestrator(config, signaler)
+    orchestrator.add_stage(Cleaner())
+    orchestrator.add_stage(StructuralDetector())
+
+    result = orchestrator.process(piece)
+
+    assert result is piece
+    assert len(result.compasses) == 1
+    assert result.compasses[0].armor == KeySignature(2, "D", TonalMode.MAJOR)
+    assert len(result.all_notes()) == 4
 
