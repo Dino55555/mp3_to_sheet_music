@@ -1,10 +1,12 @@
 from __future__ import annotations
+from typing import Optional
 from models.compass import (Compass, KeySignature, TimeSignature, TonalMode)
 from models.voice import (Voice, Clef)
 from config import Config
 from Compass.piece import Piece
 from signaling.signaler import (Signaler, SignalingCategory, SeverityLevel)
 from models.raw_signals import Beat
+from music_theory import (PitchClassHistogram, most_likely_major_tonic, choose_mode, accidents_of_major_tonic, TONIC_NAMES)
 
 COMPASS_SUSTAIN_LIMIT = 2
 CONFIDENCE_BEAT_LIMIT = 0.5
@@ -31,8 +33,11 @@ class StructuralDetector:
                     SignalingCategory.FREE_TIME_APPROXIMATION,
                     SeverityLevel.INFORMATIONAL,
                     "Trecho aproximado como tempo livre",
-                    measure.number
+                    measure.index
                 )
+        armors = self._detect_armors_by_measure(piece, signaler)
+        for measure, armor in zip(piece.compasses, armors):
+            measure.armor = armor
         return piece 
     
     def _group_candidate_measures(self, beats: list[Beat]) -> list[list[Beat]]:
@@ -145,8 +150,45 @@ class StructuralDetector:
         )
         new_measures = [pickup]
         for index, measure in enumerate(measures, start=2):
-            measure.number = index
+            measure.index = index
             new_measures.append(measure)
         last_measure = new_measures[-1]
         last_measure.end_time -= pickup_duration
         return new_measures
+
+    def _detect_armors_by_measure(self, piece: Piece, signaler: Signaler) -> list[KeySignature]:
+        armors: list[KeySignature] = []
+        previous_armor: Optional[KeySignature] = None
+
+        for measure in piece.compasses:
+            notes = piece.notes_in_compass(measure.index)
+            histogram = PitchClassHistogram.from_notes(notes)
+            major_tonic = most_likely_major_tonic(histogram)
+            last_note_pitch = notes[-1].pitch if notes else None
+
+            result = choose_mode(histogram, major_tonic, last_note_pitch)
+
+            if result is None:
+                if previous_armor is not None:
+                    armor = previous_armor
+                else:
+                    armor = KeySignature(0, "C", TonalMode.MAJOR)
+                signaler.register(
+                    SignalingCategory.AMBIGUOUS_KEY,
+                    SeverityLevel.VERIFY,
+                    "Tonalidade ambígua: mantida a armadura do compasso anterior",
+                    measure.index
+                )
+            else:
+                tonic, mode = result
+                if mode is TonalMode.MAJOR:
+                    accidents = accidents_of_major_tonic(tonic)
+                else:
+                    major_relative = (tonic + 3) % 12
+                    accidents = accidents_of_major_tonic(major_relative)
+                armor = KeySignature(accidents, TONIC_NAMES[tonic], mode)
+
+            armors.append(armor)
+            previous_armor = armor
+
+        return armors
