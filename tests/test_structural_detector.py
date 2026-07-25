@@ -403,3 +403,170 @@ def test_orchestrator_complete_so_far_integrates_correctly():
     assert result.compasses[0].armor == KeySignature(2, "D", TonalMode.MAJOR)
     assert len(result.all_notes()) == 4
 
+def test_resolve_sustained_changes_generic_with_formulas():
+    detector = StructuralDetector()
+    formulas = [
+        TimeSignature(4, 4),
+        TimeSignature(3, 4),
+        TimeSignature(3, 4),
+        TimeSignature(3, 4)
+    ]
+    free_flags = [False, False, False, False]
+    resolved = detector._resolve_sustained_changes(formulas, COMPASS_SUSTAIN_LIMIT, free_flags)
+
+    assert resolved[0] == TimeSignature(4, 4)
+    assert resolved[1] == TimeSignature(3, 4)
+    assert resolved[2] == TimeSignature(3, 4)
+    assert resolved[3] == TimeSignature(3, 4)
+
+def test_resolve_sustained_changes_generic_with_armors():
+    detector = StructuralDetector()
+    armors = [
+        KeySignature(0, "C", TonalMode.MAJOR),
+        KeySignature(2, "D", TonalMode.MAJOR),
+        KeySignature(2, "D", TonalMode.MAJOR),
+        KeySignature(2, "D", TonalMode.MAJOR),
+    ]
+    resolved = detector._resolve_sustained_changes(armors, COMPASS_SUSTAIN_LIMIT)
+
+    assert resolved[0] == KeySignature(0, "C", TonalMode.MAJOR)
+    assert resolved[1] == KeySignature(2, "D", TonalMode.MAJOR)
+    assert resolved[2] == KeySignature(2, "D", TonalMode.MAJOR)
+    assert resolved[3] == KeySignature(2, "D", TonalMode.MAJOR)
+
+def test_resolve_sustained_changes_ignores_excluded_positions_without_interrupting_count():
+    detector = StructuralDetector()
+    candidates = ["A", "B", "X", "B"]
+    exclude_as_evidence = [False, False, True, False]
+
+    resolved = detector._resolve_sustained_changes(candidates, 2, exclude_as_evidence)
+
+    assert resolved == ["A", "B", "B", "B"]
+
+def test_resolve_sustained_changes_no_exclusions_when_none():
+    detector = StructuralDetector()
+    candidates = ["A", "A", "B"]
+
+    resolved = detector._resolve_sustained_changes(candidates, 2, None)
+
+    assert resolved == ["A", "A", "A"]
+
+def test_resolve_modulations_reverts_isolated_change():
+    detector = StructuralDetector()
+    candidates = [
+        KeySignature(0, "C", TonalMode.MAJOR),
+        KeySignature(1, "G", TonalMode.MAJOR),
+        KeySignature(0, "C", TonalMode.MAJOR),
+        KeySignature(0, "C", TonalMode.MAJOR),
+    ]
+
+    resolved = detector._resolve_modulations(candidates)
+
+    assert resolved == [
+        KeySignature(0, "C", TonalMode.MAJOR),
+        KeySignature(0, "C", TonalMode.MAJOR),
+        KeySignature(0, "C", TonalMode.MAJOR),
+        KeySignature(0, "C", TonalMode.MAJOR),
+    ]
+
+def test_resolve_modulations_adopts_sustained_change():
+    detector = StructuralDetector()
+    candidates = [
+        KeySignature(0, "C", TonalMode.MAJOR),
+        KeySignature(2, "D", TonalMode.MAJOR),
+        KeySignature(2, "D", TonalMode.MAJOR),
+    ]
+
+    resolved = detector._resolve_modulations(candidates)
+
+    assert resolved == [
+        KeySignature(0, "C", TonalMode.MAJOR),
+        KeySignature(2, "D", TonalMode.MAJOR),
+        KeySignature(2, "D", TonalMode.MAJOR),
+    ]
+
+def test_resolve_modulations_keeps_armor_until_end_after_real_modulation():
+    detector = StructuralDetector()
+    candidates = [
+        KeySignature(0, "C", TonalMode.MAJOR),
+        KeySignature(0, "C", TonalMode.MAJOR),
+        KeySignature(2, "D", TonalMode.MAJOR),
+        KeySignature(2, "D", TonalMode.MAJOR),
+        KeySignature(2, "D", TonalMode.MAJOR),
+    ]
+
+    resolved = detector._resolve_modulations(candidates)
+
+    assert resolved == [
+        KeySignature(0, "C", TonalMode.MAJOR),
+        KeySignature(0, "C", TonalMode.MAJOR),
+        KeySignature(2, "D", TonalMode.MAJOR),
+        KeySignature(2, "D", TonalMode.MAJOR),
+        KeySignature(2, "D", TonalMode.MAJOR),
+    ]
+
+def test_process_phase6_regression_full():
+    detector = StructuralDetector()
+    piece = create_piece_with_spurious_note()
+    piece.raw_signals = RawSignals(regular_4_4_beats(2))
+    result = detector.process(piece, Config(), Signaler())
+
+    assert len(result.compasses) == 2
+    assert result.compasses[0].formula == TimeSignature(4, 4)
+    assert result.compasses[1].formula == TimeSignature(4, 4)
+    assert result.compasses[0].free_time is False
+    assert result.compasses[1].free_time is False
+
+def test_orchestrator_complete_so_far_integrates_correctly():
+    config = Config()
+    signaler = Signaler()
+    piece = Piece(instrument=Instrument.piano())
+    voice = Voice()
+
+    #compasso 1 (0.0-4.0): Do maior, terminando na tonica
+    voice.add_note(Note(60, 0.0, 0.5, 0.8))   # C
+    voice.add_note(Note(62, 0.5, 1.0, 0.8))   # D
+    voice.add_note(Note(64, 1.0, 1.5, 0.8))   # E
+    voice.add_note(Note(65, 1.5, 2.0, 0.8))   # F
+    voice.add_note(Note(67, 2.0, 2.5, 0.8))   # G
+    voice.add_note(Note(69, 2.5, 3.0, 0.8))   # A
+    voice.add_note(Note(71, 3.0, 3.5, 0.8))   # B
+    voice.add_note(Note(72, 3.5, 4.0, 0.8))   # C
+
+    #compasso 2 (4.0-8.0): modulacao real para Re maior, terminando na tonica
+    voice.add_note(Note(62, 4.0, 4.5, 0.8))   # D
+    voice.add_note(Note(64, 4.5, 5.0, 0.8))   # E
+    voice.add_note(Note(66, 5.0, 5.5, 0.8))   # F#
+    voice.add_note(Note(67, 5.5, 6.0, 0.8))   # G
+    voice.add_note(Note(69, 6.0, 6.5, 0.8))   # A
+    voice.add_note(Note(71, 6.5, 7.0, 0.8))   # B
+    voice.add_note(Note(73, 7.0, 7.5, 0.8))   # C#
+    voice.add_note(Note(74, 7.5, 8.0, 0.8))   # D
+
+    #compasso 3 (8.0-12.0): Re maior sustentado, terminando na tonica
+    voice.add_note(Note(62, 8.0, 8.5, 0.8))    # D
+    voice.add_note(Note(64, 8.5, 9.0, 0.8))    # E
+    voice.add_note(Note(66, 9.0, 9.5, 0.8))    # F#
+    voice.add_note(Note(67, 9.5, 10.0, 0.8))   # G
+    voice.add_note(Note(69, 10.0, 10.5, 0.8))  # A
+    voice.add_note(Note(71, 10.5, 11.0, 0.8))  # B
+    voice.add_note(Note(73, 11.0, 11.5, 0.8))  # C#
+    voice.add_note(Note(74, 11.5, 12.0, 0.8))  # D
+
+    piece.add_voice(voice)
+    piece.raw_signals = RawSignals(regular_4_4_beats(3))
+
+    orchestrator = Orchestrator(config, signaler)
+    orchestrator.add_stage(Cleaner())
+    orchestrator.add_stage(StructuralDetector())
+    result = orchestrator.process(piece)
+
+    assert result is piece
+    assert len(result.all_notes()) == 24
+    assert len(result.compasses) == 3
+    assert result.compasses[0].formula == TimeSignature(4, 4)
+    assert result.compasses[1].formula == TimeSignature(4, 4)
+    assert result.compasses[2].formula == TimeSignature(4, 4)
+    assert result.compasses[0].armor == KeySignature(0, "C", TonalMode.MAJOR)
+    assert result.compasses[1].armor == KeySignature(2, "D", TonalMode.MAJOR)
+    assert result.compasses[2].armor == KeySignature(2, "D", TonalMode.MAJOR)

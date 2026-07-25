@@ -1,5 +1,5 @@
 from __future__ import annotations
-from typing import Optional
+from typing import Optional, TypeVar
 from models.compass import (Compass, KeySignature, TimeSignature, TonalMode)
 from models.voice import (Voice, Clef)
 from config import Config
@@ -11,6 +11,8 @@ from music_theory import (PitchClassHistogram, most_likely_major_tonic, choose_m
 COMPASS_SUSTAIN_LIMIT = 2
 CONFIDENCE_BEAT_LIMIT = 0.5
 MIN_PROPORTION_CONFIABLE_BEAT = 0.5
+
+T = TypeVar("T")
 
 
 class StructuralDetector:
@@ -35,7 +37,8 @@ class StructuralDetector:
                     "Trecho aproximado como tempo livre",
                     measure.index
                 )
-        armors = self._detect_armors_by_measure(piece, signaler)
+        candidate_armors = self._detect_armors_by_measure(piece, signaler)
+        armors = self._resolve_modulations(candidate_armors)
         for measure, armor in zip(piece.compasses, armors):
             measure.armor = armor
         return piece 
@@ -66,38 +69,47 @@ class StructuralDetector:
         proportion = reliable_beats/len(group)
         return (proportion < MIN_PROPORTION_CONFIABLE_BEAT)
 
-    def _resolve_formula_changes(self, raw_formulas: list[TimeSignature], free_time_flags: list[bool]) -> list[TimeSignature]:
-        if not raw_formulas:
+    def _resolve_sustained_changes(self, candidates: list[T], sustained_threshold: int, exclude_as_evidence: Optional[list[bool]] = None) -> list[T]:
+        if not candidates:
             return []
-        resolved = [raw_formulas[0]]
-        current_formula = raw_formulas[0]
+
+        exclusions = (
+            exclude_as_evidence if exclude_as_evidence is not None
+            else [False] * len(candidates)
+        )
+
+        resolved = [candidates[0]]
+        current_value = candidates[0]
         i = 1
-        while i < len(raw_formulas):
-            candidate = raw_formulas[i]
-            if free_time_flags[i]:
-                resolved.append(current_formula)
+        while i < len(candidates):
+            candidate = candidates[i]
+            if exclusions[i]:
+                resolved.append(current_value)
                 i += 1
                 continue
-            if candidate == current_formula:
-                resolved.append(current_formula)
+            if candidate == current_value:
+                resolved.append(current_value)
                 i+=1
                 continue
             sustained = 0
             j = i
-            while j < len(raw_formulas):
-                if free_time_flags[j]:
+            while j < len(candidates):
+                if exclusions[j]:
                     j += 1
                     continue
-                if raw_formulas[j] == candidate:
+                if candidates[j] == candidate:
                     sustained += 1
                 else:
                     break
                 j += 1
-            if sustained >= COMPASS_SUSTAIN_LIMIT:
-                current_formula = candidate
-            resolved.append(current_formula)
+            if sustained >= sustained_threshold:
+                current_value = candidate
+            resolved.append(current_value)
             i += 1
         return resolved
+
+    def _resolve_formula_changes(self, raw_formulas: list[TimeSignature], free_time_flags: list[bool]) -> list[TimeSignature]:
+        return self._resolve_sustained_changes(raw_formulas, COMPASS_SUSTAIN_LIMIT, free_time_flags)
 
     def _build_measures(self, groups: list[list[Beat]], formulas: list[TimeSignature], free_time_flags: list[bool]) -> list[Compass]:
         measures: list[Compass] = []
@@ -192,3 +204,6 @@ class StructuralDetector:
             previous_armor = armor
 
         return armors
+
+    def _resolve_modulations(self, candidate_armors: list[KeySignature]) -> list[KeySignature]:
+        return self._resolve_sustained_changes(candidate_armors, COMPASS_SUSTAIN_LIMIT)
