@@ -111,3 +111,60 @@ def create_piece_with_isolated_chromatic_note():
     piece.add_voice(voice)
 
     return piece
+
+def notes_clear_melody_over_accompaniment() -> list[Note]:
+    
+    return [
+        # melodia
+        Note(60, 0.0, 0.5, 0.8),
+        Note(62, 1.0, 2.0, 0.8),
+        Note(64, 2.0, 2.75, 0.8),
+        Note(65, 3.0, 4.25, 0.8),
+        # acompanhamento (pedal repetido, mesma altura)
+        Note(55, 0.0, 1.0, 0.8),
+        Note(55, 1.0, 2.0, 0.8),
+        Note(55, 2.0, 3.0, 0.8),
+        Note(55, 3.0, 4.0, 0.8),
+    ]
+
+
+def notes_melody_temporarily_descending() -> list[Note]:
+    
+    return [
+        Note(72, 0.0, 1.0, 0.8),   # melodia
+        Note(60, 0.0, 1.0, 0.8),   # acompanhamento
+        Note(71, 1.0, 2.0, 0.8),   # melodia
+        Note(60, 1.0, 2.0, 0.8),   # acompanhamento
+        Note(48, 2.0, 3.0, 0.8),   # melodia - o mergulho (uma oitava abaixo)
+        Note(68, 2.0, 3.0, 0.8),   # acompanhamento - acorde mais agudo neste instante
+        Note(71, 3.0, 4.0, 0.8),   # melodia
+        Note(60, 3.0, 4.0, 0.8),   # acompanhamento
+        Note(72, 4.0, 5.0, 0.8),   # melodia
+        Note(60, 4.0, 5.0, 0.8),   # acompanhamento
+    ]
+
+
+def notes_ambiguous_counterpoint() -> list[Note]:
+    
+    return [
+        # linha superior (fica com A4 como melodia)
+        Note(72, 0.0, 0.5, 0.8),
+        Note(74, 1.0, 2.0, 0.8),
+        Note(73, 2.0, 2.75, 0.8),
+        Note(75, 3.0, 4.25, 0.8),
+        # linha inferior (fica com A4 como acompanhamento)
+        Note(60, 0.0, 1.25, 0.8),
+        Note(62, 1.0, 1.5, 0.8),
+        Note(61, 2.0, 3.0, 0.8),
+        Note(63, 3.0, 3.75, 0.8),
+    ]
+
+
+def notes_with_marked_vocal_origin() -> list[Note]:
+    
+    return [
+        Note(55, 0.0, 1.0, 0.8, vocal_origin_identified=True),
+        Note(57, 1.0, 2.0, 0.8, vocal_origin_identified=True),
+        Note(72, 0.0, 1.0, 0.8),
+        Note(74, 1.0, 2.0, 0.8),
+    ]
