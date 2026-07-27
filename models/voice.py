@@ -43,6 +43,13 @@ class Voice:
         )
 
         return prev, next
+
+    def simultaneous_of(self, note: Note) -> list[Note]:
+        return [ 
+            other
+            for other in self.notes
+            if other is not note and note.overlap(other)
+        ]
     
 
     def notes_on_interval(self, begin: float, end: float) -> list[Note]:
