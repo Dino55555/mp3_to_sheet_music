@@ -25,11 +25,11 @@ class VoiceSeparator:
         else:
             melody_candidates, accompaniment_candidates = self._classify_by_register(notes)
             melody_notes, accompaniment_notes = self._resolve_by_contour(melody_candidates, accompaniment_candidates, signaler)
-        melody_voice = Voice(PaperVoice.MELODY)
+        melody_voice = Voice(paper=PaperVoice.MELODY)
         for note in melody_notes:
             melody_voice.add_note(note)
 
-        accompaniment_voice = Voice(PaperVoice.ACCOMPANIMENT)
+        accompaniment_voice = Voice(paper=PaperVoice.ACCOMPANIMENT)
         for note in accompaniment_notes:
             accompaniment_voice.add_note(note)
 

@@ -1,5 +1,5 @@
 from Compass.instrument import Instrument
-from models.voice import Voice
+from models.voice import (Voice, PaperVoice)
 from models.note import Note
 from models.compass import(Compass, TimeSignature, KeySignature, TonalMode)
 from Compass.piece import Piece
@@ -168,3 +168,64 @@ def notes_with_marked_vocal_origin() -> list[Note]:
         Note(72, 0.0, 1.0, 0.8),
         Note(74, 1.0, 2.0, 0.8),
     ]
+
+def octave_leap_isolated_voice() -> Voice:
+    #Salto de oitava isolado (sobe e retorna) dentro de contorno
+    #predominantemente por grau conjunto - A10 deve corrigir
+    voice = Voice()
+    pitches = [60, 62, 64, 76, 65, 67]
+    onset = 0.0
+    for pitch in pitches:
+        voice.add_note(Note(pitch, onset, onset + 0.5, 0.8))
+        onset += 0.5
+    return voice
+
+
+def sustained_octave_leap_voice() -> Voice:
+    #Salto de oitava que se sustenta (nao retorna ao registro original) -
+    #A10 nao deve alterar
+    voice = Voice()
+    pitches = [60, 62, 64, 76, 78, 80]
+    onset = 0.0
+    for pitch in pitches:
+        voice.add_note(Note(pitch, onset, onset + 0.5, 0.8))
+        onset += 0.5
+    return voice
+
+
+def accompaniment_with_note_off_center() -> Voice:
+    #Um acorde com uma nota isolada muito acima do centro do proprio acorde,
+    #seguido de outro acorde compacto sem outlier - proporcao de candidatas
+    #baixa, entao a correcao de A11 deve ser aplicada so na nota isolada
+    voice = Voice(paper=PaperVoice.ACCOMPANIMENT)
+    voice.add_note(Note(40, 0.0, 1.0, 0.8))
+    voice.add_note(Note(43, 0.0, 1.0, 0.8))
+    voice.add_note(Note(47, 0.0, 1.0, 0.8))
+    voice.add_note(Note(72, 0.0, 1.0, 0.8))
+    voice.add_note(Note(40, 1.0, 2.0, 0.8))
+    voice.add_note(Note(43, 1.0, 2.0, 0.8))
+    voice.add_note(Note(47, 1.0, 2.0, 0.8))
+    return voice
+
+
+def accompaniment_with_consistent_open_voicing() -> Voice:
+    #Varios acordes com o mesmo spread aberto (25 semitons) de forma
+    #consistente - proporcao alta de candidatas, entao A11 nao deve
+    #aplicar nenhuma correcao
+    voice = Voice(paper=PaperVoice.ACCOMPANIMENT)
+    onset = 0.0
+    for _ in range(3):
+        voice.add_note(Note(40, onset, onset + 1.0, 0.8))
+        voice.add_note(Note(65, onset, onset + 1.0, 0.8))
+        onset += 1.0
+    return voice
+
+
+def voice_with_note_isolated_out_of_range() -> Voice:
+    #Nota isolada uma oitava abaixo da tessitura do piano (range_min=21),
+    #com vizinhas dentro da faixa
+    voice = Voice()
+    voice.add_note(Note(30, 0.0, 0.5, 0.8))   # dentro da faixa
+    voice.add_note(Note(15, 0.5, 1.0, 0.8))   # fora da faixa
+    voice.add_note(Note(32, 1.0, 1.5, 0.8))   # dentro da faixa
+    return voice

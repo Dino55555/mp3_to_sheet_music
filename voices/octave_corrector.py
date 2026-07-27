@@ -21,12 +21,12 @@ class OctaveCorrector:
         for voice in piece.voices:
             self._correct_implausible_leap(voice)
             if voice.paper is PaperVoice.ACCOMPANIMENT:
-                self._correct_accompaniment_registar(voice)
+                self._correct_accompaniment_register(voice)
             self._correct_out_of_range(voice, piece.instrument)
 
         return piece
 
-    def _countour_window(self, voice: Voice, index: int) -> list[Note]:
+    def _contour_window(self, voice: Voice, index: int) -> list[Note]:
         notes = voice.notes
         current = notes[index]
 
@@ -79,7 +79,7 @@ class OctaveCorrector:
             ):
                 continue
 
-            window = self._countour_window(voice, index)
+            window = self._contour_window(voice, index)
             if self._average_jump(window) >= STEPWISE_MOTION_THRESHOLD_SEMITONES:
                 continue
 

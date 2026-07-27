@@ -23,6 +23,10 @@ class Piece:
         #Adicionar uma voz à peça
         self.voices.append(voice)
 
+    def replace_voices(self, new_voices: list[Voice]) -> None:
+        #Descarta a lista atual de vozes e adota a nova
+        self.voices = list(new_voices)
+
     def compass_by_index(self, index: int) -> Compass:
         #Retorna o compasso do dado índice
         for compass in self.compasses:
