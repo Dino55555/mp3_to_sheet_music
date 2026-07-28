@@ -42,6 +42,11 @@ class Piece:
             notes.extend(voice.notes)
 
         return notes
+
+    def compass_at_instant(self, instant: float) -> Compass:
+        for compass in self.compasses:
+            if compass.has_time(instant):
+                return compass
     
     def notes_in_compass(self, index: int) -> list[Note]:
         #Retorna as notas de um compasso

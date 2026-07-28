@@ -9,3 +9,4 @@ class Config:
     sensivity: float = 0.5
     manual_key: KeySignature | None = None
     manual_bpm: float | None = None
+    divisions_per_beat: int = 4
