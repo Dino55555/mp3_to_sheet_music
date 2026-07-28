@@ -47,6 +47,10 @@ class Piece:
         for compass in self.compasses:
             if compass.has_time(instant):
                 return compass
+        if self.compasses and instant == self.compasses[-1].end_time:
+            return self.compasses[-1]
+
+        raise ValueError(f"Nenhum compasso contém o instante {instant}")
     
     def notes_in_compass(self, index: int) -> list[Note]:
         #Retorna as notas de um compasso

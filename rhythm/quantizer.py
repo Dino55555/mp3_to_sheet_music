@@ -64,20 +64,22 @@ class Quantizer:
 
             return grid[chosen_index], AMBIGUOUS_TIME_CONFIDENCE, True
 
-        def _quantize_note(self, note: Note, piece: Piece, divisions_per_beat: int, signaler: Signaler) -> None:
-            new_onset, onset_confidence, onset_ambiguous = self._quantize_instant(note.onset, piece, divisions_per_beat)
-            new_offset, offset_confidence, offset_ambiguous = self._quantize_instant(note.offset, piece, divisions_per_beat)
+        return grid[index_a], MODERATE_DEVIATION_CONFIDENCE, False
 
-            note.onset = new_onset
-            note.offset = new_offset
-            note.reliability_duration = min(onset_confidence, offset_confidence)
+    def _quantize_note(self, note: Note, piece: Piece, divisions_per_beat: int, signaler: Signaler) -> None:
+        new_onset, onset_confidence, onset_ambiguous = self._quantize_instant(note.onset, piece, divisions_per_beat)
+        new_offset, offset_confidence, offset_ambiguous = self._quantize_instant(note.offset, piece, divisions_per_beat)
 
-            if onset_ambiguous or offset_ambiguous:
-                measure = piece.compass_at_instant(note.onset)
-                signaler.register(
-                    SignalingCategory.LOW_CONFIDENCE_QUANTIZATION,
-                    SeverityLevel.VERIFY,
-                    "Quantização de baixa confiança: nota entre dois pontos do grid",
-                    measure.index,
-                    note
-                )
+        note.onset = new_onset
+        note.offset = new_offset
+        note.reliability_duration = min(onset_confidence, offset_confidence)
+
+        if onset_ambiguous or offset_ambiguous:
+            measure = piece.compass_at_instant(note.onset)
+            signaler.register(
+                SignalingCategory.LOW_CONFIDENCE_QUANTIZATION,
+                SeverityLevel.VERIFY,
+                "Quantização de baixa confiança: nota entre dois pontos do grid",
+                measure.index,
+                note
+            )

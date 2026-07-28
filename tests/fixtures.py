@@ -183,7 +183,6 @@ def octave_leap_isolated_voice() -> Voice:
 
 def sustained_octave_leap_voice() -> Voice:
     #Salto de oitava que se sustenta (nao retorna ao registro original) -
-    #A10 nao deve alterar
     voice = Voice()
     pitches = [60, 62, 64, 76, 78, 80]
     onset = 0.0
@@ -229,3 +228,62 @@ def voice_with_note_isolated_out_of_range() -> Voice:
     voice.add_note(Note(15, 0.5, 1.0, 0.8))   # fora da faixa
     voice.add_note(Note(32, 1.0, 1.5, 0.8))   # dentro da faixa
     return voice
+
+def _single_measure_piece() -> Piece:
+    #Peca auxiliar com um unico compasso 4/4 de 4.0s (grid a cada 0.25s
+    #com divisions_per_beat=4), usada pelas fixtures de quantizacao
+    piece = Piece(instrument=Instrument.piano())
+    compass = Compass(
+        index=1,
+        begin_time=0.0,
+        end_time=4.0,
+        formula=TimeSignature(4, 4),
+        armor=KeySignature(0, "C", TonalMode.MAJOR),
+    )
+    piece.add_compass(compass)
+    return piece
+
+
+def note_with_small_deviation() -> tuple[Piece, Note]:
+    #Onset e offset ambos a 0.02s (20ms) do ponto de grid mais proximo -
+    #B9: ajuste silencioso nos dois extremos
+    piece = _single_measure_piece()
+    note = Note(60, 0.23, 0.73, 0.8)
+    return piece, note
+
+
+def note_with_ambiguous_deviation() -> tuple[Piece, Note]:
+    #Onset a meio caminho entre um tempo (0.0) e sua subdivisao vizinha
+    #(0.25) - B10: escolhe o ponto de maior nivel metrico (o tempo).
+    #Offset exatamente no grid (0.75), sem ambiguidade
+    piece = _single_measure_piece()
+    note = Note(62, 0.13, 0.75, 0.8)
+    return piece, note
+
+
+def note_with_moderate_deviation() -> tuple[Piece, Note]:
+    #Onset e offset com desvio nem pequeno nem ambiguo (diferenca entre as
+    #duas distancias maior que a tolerancia de empate) - ajustado para o
+    #ponto mais proximo, com confianca intermediaria, sem sinalizacao
+    piece = _single_measure_piece()
+    note = Note(64, 0.16, 0.66, 0.8)
+    return piece, note
+
+
+def long_note_crossing_measure() -> tuple[Piece, Note]:
+    #Nota longa cujo onset cai no primeiro compasso (exatamente no grid) e
+    #o offset cai no segundo compasso (desvio pequeno) - cada ponta deve
+    #ser quantizada contra o grid do seu proprio compasso
+    piece = Piece(instrument=Instrument.piano())
+    compass1 = Compass(
+        index=1, begin_time=0.0, end_time=4.0,
+        formula=TimeSignature(4, 4), armor=KeySignature(0, "C", TonalMode.MAJOR),
+    )
+    compass2 = Compass(
+        index=2, begin_time=4.0, end_time=8.0,
+        formula=TimeSignature(4, 4), armor=KeySignature(0, "C", TonalMode.MAJOR),
+    )
+    piece.add_compass(compass1)
+    piece.add_compass(compass2)
+    note = Note(67, 3.5, 4.77, 0.8)
+    return piece, note
