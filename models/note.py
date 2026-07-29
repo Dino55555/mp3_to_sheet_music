@@ -17,6 +17,9 @@ class Note:
     graphy: Optional[object] = None
     signal: Optional["Signaling"] = None
 
+    raw_onset: Optional[float] = None
+    raw_offset: Optional[float] = None
+
     reliability_existence: float = 1.0
     reliability_highness: float = 1.0
     reliability_duration: float = 1.0

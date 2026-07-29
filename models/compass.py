@@ -2,6 +2,7 @@ from __future__ import annotations
 from copy import deepcopy
 from dataclasses import dataclass
 from enum import Enum
+from typing import Optional
 
 
 class TonalMode(Enum):
@@ -33,6 +34,7 @@ class Compass:
     formula: TimeSignature
     armor: KeySignature
     free_time: bool = False
+    feel_indication: Optional[str] = None
 
     def has_time(self, time: float) -> bool:
         #Retorna True se o instante do tempo pertence ao compasso
