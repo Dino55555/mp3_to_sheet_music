@@ -8,7 +8,7 @@ from signaling.signaler import (Signaler, SignalingCategory, SeverityLevel)
 from models.raw_signals import Beat
 from music_theory import (PitchClassHistogram, most_likely_major_tonic, choose_mode, accidents_of_major_tonic, TONIC_NAMES)
 
-COMPASS_SUSTAIN_LIMIT = 2
+STRUCTURAL_SUSTAIN_LIMIT = 2
 CONFIDENCE_BEAT_LIMIT = 0.5
 MIN_PROPORTION_CONFIABLE_BEAT = 0.5
 
@@ -109,7 +109,7 @@ class StructuralDetector:
         return resolved
 
     def _resolve_formula_changes(self, raw_formulas: list[TimeSignature], free_time_flags: list[bool]) -> list[TimeSignature]:
-        return self._resolve_sustained_changes(raw_formulas, COMPASS_SUSTAIN_LIMIT, free_time_flags)
+        return self._resolve_sustained_changes(raw_formulas, STRUCTURAL_SUSTAIN_LIMIT, free_time_flags)
 
     def _build_measures(self, groups: list[list[Beat]], formulas: list[TimeSignature], free_time_flags: list[bool]) -> list[Compass]:
         measures: list[Compass] = []
@@ -206,4 +206,4 @@ class StructuralDetector:
         return armors
 
     def _resolve_modulations(self, candidate_armors: list[KeySignature]) -> list[KeySignature]:
-        return self._resolve_sustained_changes(candidate_armors, COMPASS_SUSTAIN_LIMIT)
+        return self._resolve_sustained_changes(candidate_armors, STRUCTURAL_SUSTAIN_LIMIT)

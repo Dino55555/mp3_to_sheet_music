@@ -14,6 +14,7 @@ class Note:
     voice: Optional["Voice"] = None
     is_ornament: bool = False
     vocal_origin_identified: bool = False
+    staccato: bool = False
     graphy: Optional[object] = None
     signal: Optional["Signaling"] = None
 

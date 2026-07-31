@@ -2,7 +2,7 @@ import pytest
 from tests.fixtures import (create_example_piece, create_piece_with_spurious_note, regular_4_4_beats)
 from models.raw_signals import (Beat, RawSignals)
 from config import Config
-from structure.structural_detector import (StructuralDetector, COMPASS_SUSTAIN_LIMIT)
+from structure.structural_detector import (StructuralDetector, STRUCTURAL_SUSTAIN_LIMIT)
 from models.compass import (Compass, TimeSignature, KeySignature, TonalMode)
 from models.note import Note
 from models.voice import Voice
@@ -412,7 +412,7 @@ def test_resolve_sustained_changes_generic_with_formulas():
         TimeSignature(3, 4)
     ]
     free_flags = [False, False, False, False]
-    resolved = detector._resolve_sustained_changes(formulas, COMPASS_SUSTAIN_LIMIT, free_flags)
+    resolved = detector._resolve_sustained_changes(formulas, STRUCTURAL_SUSTAIN_LIMIT, free_flags)
 
     assert resolved[0] == TimeSignature(4, 4)
     assert resolved[1] == TimeSignature(3, 4)
@@ -427,7 +427,7 @@ def test_resolve_sustained_changes_generic_with_armors():
         KeySignature(2, "D", TonalMode.MAJOR),
         KeySignature(2, "D", TonalMode.MAJOR),
     ]
-    resolved = detector._resolve_sustained_changes(armors, COMPASS_SUSTAIN_LIMIT)
+    resolved = detector._resolve_sustained_changes(armors, STRUCTURAL_SUSTAIN_LIMIT)
 
     assert resolved[0] == KeySignature(0, "C", TonalMode.MAJOR)
     assert resolved[1] == KeySignature(2, "D", TonalMode.MAJOR)

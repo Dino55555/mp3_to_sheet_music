@@ -62,7 +62,9 @@ def regular_4_4_beats(measures: int) -> list[Beat]:
 
     return beats
 
+
 def notes_in_d_major() -> list[Note]:
+    #7 notas de Re maior (I-VII) mais 2 cromaticas de passagem de peso pequeno
     return [
         Note(62, 0.00, 0.50, 0.8),   # D
         Note(63, 0.20, 0.23, 0.8),   # D# - cromatica de passagem, peso pequeno
@@ -76,8 +78,10 @@ def notes_in_d_major() -> list[Note]:
         Note(74, 3.50, 4.00, 0.8),   # D
     ]
 
+
 def notes_in_c_mixolydian() -> list[Note]:
-    return[
+    #7 notas de Do mixolidio: mesmas classes de Fa maior (usa Sib em vez de Si)
+    return [
         Note(60, 0.00, 0.50, 0.8),   # C
         Note(62, 0.50, 1.00, 0.8),   # D
         Note(64, 1.00, 1.50, 0.8),   # E
@@ -88,8 +92,10 @@ def notes_in_c_mixolydian() -> list[Note]:
         Note(72, 3.50, 4.00, 0.8),   # C
     ]
 
+
 def notes_in_a_minor_natural() -> list[Note]:
-    return[
+    #Escala de La menor natural, ascendente, terminando na tonica (sem sensivel)
+    return [
         Note(57, 0.00, 0.50, 0.8),   # A
         Note(59, 0.50, 1.00, 0.8),   # B
         Note(60, 1.00, 1.50, 0.8),   # C
@@ -100,7 +106,10 @@ def notes_in_a_minor_natural() -> list[Note]:
         Note(69, 3.50, 4.00, 0.8),   # A
     ]
 
-def create_piece_with_isolated_chromatic_note():
+
+def create_piece_with_isolated_chromatic_note() -> Piece:
+    #Peca com fundo diatonico claro (Do maior) e uma nota cromatica isolada,
+    #curta, sem conexao por grau conjunto com as vizinhas (A2)
     piece = Piece(instrument=Instrument.piano())
     voice = Voice()
     voice.add_note(Note(60, 0.00, 0.50, 0.8))   # C
@@ -109,11 +118,13 @@ def create_piece_with_isolated_chromatic_note():
     voice.add_note(Note(64, 1.08, 1.58, 0.8))   # E
     voice.add_note(Note(67, 1.58, 2.08, 0.8))   # G
     piece.add_voice(voice)
-
     return piece
 
+
 def notes_clear_melody_over_accompaniment() -> list[Note]:
-    
+    #Melodia claramente mais aguda (ascendente, ritmo variado) sobre um
+    #acompanhamento estatico (pedal repetido) - A4 sozinho ja acerta,
+    #A5 confirma sem inverter
     return [
         # melodia
         Note(60, 0.0, 0.5, 0.8),
@@ -129,7 +140,9 @@ def notes_clear_melody_over_accompaniment() -> list[Note]:
 
 
 def notes_melody_temporarily_descending() -> list[Note]:
-    
+    #Melodia com um mergulho breve (uma oitava abaixo) num unico compasso,
+    #onde A4 momentaneamente troca os papeis das duas notas daquele instante -
+    #mas o fluxo agregado da melodia ainda vence em A5, sem inversao completa
     return [
         Note(72, 0.0, 1.0, 0.8),   # melodia
         Note(60, 0.0, 1.0, 0.8),   # acompanhamento
@@ -145,7 +158,9 @@ def notes_melody_temporarily_descending() -> list[Note]:
 
 
 def notes_ambiguous_counterpoint() -> list[Note]:
-    
+    #Duas linhas com comportamento igualmente melodico (saltos pequenos,
+    #ritmo variado, sem repeticao) - A4 separa por registro, mas A5 encontra
+    #pontuacao alta demais nas duas para decidir sozinho
     return [
         # linha superior (fica com A4 como melodia)
         Note(72, 0.0, 0.5, 0.8),
@@ -161,13 +176,15 @@ def notes_ambiguous_counterpoint() -> list[Note]:
 
 
 def notes_with_marked_vocal_origin() -> list[Note]:
-    
+    #Notas graves marcadas com origem vocal identificada devem virar melodia,
+    #mesmo com notas agudas nao marcadas simultaneas - A6 sobrepoe A4/A5
     return [
         Note(55, 0.0, 1.0, 0.8, vocal_origin_identified=True),
         Note(57, 1.0, 2.0, 0.8, vocal_origin_identified=True),
         Note(72, 0.0, 1.0, 0.8),
         Note(74, 1.0, 2.0, 0.8),
     ]
+
 
 def octave_leap_isolated_voice() -> Voice:
     #Salto de oitava isolado (sobe e retorna) dentro de contorno
@@ -183,6 +200,7 @@ def octave_leap_isolated_voice() -> Voice:
 
 def sustained_octave_leap_voice() -> Voice:
     #Salto de oitava que se sustenta (nao retorna ao registro original) -
+    #A10 nao deve alterar
     voice = Voice()
     pitches = [60, 62, 64, 76, 78, 80]
     onset = 0.0
@@ -228,6 +246,7 @@ def voice_with_note_isolated_out_of_range() -> Voice:
     voice.add_note(Note(15, 0.5, 1.0, 0.8))   # fora da faixa
     voice.add_note(Note(32, 1.0, 1.5, 0.8))   # dentro da faixa
     return voice
+
 
 def _single_measure_piece() -> Piece:
     #Peca auxiliar com um unico compasso 4/4 de 4.0s (grid a cada 0.25s
@@ -287,3 +306,160 @@ def long_note_crossing_measure() -> tuple[Piece, Note]:
     piece.add_compass(compass2)
     note = Note(67, 3.5, 4.77, 0.8)
     return piece, note
+
+
+def grace_note_voice() -> tuple[Piece, Voice]:
+    #Apojatura: nota muito curta (0.05s < limiar de 0.125s) entre duas
+    #notas normais, a 2 semitons de distancia de ambas as vizinhas
+    piece = _single_measure_piece()
+    voice = Voice()
+    voice.add_note(Note(60, 0.0, 0.5, 0.8))    # normal
+    voice.add_note(Note(62, 0.5, 0.55, 0.8))   # curta, proxima em altura
+    voice.add_note(Note(64, 0.55, 1.05, 0.8))  # normal
+    return piece, voice
+
+
+def trill_voice() -> Voice:
+    #Sequencia de 3 notas curtas alternando entre duas alturas, ja
+    #marcadas como ornamento (como se _classificar_ornamentos ja tivesse
+    #rodado) - _detect_trills nao deve alterar nada
+    voice = Voice()
+    voice.add_note(Note(62, 0.00, 0.05, 0.8, is_ornament=True))
+    voice.add_note(Note(64, 0.05, 0.10, 0.8, is_ornament=True))
+    voice.add_note(Note(62, 0.10, 0.15, 0.8, is_ornament=True))
+    return voice
+
+
+def small_gap_voice() -> tuple[Piece, Voice]:
+    #Gap pequeno (0.02s < limiar de 0.0375s) entre duas notas normais -
+    #B13 deve estender a primeira ate o onset da segunda
+    piece = _single_measure_piece()
+    voice = Voice()
+    voice.add_note(Note(60, 0.0, 0.5, 0.8))
+    voice.add_note(Note(62, 0.52, 1.02, 0.8))
+    return piece, voice
+
+
+def consistent_staccato_voice() -> tuple[Piece, Voice]:
+    #4 notas com 3 gaps moderados consecutivos e identicos (0.08s, entre
+    #o limiar pequeno e o limiar maximo de staccato) - as 3 primeiras
+    #notas devem ser confirmadas como staccato
+    piece = _single_measure_piece()
+    voice = Voice()
+    voice.add_note(Note(60, 0.00, 0.30, 0.8))
+    voice.add_note(Note(62, 0.38, 0.68, 0.8))
+    voice.add_note(Note(64, 0.76, 1.06, 0.8))
+    voice.add_note(Note(65, 1.14, 1.44, 0.8))
+    return piece, voice
+
+
+def isolated_staccato_voice() -> tuple[Piece, Voice]:
+    #Um unico gap moderado (0.08s), isolado - nao atinge o minimo de
+    #repeticoes e nao deve ser confirmado como staccato
+    piece = _single_measure_piece()
+    voice = Voice()
+    voice.add_note(Note(60, 0.00, 0.30, 0.8))
+    voice.add_note(Note(62, 0.38, 0.68, 0.8))
+    return piece, voice
+
+
+def consistent_swing_voice() -> tuple[Piece, Voice]:
+    #4 notas na mesma posicao metrica (2 de 4, fora do tempo forte), todas
+    #com o mesmo desvio positivo (0.05s) entre onset bruto e onset
+    #quantizado - B11 deve reconhecer como groove consistente
+    piece = _single_measure_piece()
+    voice = Voice()
+    deviation = 0.05
+    for onset in (0.5, 1.5, 2.5, 3.5):
+        note = Note(60, onset, onset + 0.2, 0.8)
+        note.raw_onset = onset + deviation
+        note.raw_offset = onset + 0.2 + deviation
+        voice.add_note(note)
+    return piece, voice
+
+
+def _binary_notes_for_group(group_start: float, pitch: int = 60) -> list[Note]:
+    #2 notas alinhadas exatamente ao grid binario (subdivisao de 4) do grupo
+    step = 1.0 / 4
+    onset1 = group_start + step
+    onset2 = group_start + 2 * step
+    return [
+        Note(pitch, onset1, onset1 + 0.05, 0.8),
+        Note(pitch, onset2, onset2 + 0.05, 0.8),
+    ]
+
+
+def _ternary_notes_for_group(group_start: float, pitch: int = 60) -> list[Note]:
+    #2 notas alinhadas exatamente ao grid ternario (subdivisao de 3) do grupo
+    step = 1.0 / 3
+    onset1 = group_start + step
+    onset2 = group_start + 2 * step
+    return [
+        Note(pitch, onset1, onset1 + 0.05, 0.8),
+        Note(pitch, onset2, onset2 + 0.05, 0.8),
+    ]
+
+
+def compass_with_constant_triplets() -> Piece:
+    #Compasso unico 4/4 com tercinas constantes e consistentes nos 4 tempos -
+    #B2 deve classificar como candidato a metrica composta
+    piece = Piece(instrument=Instrument.piano())
+    compass = Compass(
+        index=1, begin_time=0.0, end_time=4.0,
+        formula=TimeSignature(4, 4), armor=KeySignature(0, "C", TonalMode.MAJOR),
+    )
+    piece.add_compass(compass)
+    voice = Voice()
+    for group_index in range(4):
+        for note in _ternary_notes_for_group(group_index * 1.0):
+            voice.add_note(note)
+    piece.add_voice(voice)
+    return piece
+
+
+def compass_with_isolated_triplet() -> Piece:
+    #3 compassos 4/4: binario, ternario isolado, binario novamente -
+    #a mudanca isolada nao deve se sustentar
+    piece = Piece(instrument=Instrument.piano())
+    compass1 = Compass(1, 0.0, 4.0, TimeSignature(4, 4), KeySignature(0, "C", TonalMode.MAJOR))
+    compass2 = Compass(2, 4.0, 8.0, TimeSignature(4, 4), KeySignature(0, "C", TonalMode.MAJOR))
+    compass3 = Compass(3, 8.0, 12.0, TimeSignature(4, 4), KeySignature(0, "C", TonalMode.MAJOR))
+    piece.add_compass(compass1)
+    piece.add_compass(compass2)
+    piece.add_compass(compass3)
+    voice = Voice()
+    for group_index in range(4):
+        for note in _binary_notes_for_group(group_index * 1.0):
+            voice.add_note(note)
+    for group_index in range(4):
+        for note in _ternary_notes_for_group(4.0 + group_index * 1.0):
+            voice.add_note(note)
+    for group_index in range(4):
+        for note in _binary_notes_for_group(8.0 + group_index * 1.0):
+            voice.add_note(note)
+    piece.add_voice(voice)
+    return piece
+
+
+def sequence_with_sustained_ternary_change() -> Piece:
+    #3 compassos 4/4: binario, seguido de dois compassos ternarios
+    #sustentados - a mudanca deve ser adotada a partir do segundo compasso
+    piece = Piece(instrument=Instrument.piano())
+    compass1 = Compass(1, 0.0, 4.0, TimeSignature(4, 4), KeySignature(0, "C", TonalMode.MAJOR))
+    compass2 = Compass(2, 4.0, 8.0, TimeSignature(4, 4), KeySignature(0, "C", TonalMode.MAJOR))
+    compass3 = Compass(3, 8.0, 12.0, TimeSignature(4, 4), KeySignature(0, "C", TonalMode.MAJOR))
+    piece.add_compass(compass1)
+    piece.add_compass(compass2)
+    piece.add_compass(compass3)
+    voice = Voice()
+    for group_index in range(4):
+        for note in _binary_notes_for_group(group_index * 1.0):
+            voice.add_note(note)
+    for group_index in range(4):
+        for note in _ternary_notes_for_group(4.0 + group_index * 1.0):
+            voice.add_note(note)
+    for group_index in range(4):
+        for note in _ternary_notes_for_group(8.0 + group_index * 1.0):
+            voice.add_note(note)
+    piece.add_voice(voice)
+    return piece
