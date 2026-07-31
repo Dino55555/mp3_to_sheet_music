@@ -1,10 +1,12 @@
 from __future__ import annotations
+from typing import Optional
 from models.note import Note
 from models.voice import Voice
 from models.compass import Compass
 from Compass.piece import Piece
 from config import Config
 from signaling.signaler import (Signaler, SignalingCategory, SeverityLevel)
+from structure.structural_detector import (StructuralDetector, STRUCTURAL_SUSTAIN_LIMIT)
 
 SMALL_THRESHOLD_FRACTION: float = 0.15
 AMBIGUITY_TOLERANCE_FRACTION: float = 0.2
@@ -20,13 +22,24 @@ MIN_STACCATO_REPETITIONS: int = 3
 MIN_NOTES_FOR_GROOVE_PATTERN: int = 4
 GROOVE_CONSISTENCY_THRESHOLD: float = 0.3
 
+TERNARY_DIVISIONS: int = 3
+TERNARY_BETTER_ERROR_THRESHOLD: float = 0.6
+MIN_NOTES_PER_BEAT_GROUP: int = 2
+MIN_TERNARY_GROUPS_PROPORTION: float = 0.6
+
 
 class Quantizer:
     def process(self, piece: Piece, config: Config, signaler: Signaler) -> Piece:
         for voice in piece.voices:
+            self._capture_raw_values(voice)
+
+        for voice in piece.voices:
             for note in voice.notes:
                 self._quantize_note(note, piece, config.divisions_per_beat, signaler)
 
+        self._resolve_compound_meter(piece, config, signaler)
+
+        for voice in piece.voices:
             self._classify_ornaments(voice, piece, config.divisions_per_beat)
             self._detect_trills(voice)
             self._process_gaps(voice, piece, config.divisions_per_beat)
@@ -35,19 +48,26 @@ class Quantizer:
 
         return piece
 
+    def _capture_raw_values(self, voice: Voice) -> None:
+        #Captura onset/offset brutos uma unica vez por nota (idempotente)
+        for note in voice.notes:
+            if note.raw_onset is None:
+                note.raw_onset, note.raw_offset = note.onset, note.offset
+
     def _build_grid(self, compass: Compass, divisions_per_beat: int) -> list[float]:
-        point_count = compass.formula.numerator * divisions_per_beat + 1
+        point_count = compass.formula.beat_groups() * divisions_per_beat + 1
         duration = compass.end_time - compass.begin_time
         step = duration / (point_count - 1)
         return [compass.begin_time + i * step for i in range(point_count)]
 
-    def _two_closest(self, instant: float, grid: list[float]) -> tuple[int, int]:
-        ordered_indices = sorted(
-            range(len(grid)),
-            key=lambda i: abs(instant - grid[i])
-        )
+    def _closest_index(self, instant: float, grid: list[float]) -> int:
+        return min(range(len(grid)), key=lambda i: abs(instant - grid[i]))
 
-        return ordered_indices[0], ordered_indices[1]
+    def _two_closest(self, instant: float, grid: list[float]) -> tuple[int, int]:
+        closest = self._closest_index(instant, grid)
+        remaining_indices = [i for i in range(len(grid)) if i != closest]
+        second_closest = min(remaining_indices, key=lambda i: abs(instant - grid[i]))
+        return closest, second_closest
 
     def _metric_level(self, index_in_grid: int, divisions_per_beat: int) -> int:
         local_index = index_in_grid % divisions_per_beat
@@ -64,7 +84,7 @@ class Quantizer:
     def _quantize_instant(self, instant: float, piece: Piece, divisions_per_beat: int) -> tuple[float, float, bool]:
         compass = piece.compass_at_instant(instant)
         grid = self._build_grid(compass, divisions_per_beat)
-        grid_spacing = (compass.end_time - compass.begin_time) / (compass.formula.numerator * divisions_per_beat)
+        grid_spacing = grid[1] - grid[0]
 
         index_a, index_b = self._two_closest(instant, grid)
         distance_a = abs(instant - grid[index_a])
@@ -101,16 +121,18 @@ class Quantizer:
             )
 
     def _compass_and_spacing(self, piece: Piece, instant: float, divisions_per_beat: int) -> tuple[Compass, float]:
+        #Utilitario interno: localiza o compasso e o espacamento do grid
+        #naquele instante, reaproveitado pelos metodos abaixo
         compass = piece.compass_at_instant(instant)
         grid = self._build_grid(compass, divisions_per_beat)
         spacing = grid[1] - grid[0]
-
         return compass, spacing
 
     def _grid_index(self, instant: float, compass: Compass, spacing: float) -> int:
         return round((instant - compass.begin_time) / spacing)
 
     def _classify_ornaments(self, voice: Voice, piece: Piece, divisions_per_beat: int) -> None:
+        #B12: nota muito curta e proxima em altura de uma vizinha
         for note in voice.notes:
             _, spacing = self._compass_and_spacing(piece, note.onset, divisions_per_beat)
             if note.duration() >= ORNAMENT_THRESHOLD_FRACTION * spacing:
@@ -126,9 +148,15 @@ class Quantizer:
                 note.is_ornament = True
 
     def _detect_trills(self, voice: Voice) -> None:
+        #B12 (trinado): sequencias de MIN_TRILL_REPETITIONS+ notas de
+        #ornamento alternando entre duas alturas permanecem marcadas como
+        #ornamento - nenhuma mudanca de estado adicional e necessaria aqui;
+        #diferenciar trinado de apojatura isolada na notacao e decisao do
+        #Notador (Fase 14), fora do escopo deste componente
         return
 
     def _process_gaps(self, voice: Voice, piece: Piece, divisions_per_beat: int) -> None:
+        #B13: estende, marca staccato, ou deixa como pausa real
         notes = voice.notes
         candidate_flags = [False] * len(notes)
 
@@ -152,20 +180,20 @@ class Quantizer:
             if not candidate_flags[i]:
                 i += 1
                 continue
-            j = 1
+            j = i
             while j < total and candidate_flags[j]:
                 j += 1
-            if j - 1 >= MIN_STACCATO_REPETITIONS:
+            if j - i >= MIN_STACCATO_REPETITIONS:
                 for k in range(i, j):
                     notes[k].staccato = True
             i = j
 
     def _detect_groove_patterns(self, voice: Voice, piece: Piece, divisions_per_beat: int) -> dict[int, float]:
-        groups: dict[int, list[None]] = {}
+        #B11: deteccao de desvio sistematico e consistente por posicao metrica
+        groups: dict[int, list[Note]] = {}
         for note in voice.notes:
             if note.is_ornament or note.raw_onset is None:
                 continue
-
             compass, spacing = self._compass_and_spacing(piece, note.onset, divisions_per_beat)
             index_in_grid = self._grid_index(note.onset, compass, spacing)
             local_position = index_in_grid % divisions_per_beat
@@ -187,7 +215,12 @@ class Quantizer:
             if mean_deviation == 0:
                 continue
 
-            variance = sum((d - mean_deviation) ** 2 for d in deviations) /len(deviations)
+            #Limitacao documentada: nao verificamos que todos os desvios tem
+            #o mesmo sinal antes de calcular o coeficiente de variacao - um
+            #grupo com sinais alternados poderia, em tese, escapar por aqui
+            #se a media residual ainda superasse o limiar de ruido. Fora do
+            #escopo de B11 tal como especificado nesta fase.
+            variance = sum((d - mean_deviation) ** 2 for d in deviations) / len(deviations)
             std_dev = variance ** 0.5
             coefficient_of_variation = abs(std_dev / mean_deviation)
 
@@ -196,7 +229,14 @@ class Quantizer:
 
         return patterns
 
-    def _apply_groove(self, voice: Voice, piece: Piece, patterns: dict[int, float], divisions_per_beat: int, signaler: Signaler) -> None:
+    def _apply_groove(
+        self,
+        voice: Voice,
+        piece: Piece,
+        patterns: dict[int, float],
+        divisions_per_beat: int,
+        signaler: Signaler,
+    ) -> None:
         for note in voice.notes:
             if note.is_ornament:
                 continue
@@ -205,4 +245,84 @@ class Quantizer:
             local_position = index_in_grid % divisions_per_beat
             if local_position in patterns:
                 note.reliability_duration = 1.0
-                compass.feel_indication = 'swing'
+                compass.feel_indication = "swing"
+
+    def _total_fit_error(self, raw_onsets: list[float], grid: list[float]) -> float:
+        return sum(abs(onset - grid[self._closest_index(onset, grid)]) for onset in raw_onsets)
+
+    def _subdivision_grid(self, start: float, end: float, subdivisions: int) -> list[float]:
+        step = (end - start) / subdivisions
+        return [start + i * step for i in range(subdivisions + 1)]
+
+    def _compass_beat_groups(self, compass: Compass) -> list[tuple[float, float]]:
+        group_count = compass.formula.beat_groups()
+        duration = compass.end_time - compass.begin_time
+        group_duration = duration / group_count
+        return [
+            (compass.begin_time + i * group_duration, compass.begin_time + (i + 1) * group_duration)
+            for i in range(group_count)
+        ]
+
+    def _classify_compass_meter(self, compass: Compass, piece: Piece, divisions_per_beat: int) -> Optional[bool]:
+        groups = self._compass_beat_groups(compass)
+        all_notes = piece.all_notes()
+
+        evaluations: list[bool] = []
+        for start, end in groups:
+            raw_onsets = [
+                note.raw_onset for note in all_notes
+                if note.raw_onset is not None and start <= note.raw_onset < end
+            ]
+            if len(raw_onsets) < MIN_NOTES_PER_BEAT_GROUP:
+                continue
+
+            binary_grid = self._subdivision_grid(start, end, divisions_per_beat)
+            ternary_grid = self._subdivision_grid(start, end, TERNARY_DIVISIONS)
+
+            binary_error = self._total_fit_error(raw_onsets, binary_grid)
+            ternary_error = self._total_fit_error(raw_onsets, ternary_grid)
+
+            evaluations.append(ternary_error < TERNARY_BETTER_ERROR_THRESHOLD * binary_error)
+
+        if not evaluations:
+            return None
+
+        proportion = sum(evaluations) / len(evaluations)
+        return proportion >= MIN_TERNARY_GROUPS_PROPORTION
+
+    def _resolve_compound_meter(self, piece: Piece, config: Config, signaler: Signaler) -> None:
+        #B2: classifica cada compasso nao-rubato, resolve a sequencia via o
+        #mesmo mecanismo de sustentacao de B1/B6 (Fase 8), converte e
+        #requantiza onde a mudanca for adotada
+        evaluable_compasses = [c for c in piece.compasses if not c.free_time]
+        if not evaluable_compasses:
+            return
+
+        raw_candidates: list[bool] = []
+        exclude_flags: list[bool] = []
+        for compass in evaluable_compasses:
+            result = self._classify_compass_meter(compass, piece, config.divisions_per_beat)
+            if result is None:
+                raw_candidates.append(False)
+                exclude_flags.append(True)
+            else:
+                raw_candidates.append(result)
+                exclude_flags.append(False)
+
+        structural_detector = StructuralDetector()
+        resolved = structural_detector._resolve_sustained_changes(
+            raw_candidates, STRUCTURAL_SUSTAIN_LIMIT, exclude_flags
+        )
+
+        for compass, is_compound in zip(evaluable_compasses, resolved):
+            if is_compound and not compass.formula.is_compound:
+                compass.formula = compass.formula.convert_to_compound()
+                self._requantize_compass(compass, piece, TERNARY_DIVISIONS, signaler)
+
+    def _requantize_compass(self, compass: Compass, piece: Piece, divisions_per_beat: int, signaler: Signaler) -> None:
+        for voice in piece.voices:
+            for note in voice.notes:
+                if note.raw_onset is None or not compass.has_time(note.raw_onset):
+                    continue
+                note.onset, note.offset = note.raw_onset, note.raw_offset
+                self._quantize_note(note, piece, divisions_per_beat, signaler)

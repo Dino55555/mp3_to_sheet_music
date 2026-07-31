@@ -14,9 +14,20 @@ class TonalMode(Enum):
 class TimeSignature:
     numerator: int
     denominator: int
+    is_compound: bool = False
 
     def __str__(self) -> str:
         return f"{self.numerator}/{self.denominator}"
+
+    def beat_groups(self) -> int:
+        return self.numerator // 3 if self.is_compound else self.numerator
+
+    def convert_to_compound(self) -> "TimeSignature":
+        return TimeSignature(
+            numerator=self.numerator * 3,
+            denominator=self.denominator * 2,
+            is_compound=True,
+        )
     
 
 @dataclass
