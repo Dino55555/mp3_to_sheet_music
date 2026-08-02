@@ -7,6 +7,7 @@ from rhythm.quantizer import (
     AMBIGUOUS_TIME_CONFIDENCE,
     TERNARY_DIVISIONS,
 )
+from rhythm.rhythmic_grid import (build_grid, closest_index)
 from models.note import Note
 from models.voice import Voice
 from models.compass import (Compass, TimeSignature, KeySignature, TonalMode)
@@ -77,18 +78,16 @@ def test_compass_at_instant_raises_error_outside_any_compass():
         piece.compass_at_instant(10.0)
 
 def test_build_grid_has_correct_number_of_points():
-    quantizer = Quantizer()
     compass = Compass(1, 0.0, 4.0, TimeSignature(4, 4), KeySignature(0, "C", TonalMode.MAJOR))
 
-    grid = quantizer._build_grid(compass, 4)
+    grid = build_grid(compass, 4)
 
     assert len(grid) == 4 * 4 + 1
 
 def test_build_grid_includes_both_extremes():
-    quantizer = Quantizer()
     compass = Compass(1, 0.0, 4.0, TimeSignature(4, 4), KeySignature(0, "C", TonalMode.MAJOR))
 
-    grid = quantizer._build_grid(compass, 4)
+    grid = build_grid(compass, 4)
 
     assert grid[0] == pytest.approx(0.0)
     assert grid[-1] == pytest.approx(4.0)
@@ -373,7 +372,6 @@ def test_apply_groove_marks_compass_with_feel_indication():
 
     assert piece.compasses[0].feel_indication == "swing"
 
-
 def test_quantize_note_preserves_raw_onset_and_raw_offset_via_capture():
     quantizer = Quantizer()
     signaler = Signaler()
@@ -413,18 +411,16 @@ def test_converter_para_composta_aplica_formula_padrao(numerator, denominator, e
     assert converted.is_compound is True
 
 def test_construir_grid_usa_grupos_de_batida_nao_numerador_bruto():
-    quantizer = Quantizer()
     compass = Compass(1, 0.0, 4.0, TimeSignature(12, 8, is_compound=True), KeySignature(0, "C", TonalMode.MAJOR))
 
-    grid = quantizer._build_grid(compass, TERNARY_DIVISIONS)
+    grid = build_grid(compass, TERNARY_DIVISIONS)
 
     assert len(grid) == 4 * TERNARY_DIVISIONS + 1
 
 def test_indice_mais_proximo_extraido_preserva_comportamento_da_fase_11():
-    quantizer = Quantizer()
     grid = [0.0, 1.0, 2.0, 3.0, 4.0]
 
-    assert quantizer._closest_index(2.7, grid) == 3
+    assert closest_index(2.7, grid) == 3
 
 def test_erro_total_de_ajuste_soma_distancias_corretamente():
     quantizer = Quantizer()
@@ -465,12 +461,11 @@ def test_classificar_metrica_do_compasso_ignora_grupo_com_poucas_notas():
     quantizer = Quantizer()
     piece = compass_with_constant_triplets()
     voice = piece.voices[0]
-    del voice.notes[1]   # remove a segunda nota do primeiro grupo (fica com 1)
+    del voice.notes[1]
     quantizer._capture_raw_values(voice)
 
     result = quantizer._classify_compass_meter(piece.compasses[0], piece, 4)
 
-    #grupo 0 ignorado (so 1 nota); grupos 1-3 ainda ternarios -> proporcao 1.0
     assert result is True
 
 def test_classificar_metrica_do_compasso_retorna_none_sem_grupos_avaliaveis():
@@ -585,13 +580,11 @@ def test_orquestrador_completo_ate_aqui_integra_corretamente():
     piece = Piece(instrument=Instrument.piano())
     voice = Voice()
 
-    #compasso 1 (0-4s): conteudo binario
     for group_index in range(4):
         group_start = group_index * 1.0
         voice.add_note(Note(60, group_start + 0.25, group_start + 0.30, 0.8))
         voice.add_note(Note(60, group_start + 0.50, group_start + 0.55, 0.8))
 
-    #compassos 2 e 3 (4-8s, 8-12s): conteudo ternario sustentado
     for measure_start in (4.0, 8.0):
         for group_index in range(4):
             group_start = measure_start + group_index * 1.0

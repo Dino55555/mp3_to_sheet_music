@@ -463,3 +463,83 @@ def sequence_with_sustained_ternary_change() -> Piece:
             voice.add_note(note)
     piece.add_voice(voice)
     return piece
+
+
+def voice_with_repeated_arpeggio_and_one_gap() -> Piece:
+    #5 compassos 4/4 identicos (arpejo nas 4 pulsacoes), com uma nota
+    #ausente exatamente na 3a pulsacao do compasso central (indice 3) -
+    #A8a/A9 deve preencher com alta confianca (4 vizinhos confirmando)
+    piece = Piece(instrument=Instrument.piano())
+    voice = Voice()
+    pitches = [60, 62, 64, 65]
+    for measure_index in range(5):
+        start = measure_index * 4.0
+        compass = Compass(
+            index=measure_index + 1,
+            begin_time=start,
+            end_time=start + 4.0,
+            formula=TimeSignature(4, 4),
+            armor=KeySignature(0, "C", TonalMode.MAJOR),
+        )
+        piece.add_compass(compass)
+        for beat_index, pitch in enumerate(pitches):
+            if measure_index == 2 and beat_index == 2:
+                continue   # o furo: compasso 3, 3a pulsacao
+            onset = start + beat_index * 1.0
+            voice.add_note(Note(pitch, onset, onset + 0.9, 0.8))
+    piece.add_voice(voice)
+    return piece
+
+
+def voice_with_pattern_confirmed_once() -> Piece:
+    #2 compassos 4/4: o alvo (indice 1) com um furo, e um unico vizinho
+    #(indice 2) com o padrao completo - apenas 1 confirmacao, abaixo do
+    #limiar de confianca alta
+    piece = Piece(instrument=Instrument.piano())
+    voice = Voice()
+    pitches = [60, 62, 64, 65]
+    for measure_index in range(2):
+        start = measure_index * 4.0
+        compass = Compass(
+            index=measure_index + 1,
+            begin_time=start,
+            end_time=start + 4.0,
+            formula=TimeSignature(4, 4),
+            armor=KeySignature(0, "C", TonalMode.MAJOR),
+        )
+        piece.add_compass(compass)
+        for beat_index, pitch in enumerate(pitches):
+            if measure_index == 0 and beat_index == 2:
+                continue   # o compasso-alvo (indice 1) tem o furo
+            onset = start + beat_index * 1.0
+            voice.add_note(Note(pitch, onset, onset + 0.9, 0.8))
+    piece.add_voice(voice)
+    return piece
+
+
+def voice_without_repetitive_pattern() -> Piece:
+    #3 compassos 4/4 com padroes de grade mutuamente incompativeis -
+    #nenhum par forma "mesmo padrao com exatamente um furo"
+    piece = Piece(instrument=Instrument.piano())
+    voice = Voice()
+
+    patterns = [
+        [0, 1, 2, 3],   # compasso 1: as 4 pulsacoes (padrao completo)
+        [0, 2],         # compasso 2: so pulsacoes 1 e 3
+        [1, 3],         # compasso 3: so pulsacoes 2 e 4
+    ]
+    for measure_index, beat_positions in enumerate(patterns):
+        start = measure_index * 4.0
+        compass = Compass(
+            index=measure_index + 1,
+            begin_time=start,
+            end_time=start + 4.0,
+            formula=TimeSignature(4, 4),
+            armor=KeySignature(0, "C", TonalMode.MAJOR),
+        )
+        piece.add_compass(compass)
+        for beat_index in beat_positions:
+            onset = start + beat_index * 1.0
+            voice.add_note(Note(60, onset, onset + 0.9, 0.8))
+    piece.add_voice(voice)
+    return piece
