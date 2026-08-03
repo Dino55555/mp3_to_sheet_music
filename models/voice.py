@@ -43,14 +43,16 @@ class Voice:
         )
 
         return prev, next
+    
 
     def simultaneous_of(self, note: Note) -> list[Note]:
-        return [ 
+        #Retorna as notas desta voz (excluindo a propria) que se sobrepoem a nota
+        return [
             other
             for other in self.notes
             if other is not note and note.overlap(other)
         ]
-    
+
 
     def notes_on_interval(self, begin: float, end: float) -> list[Note]:
         return [
@@ -58,6 +60,10 @@ class Voice:
             for note in self.notes
             if begin <= note.onset < end
         ]
+
+    def replace_notes(self, new_notes: list[Note]) -> None:
+        #Descarta a lista atual de notas e adota a nova, na ordem recebida
+        self.notes = list(new_notes)
     
 
     @property
