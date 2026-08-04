@@ -543,3 +543,52 @@ def voice_without_repetitive_pattern() -> Piece:
             voice.add_note(Note(60, onset, onset + 0.9, 0.8))
     piece.add_voice(voice)
     return piece
+
+
+def voice_with_spurious_rearticulations() -> Voice:
+    #4 deteccoes consecutivas da mesma altura, sem gaps reais e sem picos
+    #de intensidade - C1 deve unir tudo em uma unica Nota
+    voice = Voice()
+    voice.add_note(Note(60, 0.00, 0.30, 0.70))
+    voice.add_note(Note(60, 0.31, 0.60, 0.72))
+    voice.add_note(Note(60, 0.61, 0.90, 0.68))
+    voice.add_note(Note(60, 0.91, 1.20, 0.71))
+    return voice
+
+
+def voice_with_real_repeated_attack() -> Voice:
+    #Nota curta e fraca seguida de outra, mesma altura, bem mais intensa -
+    #novo ataque real, C1 nao deve unir
+    voice = Voice()
+    voice.add_note(Note(60, 0.00, 0.30, 0.30))
+    voice.add_note(Note(60, 0.31, 0.60, 0.90))
+    return voice
+
+
+def notes_diatonic_in_d_major() -> list[Note]:
+    #Escala de Re maior (I-VII) - usada para validar que Do# e Fa# sao
+    #grafados como diatonicos (nao acidentes) sob a armadura de Re maior
+    return [
+        Note(62, 0.0, 0.5, 0.8),   # D
+        Note(64, 0.5, 1.0, 0.8),   # E
+        Note(66, 1.0, 1.5, 0.8),   # F#
+        Note(67, 1.5, 2.0, 0.8),   # G
+        Note(69, 2.0, 2.5, 0.8),   # A
+        Note(71, 2.5, 3.0, 0.8),   # B
+        Note(73, 3.0, 3.5, 0.8),   # C#
+        Note(74, 3.5, 4.0, 0.8),   # D
+    ]
+
+
+def notes_chromatic_ascending_and_descending() -> list[Note]:
+    #Passagem ascendente C-C#-D e, mais tarde, passagem descendente D-Db-C,
+    #ambas sobre uma armadura sem acidentes (Do maior) - usada para validar
+    #C4: sustenido ao subir, bemol ao descer
+    return [
+        Note(60, 0.0, 0.5, 0.8),   # C
+        Note(61, 0.5, 1.0, 0.8),   # C# - ascendente
+        Note(62, 1.0, 1.5, 0.8),   # D
+        Note(62, 2.0, 2.5, 0.8),   # D
+        Note(61, 2.5, 3.0, 0.8),   # Db - descendente
+        Note(60, 3.0, 3.5, 0.8),   # C
+    ]
