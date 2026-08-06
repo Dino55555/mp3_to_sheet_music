@@ -2,8 +2,19 @@ from Compass.instrument import Instrument
 from models.voice import (Voice, PaperVoice)
 from models.note import Note
 from models.compass import(Compass, TimeSignature, KeySignature, TonalMode)
+from models.pitch_spelling import PitchSpelling
 from Compass.piece import Piece
-from models.raw_signals import Beat
+from models.raw_signals import Beat, RawSignals
+from config import Config
+from signaling.signaler import Signaler
+from orchestrator import Orchestrator
+from cleaning.cleaner import Cleaner
+from structure.structural_detector import StructuralDetector
+from voices.voice_separator import VoiceSeparator
+from voices.octave_corrector import OctaveCorrector
+from rhythm.quantizer import Quantizer
+from completeness.completeness_detector import CompletenessDetector
+from notation.notator import Notator
 
 
 def create_example_piece() -> Piece:
@@ -592,3 +603,58 @@ def notes_chromatic_ascending_and_descending() -> list[Note]:
         Note(61, 2.5, 3.0, 0.8),   # Db - descendente
         Note(60, 3.0, 3.5, 0.8),   # C
     ]
+
+
+def piece_ready_to_export() -> Piece:
+    #Peca simples (1 compasso 4/4, Do maior), rodada pelo pipeline completo
+    #das 15 fases anteriores sobre dados sinteticos: 4 notas de melodia
+    #(G4-A4-B4-C5, semínimas) e 3 de acompanhamento (G2-D3-G2, semínimas),
+    #limites sempre em segundos inteiros - evita qualquer divisao
+    #incidental por makeNotation, mantendo as contagens de nota previsiveis
+    piece = Piece(instrument=Instrument.piano())
+    voice = Voice()
+    voice.add_note(Note(67, 0.0, 1.0, 0.8))   # G4
+    voice.add_note(Note(69, 1.0, 2.0, 0.8))   # A4
+    voice.add_note(Note(71, 2.0, 3.0, 0.8))   # B4
+    voice.add_note(Note(72, 3.0, 4.0, 0.8))   # C5
+    voice.add_note(Note(43, 0.0, 1.0, 0.8))   # G2
+    voice.add_note(Note(50, 1.0, 2.0, 0.8))   # D3
+    voice.add_note(Note(43, 2.0, 3.0, 0.8))   # G2
+    piece.add_voice(voice)
+    piece.raw_signals = RawSignals(regular_4_4_beats(1))
+
+    orchestrator = Orchestrator(Config(), Signaler())
+    orchestrator.add_stage(Cleaner())
+    orchestrator.add_stage(StructuralDetector())
+    orchestrator.add_stage(VoiceSeparator())
+    orchestrator.add_stage(OctaveCorrector())
+    orchestrator.add_stage(Quantizer())
+    orchestrator.add_stage(CompletenessDetector())
+    orchestrator.add_stage(Notator())
+    orchestrator.process(piece)
+    return piece
+
+
+def note_crossing_compass() -> Piece:
+    #Peca com 2 compassos 4/4 de 2.0s cada (fator=2.0 quarterLength/segundo);
+    #uma nota atravessa a barra entre os dois compassos, ja grafada -
+    #usada para testar C2 diretamente em _build_part, sem depender do
+    #pipeline completo
+    piece = Piece(instrument=Instrument.piano())
+    compass1 = Compass(1, 0.0, 2.0, TimeSignature(4, 4), KeySignature(2, "D", TonalMode.MAJOR))
+    compass2 = Compass(2, 2.0, 4.0, TimeSignature(4, 4), KeySignature(2, "D", TonalMode.MAJOR))
+    piece.add_compass(compass1)
+    piece.add_compass(compass2)
+
+    voice = Voice(paper=PaperVoice.MELODY)
+    note_before = Note(60, 0.0, 1.5, 0.8)
+    note_before.graphy = PitchSpelling('C', 0, 4)
+    note_crossing = Note(62, 1.5, 2.5, 0.8)
+    note_crossing.graphy = PitchSpelling('D', 0, 4)
+    note_after = Note(66, 2.5, 4.0, 0.8)
+    note_after.graphy = PitchSpelling('F', 1, 4)
+    voice.add_note(note_before)
+    voice.add_note(note_crossing)
+    voice.add_note(note_after)
+    piece.add_voice(voice)
+    return piece
