@@ -2,6 +2,7 @@ from config import Config
 from orchestrator import Orchestrator
 from signaling.signaler import Signaler
 from tests.fixtures import create_example_piece
+from playability.playability_checker import PlayabilityChecker
 
 
 class FakeStage:

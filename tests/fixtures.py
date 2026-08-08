@@ -658,3 +658,51 @@ def note_crossing_compass() -> Piece:
     voice.add_note(note_after)
     piece.add_voice(voice)
     return piece
+
+
+def _playability_single_measure_piece() -> Piece:
+    piece = Piece(instrument=Instrument.piano())
+    piece.add_compass(Compass(1, 0.0, 4.0, TimeSignature(4, 4), KeySignature(0, "C", TonalMode.MAJOR)))
+    return piece
+
+
+def chord_within_reach() -> tuple[Piece, Voice]:
+    #Triade C4-E4-G4 (alcance=7 semitons), dentro do limite de uma decima
+    piece = _playability_single_measure_piece()
+    voice = Voice()
+    voice.add_note(Note(60, 0.0, 1.0, 0.8))   # C4
+    voice.add_note(Note(64, 0.0, 1.0, 0.8))   # E4
+    voice.add_note(Note(67, 0.0, 1.0, 0.8))   # G4
+    piece.add_voice(voice)
+    return piece, voice
+
+
+def chord_above_reach() -> tuple[Piece, Voice]:
+    #Triade C3-E4-G4 (alcance=19 semitons), acima do limite de uma decima
+    piece = _playability_single_measure_piece()
+    voice = Voice()
+    voice.add_note(Note(48, 0.0, 1.0, 0.8))   # C3
+    voice.add_note(Note(64, 0.0, 1.0, 0.8))   # E4
+    voice.add_note(Note(67, 0.0, 1.0, 0.8))   # G4
+    piece.add_voice(voice)
+    return piece, voice
+
+
+def leap_with_sufficient_time() -> tuple[Piece, Voice]:
+    #Salto de 24 semitons com 0.5s de folga - tempo minimo exigido e ~0.242s
+    piece = _playability_single_measure_piece()
+    voice = Voice()
+    voice.add_note(Note(60, 0.0, 0.5, 0.8))
+    voice.add_note(Note(84, 1.0, 1.5, 0.8))
+    piece.add_voice(voice)
+    return piece, voice
+
+
+def impossible_leap() -> tuple[Piece, Voice]:
+    #Mesmo salto de 24 semitons, mas com apenas 0.01s de folga
+    piece = _playability_single_measure_piece()
+    voice = Voice()
+    voice.add_note(Note(60, 0.0, 0.5, 0.8))
+    voice.add_note(Note(84, 0.51, 1.0, 0.8))
+    piece.add_voice(voice)
+    return piece, voice
