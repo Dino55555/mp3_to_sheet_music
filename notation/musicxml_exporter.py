@@ -6,18 +6,31 @@ from music21 import key as m21_key
 from music21 import pitch as m21_pitch_module
 from music21 import clef as m21_clef
 from music21 import articulations as m21_articulations
+from music21 import expressions as m21_expressions
 
 from models.note import Note
 from models.voice import (Voice, Clef)
 from models.compass import Compass
+from models.signaling import (Signaling, SeverityLevel)
 from Compass.piece import Piece
+from signaling.signaler import Signaler
+from signaling.report_generator import ReportGenerator
+
+FREE_TIME_TEXT: str = "rubato"
+SEVERITY_COLORS: dict[SeverityLevel, str] = {
+    SeverityLevel.REQUIRES_DECISION: "#D32F2F",
+    SeverityLevel.VERIFY: "#F57C00",
+    SeverityLevel.INFORMATIONAL: "#1976D2",
+}
 
 
 class MusicXMLExporter:
 
-    def export(self, piece: Piece, path: str) -> None:
-        score = self._build_score(piece)
-        score.write('musicxml', fp=path)
+    def export(self, piece: Piece, score_path: str, signaler: Signaler, report_path: str) -> None:
+        score, note_map = self._build_score(piece)
+        self._apply_visual_marking(note_map, signaler.ordered_report())
+        score.write('musicxml', fp=score_path)
+        ReportGenerator().generate(signaler, report_path)
 
     def _quarterlength_factor_per_second(self, compass: Compass) -> float:
         quarterlength_per_group = 1.5 if compass.formula.is_compound else 1.0
@@ -46,8 +59,11 @@ class MusicXMLExporter:
             m21_note_obj.articulations.append(m21_articulations.Staccato())
         return m21_note_obj
 
-    def _build_part(self, voice: Voice, piece: Piece, offsets: dict[int, float]) -> m21_stream.Part:
+    def _build_part(
+        self, voice: Voice, piece: Piece, offsets: dict[int, float]
+    ) -> tuple[m21_stream.Part, dict[int, m21_note_module.Note]]:
         part = m21_stream.Part()
+        note_map: dict[int, m21_note_module.Note] = {}
 
         m21_clef_obj = m21_clef.TrebleClef() if voice.clef is Clef.SOL else m21_clef.BassClef()
         part.insert(0, m21_clef_obj)
@@ -67,16 +83,55 @@ class MusicXMLExporter:
 
             for note in voice.notes_on_interval(compass.begin_time, compass.end_time):
                 note_offset = offset + (note.onset - compass.begin_time) * factor
-                part.insert(note_offset, self._m21_note(note, factor))
+                m21_note_obj = self._m21_note(note, factor)
+                note_map[id(note)] = m21_note_obj
+                part.insert(note_offset, m21_note_obj)
 
             previous_compass = compass
 
         part.makeNotation(inPlace=True)
-        return part
+        return part, note_map
 
-    def _build_score(self, piece: Piece) -> m21_stream.Score:
+    def _insert_feel_indications(self, part: m21_stream.Part, piece: Piece, offsets: dict[int, float]) -> None:
+        #Chamado apos makeNotation ja ter criado as Measures - inserir
+        #diretamente na Part (em vez da Measure correta) faz o elemento
+        #ficar "solto" e desaparecer na exportacao, por isso localizamos
+        #a Measure pelo offset e inserimos nela
+        measures_by_offset = {
+            measure.offset: measure for measure in part.getElementsByClass(m21_stream.Measure)
+        }
+        for compass in piece.compasses:
+            offset = offsets[compass.index]
+            measure = measures_by_offset.get(offset)
+            if measure is None:
+                continue
+            if compass.free_time:
+                measure.insert(0.0, m21_expressions.TextExpression(FREE_TIME_TEXT))
+            elif compass.feel_indication is not None:
+                measure.insert(0.0, m21_expressions.TextExpression(compass.feel_indication))
+
+    def _color_for_severity(self, level: SeverityLevel) -> str:
+        return SEVERITY_COLORS[level]
+
+    def _apply_visual_marking(
+        self, note_map: dict[int, m21_note_module.Note], signalings: list[Signaling]
+    ) -> None:
+        for signaling in signalings:
+            if signaling.note is None:
+                continue
+            m21_note_obj = note_map.get(id(signaling.note))
+            if m21_note_obj is None:
+                continue
+            m21_note_obj.style.color = self._color_for_severity(signaling.level)
+            m21_note_obj.noteheadParenthesis = True
+
+    def _build_score(self, piece: Piece) -> tuple[m21_stream.Score, dict[int, m21_note_module.Note]]:
         offsets = self._cumulative_offsets(piece)
         score = m21_stream.Score()
+        combined_note_map: dict[int, m21_note_module.Note] = {}
         for voice in piece.voices:
-            score.insert(0, self._build_part(voice, piece, offsets))
-        return score
+            part, note_map = self._build_part(voice, piece, offsets)
+            self._insert_feel_indications(part, piece, offsets)
+            score.insert(0, part)
+            combined_note_map.update(note_map)
+        return score, combined_note_map
