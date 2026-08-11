@@ -2,6 +2,7 @@ from Compass.instrument import Instrument
 from models.voice import (Voice, PaperVoice)
 from models.note import Note
 from models.compass import(Compass, TimeSignature, KeySignature, TonalMode)
+from models.signaling import (SignalingCategory, SeverityLevel)
 from models.pitch_spelling import PitchSpelling
 from Compass.piece import Piece
 from models.raw_signals import Beat, RawSignals
@@ -706,3 +707,46 @@ def impossible_leap() -> tuple[Piece, Voice]:
     voice.add_note(Note(84, 0.51, 1.0, 0.8))
     piece.add_voice(voice)
     return piece, voice
+
+def sinalizador_vazio() -> Signaler:
+    return Signaler()
+
+
+def sinalizador_com_tres_niveis() -> Signaler:
+    signaler = Signaler()
+    signaler.register(SignalingCategory.IMPOSSIBLE_PASSAGE, SeverityLevel.REQUIRES_DECISION, "requer decisão de teste", 1)
+    signaler.register(SignalingCategory.AMBIGUOUS_KEY, SeverityLevel.VERIFY, "verificar de teste", 2)
+    signaler.register(SignalingCategory.INFERRED_NOTE, SeverityLevel.INFORMATIONAL, "informativo de teste", 3)
+    return signaler
+
+
+def peca_com_compasso_rubato_e_swing() -> Piece:
+    #3 compassos 4/4: o primeiro em tempo livre, o segundo com indicacao
+    #de swing, o terceiro sem nenhum dos dois - usada para testar
+    #_insert_feel_indications diretamente, sem depender do pipeline completo
+    piece = Piece(instrument=Instrument.piano())
+    compass1 = Compass(
+        1, 0.0, 4.0, TimeSignature(4, 4), KeySignature(0, "C", TonalMode.MAJOR),
+        free_time=True,
+    )
+    compass2 = Compass(
+        2, 4.0, 8.0, TimeSignature(4, 4), KeySignature(0, "C", TonalMode.MAJOR),
+        feel_indication="swing",
+    )
+    compass3 = Compass(3, 8.0, 12.0, TimeSignature(4, 4), KeySignature(0, "C", TonalMode.MAJOR))
+    piece.add_compass(compass1)
+    piece.add_compass(compass2)
+    piece.add_compass(compass3)
+
+    voice = Voice(paper=PaperVoice.MELODY)
+    note1 = Note(60, 0.0, 4.0, 0.8)
+    note1.graphy = PitchSpelling('C', 0, 4)
+    note2 = Note(62, 4.0, 8.0, 0.8)
+    note2.graphy = PitchSpelling('D', 0, 4)
+    note3 = Note(64, 8.0, 12.0, 0.8)
+    note3.graphy = PitchSpelling('E', 0, 4)
+    voice.add_note(note1)
+    voice.add_note(note2)
+    voice.add_note(note3)
+    piece.add_voice(voice)
+    return piece
