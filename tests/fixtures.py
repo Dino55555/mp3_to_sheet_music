@@ -16,6 +16,9 @@ from voices.octave_corrector import OctaveCorrector
 from rhythm.quantizer import Quantizer
 from completeness.completeness_detector import CompletenessDetector
 from notation.notator import Notator
+import wave
+import struct
+import math
 
 
 def create_example_piece() -> Piece:
@@ -750,3 +753,31 @@ def peca_com_compasso_rubato_e_swing() -> Piece:
     voice.add_note(note3)
     piece.add_voice(voice)
     return piece
+
+import wave
+import struct
+import math
+
+
+def generate_sine_wav(path: str, frequency_hz: float, duration_s: float, sample_rate: int = 22050) -> None:
+    #Escreve um WAV mono PCM 16-bit com uma onda senoidal pura, usando
+    #apenas o modulo padrao wave - sem dependencia nova
+    num_samples = int(duration_s * sample_rate)
+    amplitude = 32767 * 0.5
+    with wave.open(path, 'w') as wav_file:
+        wav_file.setnchannels(1)
+        wav_file.setsampwidth(2)
+        wav_file.setframerate(sample_rate)
+        for i in range(num_samples):
+            value = int(amplitude * math.sin(2 * math.pi * frequency_hz * i / sample_rate))
+            wav_file.writeframes(struct.pack('<h', value))
+
+
+def generate_silence_wav(path: str, duration_s: float, sample_rate: int = 22050) -> None:
+    num_samples = int(duration_s * sample_rate)
+    with wave.open(path, 'w') as wav_file:
+        wav_file.setnchannels(1)
+        wav_file.setsampwidth(2)
+        wav_file.setframerate(sample_rate)
+        for i in range(num_samples):
+            wav_file.writeframes(struct.pack('<h', 0))
