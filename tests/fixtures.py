@@ -781,3 +781,21 @@ def generate_silence_wav(path: str, duration_s: float, sample_rate: int = 22050)
         wav_file.setframerate(sample_rate)
         for i in range(num_samples):
             wav_file.writeframes(struct.pack('<h', 0))
+
+def generate_two_tone_wav(path: str, freq1_hz: float, freq2_hz: float, duration_s: float, sample_rate: int = 22050) -> None:
+    #Reaproveita a logica de generate_sine_wav para produzir um audio de
+    #entrada minimamente nao-trivial (soma de duas senoides)
+    num_samples = int(duration_s * sample_rate)
+    amplitude = 32767 * 0.25
+    with wave.open(path, 'w') as wav_file:
+        wav_file.setnchannels(1)
+        wav_file.setsampwidth(2)
+        wav_file.setframerate(sample_rate)
+        for i in range(num_samples):
+            value = int(
+                amplitude * (
+                    math.sin(2 * math.pi * freq1_hz * i / sample_rate)
+                    + math.sin(2 * math.pi * freq2_hz * i / sample_rate)
+                )
+            )
+            wav_file.writeframes(struct.pack('<h', value))

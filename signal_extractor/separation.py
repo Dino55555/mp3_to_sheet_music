@@ -1,7 +1,8 @@
 from __future__ import annotations
 import os
+import wave
+import numpy as np
 from demucs.api import Separator
-import torchaudio
 
 MODEL_NAME: str = "htdemucs"
 OUTPUT_SAMPLE_RATE: int = 44100
@@ -30,4 +31,21 @@ class SourceSeparator:
         return stems["drums"] + stems["bass"] + stems["other"]
 
     def _save_wav(self, audio, path: str) -> None:
-        torchaudio.save(path, audio, OUTPUT_SAMPLE_RATE)
+        #Converte o tensor float32 [-1,1] (canais, amostras) para PCM 16-bit
+        #e grava via wave (stdlib) - evita depender de torchaudio.save, que
+        #em versoes recentes exige torchcodec + FFmpeg instalado no sistema,
+        #uma cadeia de dependencia bem mais pesada do que o esperado
+        audio_np = audio.detach().cpu().numpy()
+        num_channels, _ = audio_np.shape
+
+        clipped = np.clip(audio_np, -1.0, 1.0)
+        pcm16 = (clipped * 32767.0).astype(np.int16)
+
+        #wave espera amostras intercaladas por canal: [L0,R0,L1,R1,...]
+        interleaved = pcm16.T.flatten()
+
+        with wave.open(path, 'w') as wav_file:
+            wav_file.setnchannels(num_channels)
+            wav_file.setsampwidth(2)
+            wav_file.setframerate(OUTPUT_SAMPLE_RATE)
+            wav_file.writeframes(interleaved.tobytes())
