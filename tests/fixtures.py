@@ -19,6 +19,7 @@ from notation.notator import Notator
 import wave
 import struct
 import math
+import random
 
 
 def create_example_piece() -> Piece:
@@ -799,3 +800,30 @@ def generate_two_tone_wav(path: str, freq1_hz: float, freq2_hz: float, duration_
                 )
             )
             wav_file.writeframes(struct.pack('<h', value))
+
+def generate_click_wav(path: str, bpm: float, duration_s: float, sample_rate: int = 22050) -> None:
+    #Serie de transientes curtos (rajadas breves de ruido branco com
+    #decaimento rapido) em intervalos regulares - sinal ritmico genuino,
+    #diferente do tom sustentado de generate_sine_wav (Fase 19)
+    num_samples = int(duration_s * sample_rate)
+    beat_interval = 60.0 / bpm
+    click_duration_samples = int(0.02 * sample_rate)
+    samples = [0] * num_samples
+
+    t = 0.0
+    while t < duration_s:
+        start_sample = int(t * sample_rate)
+        for i in range(click_duration_samples):
+            idx = start_sample + i
+            if idx >= num_samples:
+                break
+            decay = math.exp(-i / (click_duration_samples * 0.2))
+            samples[idx] = int(32767 * 0.8 * decay * random.uniform(-1.0, 1.0))
+        t += beat_interval
+
+    with wave.open(path, 'w') as wav_file:
+        wav_file.setnchannels(1)
+        wav_file.setsampwidth(2)
+        wav_file.setframerate(sample_rate)
+        for sample in samples:
+            wav_file.writeframes(struct.pack('<h', sample))

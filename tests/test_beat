@@ -1,0 +1,5 @@
+from beat_this.inference import File2Beats
+
+detector = File2Beats(checkpoint_path="checkpoints/final0.ckpt", device="cpu", dbn=False)
+beats, downbeats = detector("tests/test_audio.wav")
+print(beats, downbeats)
