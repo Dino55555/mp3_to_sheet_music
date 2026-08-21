@@ -827,3 +827,19 @@ def generate_click_wav(path: str, bpm: float, duration_s: float, sample_rate: in
         wav_file.setframerate(sample_rate)
         for sample in samples:
             wav_file.writeframes(struct.pack('<h', sample))
+
+def generate_simple_melody_wav(path: str, pitches_midi: list[int], bpm: float, sample_rate: int = 22050) -> None:
+    #Pequena sequencia de tons puros em ritmo regular - suficiente para
+    #exercitar o pipeline inteiro sem exigir audio musical real
+    beat_duration = 60.0 / bpm
+    samples_per_beat = int(beat_duration * sample_rate)
+
+    with wave.open(path, 'w') as wav_file:
+        wav_file.setnchannels(1)
+        wav_file.setsampwidth(2)
+        wav_file.setframerate(sample_rate)
+        for pitch in pitches_midi:
+            frequency = 440.0 * (2.0 ** ((pitch - 69) / 12.0))
+            for i in range(samples_per_beat):
+                value = int(32767 * 0.5 * math.sin(2 * math.pi * frequency * i / sample_rate))
+                wav_file.writeframes(struct.pack('<h', value))
