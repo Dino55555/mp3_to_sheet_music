@@ -119,3 +119,30 @@ def test_offset_lower_than_onset(onset, offset):
             offset=offset,
             magnitude=1.0
         )
+
+def test_redefinir_tempo_aceita_par_valido():
+    note = Note(60, 0.0, 1.0, 0.8)
+
+    note.redefine_time(2.0, 3.0)
+
+    assert note.onset == 2.0
+    assert note.offset == 3.0
+
+def test_redefinir_tempo_rejeita_offset_menor_ou_igual_a_onset():
+    note = Note(60, 0.0, 1.0, 0.8)
+
+    with pytest.raises(ValueError):
+        note.redefine_time(2.0, 2.0)
+
+    with pytest.raises(ValueError):
+        note.redefine_time(2.0, 1.5)
+
+def test_post_init_e_redefinir_tempo_usam_a_mesma_validacao():
+    with pytest.raises(ValueError) as construction_error:
+        Note(60, 1.0, 0.5, 0.8)
+
+    note = Note(60, 0.0, 1.0, 0.8)
+    with pytest.raises(ValueError) as redefine_error:
+        note.redefine_time(1.0, 0.5)
+
+    assert str(construction_error.value) == str(redefine_error.value)

@@ -609,3 +609,39 @@ def test_orquestrador_completo_ate_aqui_integra_corretamente():
     assert result.compasses[1].formula.numerator == 12
     assert result.compasses[1].formula.denominator == 8
     assert result.compasses[2].formula.is_compound is True
+
+def test_quantizar_nota_resolve_colisao_empurrando_offset():
+    quantizer = Quantizer()
+    signaler = Signaler()
+    piece = _single_measure_piece()
+    #onset=0.24 e offset=0.26 colapsam para o mesmo ponto de grid (0.25)
+    #quando quantizados de forma independente
+    note = Note(60, 0.24, 0.26, 0.8)
+
+    quantizer._quantize_note(note, piece, 4, signaler)
+
+    assert note.onset == pytest.approx(0.25)
+    assert note.offset == pytest.approx(0.5)
+
+def test_quantizar_nota_colisao_reduz_confianca_tempo():
+    quantizer = Quantizer()
+    signaler = Signaler()
+    piece = _single_measure_piece()
+    note = Note(60, 0.24, 0.26, 0.8)
+
+    quantizer._quantize_note(note, piece, 4, signaler)
+
+    assert note.reliability_duration == AMBIGUOUS_TIME_CONFIDENCE
+
+def test_quantizar_nota_colisao_gera_sinalizacao_informativa():
+    quantizer = Quantizer()
+    signaler = Signaler()
+    piece = _single_measure_piece()
+    note = Note(60, 0.24, 0.26, 0.8)
+
+    quantizer._quantize_note(note, piece, 4, signaler)
+
+    signals = signaler.all()
+    assert len(signals) == 1
+    assert signals[0].category == SignalingCategory.LOW_CONFIDENCE_QUANTIZATION
+    assert signals[0].level == SeverityLevel.INFORMATIONAL

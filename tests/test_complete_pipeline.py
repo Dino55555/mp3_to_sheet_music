@@ -20,6 +20,11 @@ from completeness.completeness_detector import CompletenessDetector
 from playability.playability_checker import PlayabilityChecker
 from notation.notator import Notator
 from tests.fixtures import generate_simple_melody_wav
+import signal_extractor.rhythmic_detection as rhythmic_detection_module
+
+@pytest.fixture
+def use_local_checkpoint(monkeypatch):
+    monkeypatch.setattr(rhythmic_detection_module, "MODEL_CHECKPOINT", "checkpoints/final0.ckpt")
 
 
 def test_contar_por_severidade_soma_corretamente_os_tres_niveis():
@@ -72,7 +77,7 @@ def test_main_arquivo_inexistente_encerra_com_codigo_1_sem_traceback(tmp_path):
     assert "não encontrado" in result.stderr
 
 @pytest.mark.integracao
-def test_processar_arquivo_completo_produz_tres_arquivos(tmp_path):
+def test_processar_arquivo_completo_produz_tres_arquivos(tmp_path, use_local_checkpoint):
     audio_path = str(tmp_path / "melodia.wav")
     generate_simple_melody_wav(audio_path, [60, 62, 64, 65], 120)
     output_dir = str(tmp_path / "saida")
@@ -84,7 +89,7 @@ def test_processar_arquivo_completo_produz_tres_arquivos(tmp_path):
     assert os.path.exists(result.report_path)
 
 @pytest.mark.integracao
-def test_processar_arquivo_completo_musicxml_e_valido_via_music21(tmp_path):
+def test_processar_arquivo_completo_musicxml_e_valido_via_music21(tmp_path, use_local_checkpoint):
     from music21 import converter
 
     audio_path = str(tmp_path / "melodia.wav")
@@ -97,7 +102,7 @@ def test_processar_arquivo_completo_musicxml_e_valido_via_music21(tmp_path):
     assert reloaded is not None
 
 @pytest.mark.integracao
-def test_processar_arquivo_completo_resultado_reflete_sinalizacoes_reais(tmp_path):
+def test_processar_arquivo_completo_resultado_reflete_sinalizacoes_reais(tmp_path, use_local_checkpoint):
     audio_path = str(tmp_path / "melodia.wav")
     generate_simple_melody_wav(audio_path, [60, 62, 64, 65], 120)
     output_dir = str(tmp_path / "saida")

@@ -97,8 +97,27 @@ class Quantizer:
         new_onset, onset_confidence, onset_ambiguous = self._quantize_instant(note.onset, piece, divisions_per_beat)
         new_offset, offset_confidence, offset_ambiguous = self._quantize_instant(note.offset, piece, divisions_per_beat)
 
-        note.onset = new_onset
-        note.offset = new_offset
+        if new_offset <= new_onset:
+            #Colisao: dois arredondamentos independentes (onset e offset)
+            #caem no mesmo ponto do grid, ou o offset ficou antes do onset -
+            #nao e evidencia acustica de espuriedade (essa avaliacao ja
+            #aconteceu no Limpador, A1-A3), so um artefato aritmetico da
+            #quantizacao independente dos dois extremos
+            _, spacing = self._compass_and_spacing(piece, new_onset, divisions_per_beat)
+            new_offset = new_onset + spacing
+            note.reliability_duration = AMBIGUOUS_TIME_CONFIDENCE
+            measure = piece.compass_at_instant(new_onset)
+            signaler.register(
+                SignalingCategory.LOW_CONFIDENCE_QUANTIZATION,
+                SeverityLevel.INFORMATIONAL,
+                "Duração ajustada após colisão de quantização",
+                measure.index,
+                note
+            )
+            note.redefine_time(new_onset, new_offset)
+            return
+
+        note.redefine_time(new_onset, new_offset)
         note.reliability_duration = min(onset_confidence, offset_confidence)
 
         if onset_ambiguous or offset_ambiguous:
@@ -125,12 +144,10 @@ class Quantizer:
             _, spacing = self._compass_and_spacing(piece, note.onset, divisions_per_beat)
             if note.duration() >= ORNAMENT_THRESHOLD_FRACTION * spacing:
                 continue
-
             previous, following = voice.neighbour(note)
             candidates = [n for n in (previous, following) if n is not None]
             if not candidates:
                 continue
-
             closest = min(candidates, key=lambda n: note.interval_in_semitones(n))
             if note.interval_in_semitones(closest) <= ORNAMENT_INTERVAL_THRESHOLD_SEMITONES:
                 note.is_ornament = True
@@ -152,7 +169,7 @@ class Quantizer:
             _, spacing = self._compass_and_spacing(piece, n1.onset, divisions_per_beat)
 
             if gap <= SMALL_GAP_FRACTION * spacing:
-                n1.offset = n2.onset
+                n1.redefine_time(n1.onset, n2.onset)
             elif gap <= MAX_STACCATO_GAP_FRACTION * spacing:
                 candidate_flags[i] = True
 
@@ -181,28 +198,22 @@ class Quantizer:
             if local_position == 0:
                 continue
             groups.setdefault(local_position, []).append(note)
-
         patterns: dict[int, float] = {}
         for position, notes in groups.items():
             if len(notes) < MIN_NOTES_FOR_GROOVE_PATTERN:
                 continue
-
             deviations = [note.raw_onset - note.onset for note in notes]
             mean_deviation = sum(deviations) / len(deviations)
-
             _, spacing = self._compass_and_spacing(piece, notes[0].onset, divisions_per_beat)
             if abs(mean_deviation) <= SMALL_THRESHOLD_FRACTION * spacing:
                 continue
             if mean_deviation == 0:
                 continue
-
             variance = sum((d - mean_deviation) ** 2 for d in deviations) / len(deviations)
             std_dev = variance ** 0.5
             coefficient_of_variation = abs(std_dev / mean_deviation)
-
             if coefficient_of_variation < GROOVE_CONSISTENCY_THRESHOLD:
                 patterns[position] = mean_deviation
-
         return patterns
 
     def _apply_groove(
@@ -242,7 +253,6 @@ class Quantizer:
     def _classify_compass_meter(self, compass: Compass, piece: Piece, divisions_per_beat: int) -> Optional[bool]:
         groups = self._compass_beat_groups(compass)
         all_notes = piece.all_notes()
-
         evaluations: list[bool] = []
         for start, end in groups:
             raw_onsets = [
@@ -251,18 +261,13 @@ class Quantizer:
             ]
             if len(raw_onsets) < MIN_NOTES_PER_BEAT_GROUP:
                 continue
-
             binary_grid = self._subdivision_grid(start, end, divisions_per_beat)
             ternary_grid = self._subdivision_grid(start, end, TERNARY_DIVISIONS)
-
             binary_error = self._total_fit_error(raw_onsets, binary_grid)
             ternary_error = self._total_fit_error(raw_onsets, ternary_grid)
-
             evaluations.append(ternary_error < TERNARY_BETTER_ERROR_THRESHOLD * binary_error)
-
         if not evaluations:
             return None
-
         proportion = sum(evaluations) / len(evaluations)
         return proportion >= MIN_TERNARY_GROUPS_PROPORTION
 
@@ -270,7 +275,6 @@ class Quantizer:
         evaluable_compasses = [c for c in piece.compasses if not c.free_time]
         if not evaluable_compasses:
             return
-
         raw_candidates: list[bool] = []
         exclude_flags: list[bool] = []
         for compass in evaluable_compasses:
@@ -281,12 +285,10 @@ class Quantizer:
             else:
                 raw_candidates.append(result)
                 exclude_flags.append(False)
-
         structural_detector = StructuralDetector()
         resolved = structural_detector._resolve_sustained_changes(
             raw_candidates, STRUCTURAL_SUSTAIN_LIMIT, exclude_flags
         )
-
         for compass, is_compound in zip(evaluable_compasses, resolved):
             if is_compound and not compass.formula.is_compound:
                 compass.formula = compass.formula.convert_to_compound()

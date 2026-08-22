@@ -3,7 +3,7 @@ import torch
 from beat_this.inference import File2Beats
 from models.raw_signals import (Beat, RawSignals)
 
-MODEL_CHECKPOINT: str = "final0"
+MODEL_CHECKPOINT: str = "checkpoints/final0.ckpt"
 INSTANT_TOLERANCE_SECONDS: float = 0.01
 REGULARITY_WINDOW_SIZE: int = 4
 RELATIVE_REGULARITY_TOLERANCE: float = 0.15
