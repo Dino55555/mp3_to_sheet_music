@@ -532,14 +532,18 @@ def test_requantizar_compasso_atualiza_onset_offset_contra_grid_ternario():
     compass = Compass(1, 0.0, 4.0, TimeSignature(12, 8, is_compound=True), KeySignature(0, "C", TonalMode.MAJOR))
     piece.add_compass(compass)
     voice = Voice()
-    note = Note(60, 0.25, 0.30, 0.8)
-    note.raw_onset, note.raw_offset = 1 / 3, 1 / 3 + 0.05
+    note = Note(60, 0.3, 0.63, 0.8)
+    #onset e offset caem exatamente em dois pontos distintos do grid
+    #ternario (0.0 e 2/3) - sem ambiguidade, sem colisao, testando
+    #especificamente o caminho de sucesso da requantizacao
+    note.raw_onset, note.raw_offset = 0.0, 2 / 3
     voice.add_note(note)
     piece.add_voice(voice)
 
     quantizer._requantize_compass(compass, piece, TERNARY_DIVISIONS, signaler)
 
-    assert note.onset == pytest.approx(1 / 3)
+    assert note.onset == pytest.approx(0.0)
+    assert note.offset == pytest.approx(2 / 3)
     assert note.reliability_duration == 1.0
 
 def test_requantizar_compasso_nao_recaptura_onset_bruto():
