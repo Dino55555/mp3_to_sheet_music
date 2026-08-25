@@ -649,3 +649,104 @@ def test_quantizar_nota_colisao_gera_sinalizacao_informativa():
     assert len(signals) == 1
     assert signals[0].category == SignalingCategory.LOW_CONFIDENCE_QUANTIZATION
     assert signals[0].level == SeverityLevel.INFORMATIONAL
+
+def test_resolver_colisoes_preserva_notas_originalmente_simultaneas():
+    quantizer = Quantizer()
+    signaler = Signaler()
+    piece = _single_measure_piece()
+    voice = Voice()
+    n1 = Note(60, 1.0, 1.5, 0.8)
+    n1.raw_onset, n1.raw_offset = 0.99, 1.49
+    n2 = Note(64, 1.0, 1.5, 0.8)
+    n2.raw_onset, n2.raw_offset = 1.01, 1.51
+    voice.add_note(n1)
+    voice.add_note(n2)
+    piece.add_voice(voice)
+
+    quantizer._resolve_note_collisions(voice, piece, 4, signaler)
+
+    assert n2.onset == pytest.approx(1.0)
+    assert signaler.all() == []
+
+def test_resolver_colisoes_ajusta_nota_que_colidiu_por_acaso():
+    quantizer = Quantizer()
+    signaler = Signaler()
+    piece = _single_measure_piece()
+    voice = Voice()
+    n1 = Note(60, 1.0, 1.5, 0.8)
+    n1.raw_onset, n1.raw_offset = 0.9, 1.4
+    n2 = Note(64, 1.0, 1.5, 0.8)
+    n2.raw_onset, n2.raw_offset = 1.9, 2.4
+    voice.add_note(n1)
+    voice.add_note(n2)
+    piece.add_voice(voice)
+
+    quantizer._resolve_note_collisions(voice, piece, 4, signaler)
+
+    assert n2.onset == pytest.approx(1.25)
+    assert n2.offset == pytest.approx(1.75)   # duracao original (0.5) preservada
+
+def test_resolver_colisoes_reduz_confianca_tempo_e_gera_sinalizacao():
+    quantizer = Quantizer()
+    signaler = Signaler()
+    piece = _single_measure_piece()
+    voice = Voice()
+    n1 = Note(60, 1.0, 1.5, 0.8)
+    n1.raw_onset, n1.raw_offset = 0.9, 1.4
+    n2 = Note(64, 1.0, 1.5, 0.8)
+    n2.raw_onset, n2.raw_offset = 1.9, 2.4
+    voice.add_note(n1)
+    voice.add_note(n2)
+    piece.add_voice(voice)
+
+    quantizer._resolve_note_collisions(voice, piece, 4, signaler)
+
+    assert n2.reliability_duration == AMBIGUOUS_TIME_CONFIDENCE
+    signals = signaler.all()
+    assert len(signals) == 1
+    assert signals[0].category == SignalingCategory.LOW_CONFIDENCE_QUANTIZATION
+    assert signals[0].level == SeverityLevel.VERIFY
+    assert signals[0].note is n2
+
+def test_resolver_colisoes_reordena_voz_quando_ajuste_ultrapassa_vizinha():
+    quantizer = Quantizer()
+    signaler = Signaler()
+    piece = _single_measure_piece()
+    voice = Voice()
+    n1 = Note(60, 1.0, 1.5, 0.8)
+    n1.raw_onset, n1.raw_offset = 0.9, 1.4
+    n2 = Note(64, 1.0, 1.2, 0.8)   #colide com n1, sera empurrada para 1.25
+    n2.raw_onset, n2.raw_offset = 2.9, 3.1
+    n3 = Note(67, 1.2, 1.4, 0.8)   #onset original menor que o novo onset de n2
+    n3.raw_onset, n3.raw_offset = 1.2, 1.4
+    voice.add_note(n1)
+    voice.add_note(n2)
+    voice.add_note(n3)
+    piece.add_voice(voice)
+
+    quantizer._resolve_note_collisions(voice, piece, 4, signaler)
+
+    assert [n.pitch for n in voice.notes] == [60, 67, 64]
+
+def test_processar_gaps_ignora_par_com_sobreposicao_real():
+    quantizer = Quantizer()
+    piece = _single_measure_piece()
+    voice = Voice()
+    n1 = Note(60, 1.0, 1.5, 0.8)
+    n2 = Note(64, 1.0, 1.3, 0.8)   #mesmo onset, sobreposicao real - nao deveria crashar
+    voice.add_note(n1)
+    voice.add_note(n2)
+
+    quantizer._process_gaps(voice, piece, 4)
+
+    assert n1.onset == pytest.approx(1.0)
+    assert n1.offset == pytest.approx(1.5)
+
+def test_processar_gaps_continua_estendendo_gap_positivo_pequeno_normalmente():
+    quantizer = Quantizer()
+    piece, voice = small_gap_voice()
+
+    quantizer._process_gaps(voice, piece, 4)
+
+    assert voice.notes[0].offset == pytest.approx(voice.notes[1].onset)
+    assert voice.notes[0].offset == pytest.approx(0.52)

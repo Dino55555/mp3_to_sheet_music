@@ -1,0 +1,20 @@
+import sys
+sys.path.insert(0, ".")
+from signal_extractor.extraction_pipeline import extract_notes_from_mix
+from signal_extractor.rhythmic_detection import BeatDetector
+import tempfile
+
+audio_path = "mp3/Connect.mp3"
+
+with tempfile.TemporaryDirectory() as temp_dir:
+    notes = extract_notes_from_mix(audio_path, temp_dir)
+
+raw_signals = BeatDetector().detect(audio_path)
+
+last_note_offset = max(n.offset for n in notes)
+last_beat_instant = max(b.instant for b in raw_signals.beats)
+
+print(f"Última nota (offset): {last_note_offset:.2f}s")
+print(f"Última batida detectada: {last_beat_instant:.2f}s")
+print(f"Diferença: {last_note_offset - last_beat_instant:.2f}s")
+print(f"Total de notas além da última batida: {sum(1 for n in notes if n.offset > last_beat_instant)}")
