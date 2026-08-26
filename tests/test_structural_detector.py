@@ -570,3 +570,118 @@ def test_orchestrator_complete_so_far_integrates_correctly():
     assert result.compasses[0].armor == KeySignature(0, "C", TonalMode.MAJOR)
     assert result.compasses[1].armor == KeySignature(2, "D", TonalMode.MAJOR)
     assert result.compasses[2].armor == KeySignature(2, "D", TonalMode.MAJOR)
+
+def test_cobrir_notas_alem_do_ultimo_compasso_cria_compasso_de_cauda_quando_gap_excede_limiar():
+    detector = StructuralDetector()
+    signaler = Signaler()
+    piece = Piece(instrument=Instrument.piano())
+    voice = Voice()
+    voice.add_note(Note(60, 0.0, 1.0, 0.8))
+    voice.add_note(Note(62, 5.0, 8.5, 0.8))
+    piece.add_voice(voice)
+    measures = [
+        Compass(1, 0.0, 4.0, TimeSignature(4, 4), KeySignature(0, "C", TonalMode.MAJOR), False)
+    ]
+
+    result = detector._cover_notes_beyond_last_measure(piece, measures, signaler)
+
+    assert len(result) == 2
+    assert result[1].index == 2
+    assert result[1].begin_time == pytest.approx(4.0)
+    assert result[1].end_time == pytest.approx(8.5)
+
+def test_cobrir_notas_alem_do_ultimo_compasso_nao_altera_nada_dentro_do_limiar():
+    detector = StructuralDetector()
+    signaler = Signaler()
+    piece = Piece(instrument=Instrument.piano())
+    voice = Voice()
+    voice.add_note(Note(60, 0.0, 1.0, 0.8))
+    voice.add_note(Note(62, 3.5, 4.5, 0.8))
+    piece.add_voice(voice)
+    measures = [
+        Compass(1, 0.0, 4.0, TimeSignature(4, 4), KeySignature(0, "C", TonalMode.MAJOR), False)
+    ]
+
+    result = detector._cover_notes_beyond_last_measure(piece, measures, signaler)
+
+    assert len(result) == 1
+    assert signaler.all() == []
+
+def test_compasso_de_cauda_marcado_como_tempo_livre():
+    detector = StructuralDetector()
+    signaler = Signaler()
+    piece = Piece(instrument=Instrument.piano())
+    voice = Voice()
+    voice.add_note(Note(60, 5.0, 8.5, 0.8))
+    piece.add_voice(voice)
+    measures = [
+        Compass(1, 0.0, 4.0, TimeSignature(4, 4), KeySignature(0, "C", TonalMode.MAJOR), False)
+    ]
+
+    result = detector._cover_notes_beyond_last_measure(piece, measures, signaler)
+
+    assert result[1].free_time is True
+
+def test_compasso_de_cauda_gera_sinalizacao_de_nivel_verificar():
+    detector = StructuralDetector()
+    signaler = Signaler()
+    piece = Piece(instrument=Instrument.piano())
+    voice = Voice()
+    voice.add_note(Note(60, 5.0, 8.5, 0.8))
+    piece.add_voice(voice)
+    measures = [
+        Compass(1, 0.0, 4.0, TimeSignature(4, 4), KeySignature(0, "C", TonalMode.MAJOR), False)
+    ]
+
+    detector._cover_notes_beyond_last_measure(piece, measures, signaler)
+
+    signals = signaler.all()
+    assert len(signals) == 1
+    assert signals[0].level == SeverityLevel.VERIFY
+
+def test_compasso_de_cauda_recebe_armadura_via_deteccao_normal_da_fase_7():
+    detector = StructuralDetector()
+    signaler = Signaler()
+    piece = Piece(instrument=Instrument.piano())
+    voice = Voice()
+    #compasso principal: Do maior claro
+    voice.add_note(Note(60, 0.0, 0.5, 0.8))
+    voice.add_note(Note(64, 0.5, 1.0, 0.8))
+    voice.add_note(Note(67, 1.0, 1.5, 0.8))
+    voice.add_note(Note(72, 1.5, 2.0, 0.8))
+    #cauda: Re maior claro, terminando na tonica, bem alem do ultimo compasso
+    voice.add_note(Note(62, 5.0, 5.5, 0.8))
+    voice.add_note(Note(66, 5.5, 6.0, 0.8))
+    voice.add_note(Note(69, 6.0, 6.5, 0.8))
+    voice.add_note(Note(74, 6.5, 7.0, 0.8))
+    piece.add_voice(voice)
+
+    measures = [Compass(1, 0.0, 2.0, TimeSignature(4, 4), KeySignature(0, "C", TonalMode.MAJOR), False)]
+    measures = detector._cover_notes_beyond_last_measure(piece, measures, signaler)
+    for measure in measures:
+        piece.add_compass(measure)
+
+    #testando a candidatura de armadura antes de B6 (_resolve_modulations)
+    #entrar em jogo - B6 sozinho, com apenas 1 compasso de cauda, nunca
+    #sustentaria uma modulacao isolada de volta ao resultado final
+    candidate_armors = detector._detect_armors_by_measure(piece, signaler)
+
+    assert candidate_armors[1].tonic == "D"
+
+def test_todas_as_notas_da_peca_pertencem_a_algum_compasso_apos_processar():
+    detector = StructuralDetector()
+    signaler = Signaler()
+    piece = Piece(instrument=Instrument.piano())
+    voice = Voice()
+    voice.add_note(Note(60, 0.0, 1.0, 0.8))
+    voice.add_note(Note(62, 1.0, 2.0, 0.8))
+    voice.add_note(Note(64, 2.0, 3.0, 0.8))
+    voice.add_note(Note(65, 3.0, 4.0, 0.8))
+    voice.add_note(Note(67, 6.0, 7.5, 0.8))   #bem alem do ultimo compasso detectado por batida
+    piece.add_voice(voice)
+    piece.raw_signals = RawSignals(regular_4_4_beats(1))
+
+    result = detector.process(piece, Config(), signaler)
+
+    for note in result.all_notes():
+        assert result.compass_at_instant(note.onset) is not None

@@ -6,17 +6,24 @@ from config import Config
 from Compass.piece import Piece
 from signaling.signaler import (Signaler, SignalingCategory, SeverityLevel)
 from models.raw_signals import Beat
-from music_theory import (PitchClassHistogram, most_likely_major_tonic, choose_mode, accidents_of_major_tonic, TONIC_NAMES)
+from music_theory import (
+    PitchClassHistogram,
+    most_likely_major_tonic,
+    choose_mode,
+    accidents_of_major_tonic,
+    TONIC_NAMES,
+)
 
 STRUCTURAL_SUSTAIN_LIMIT = 2
 CONFIDENCE_BEAT_LIMIT = 0.5
 MIN_PROPORTION_CONFIABLE_BEAT = 0.5
+TAIL_GAP_THRESHOLD_SECONDS: float = 1.0
 
 T = TypeVar("T")
 
 
 class StructuralDetector:
-    
+
     def process(self, piece: Piece, config: Config, signaler: Signaler) -> Piece:
         if (piece.raw_signals is None or len(piece.raw_signals.beats) == 0):
             raise ValueError("Peça não tem sinais brutos")
@@ -27,6 +34,7 @@ class StructuralDetector:
         formulas = self._resolve_formula_changes(raw_formulas, free_time_flags)
         measures = self._build_measures(groups, formulas, free_time_flags)
         measures = self._detect_and_adjust_pickup(piece, measures)
+        measures = self._cover_notes_beyond_last_measure(piece, measures, signaler)
         piece.compasses.clear()
         for measure in measures:
             piece.add_compass(measure)
@@ -41,7 +49,7 @@ class StructuralDetector:
         armors = self._resolve_modulations(candidate_armors)
         for measure, armor in zip(piece.compasses, armors):
             measure.armor = armor
-        return piece 
+        return piece
     
     def _group_candidate_measures(self, beats: list[Beat]) -> list[list[Beat]]:
         if not beats:
@@ -69,7 +77,12 @@ class StructuralDetector:
         proportion = reliable_beats/len(group)
         return (proportion < MIN_PROPORTION_CONFIABLE_BEAT)
 
-    def _resolve_sustained_changes(self, candidates: list[T], sustained_threshold: int, exclude_as_evidence: Optional[list[bool]] = None) -> list[T]:
+    def _resolve_sustained_changes(
+        self,
+        candidates: list[T],
+        sustain_threshold: int,
+        exclude_as_evidence: Optional[list[bool]] = None,
+    ) -> list[T]:
         if not candidates:
             return []
 
@@ -89,7 +102,7 @@ class StructuralDetector:
                 continue
             if candidate == current_value:
                 resolved.append(current_value)
-                i+=1
+                i += 1
                 continue
             sustained = 0
             j = i
@@ -102,7 +115,7 @@ class StructuralDetector:
                 else:
                     break
                 j += 1
-            if sustained >= sustained_threshold:
+            if sustained >= sustain_threshold:
                 current_value = candidate
             resolved.append(current_value)
             i += 1
@@ -167,6 +180,43 @@ class StructuralDetector:
         last_measure = new_measures[-1]
         last_measure.end_time -= pickup_duration
         return new_measures
+
+    def _cover_notes_beyond_last_measure(
+        self, piece: Piece, measures: list[Compass], signaler: Signaler
+    ) -> list[Compass]:
+        #Par simetrico de _detect_and_adjust_pickup, no fim da peca: quando
+        #o Beat This! perde confianca ritmica antes do Basic Pitch parar de
+        #detectar notas, um compasso novo (nao uma extensao artificial do
+        #ultimo) cobre o conteudo remanescente, marcado como tempo livre
+        if not measures:
+            return measures
+
+        notes = piece.all_notes()
+        if not notes:
+            return measures
+
+        last_note_offset = max(note.offset for note in notes)
+        last_measure = measures[-1]
+        gap = last_note_offset - last_measure.end_time
+
+        if gap <= TAIL_GAP_THRESHOLD_SECONDS:
+            return measures
+
+        tail_measure = Compass(
+            last_measure.index + 1,
+            last_measure.end_time,
+            last_note_offset,
+            last_measure.formula,
+            KeySignature(0, "C", TonalMode.MAJOR),
+            True,
+        )
+        signaler.register(
+            SignalingCategory.FREE_TIME_APPROXIMATION,
+            SeverityLevel.VERIFY,
+            "Notas além do último compasso detectado por batida: compasso de cauda criado",
+            tail_measure.index,
+        )
+        return measures + [tail_measure]
 
     def _detect_armors_by_measure(self, piece: Piece, signaler: Signaler) -> list[KeySignature]:
         armors: list[KeySignature] = []
