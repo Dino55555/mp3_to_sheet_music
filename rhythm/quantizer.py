@@ -9,6 +9,7 @@ from signaling.signaler import (Signaler, SignalingCategory, SeverityLevel)
 from structure.structural_detector import (StructuralDetector, STRUCTURAL_SUSTAIN_LIMIT)
 from rhythm.rhythmic_grid import (build_grid, closest_index)
 from signal_extractor.rhythmic_detection import INSTANT_TOLERANCE_SECONDS
+from notation.notator import Notator
 
 SMALL_THRESHOLD_FRACTION: float = 0.15
 AMBIGUITY_TOLERANCE_FRACTION: float = 0.2
@@ -100,10 +101,6 @@ class Quantizer:
         new_offset, offset_confidence, offset_ambiguous = self._quantize_instant(note.offset, piece, divisions_per_beat)
 
         if new_offset <= new_onset:
-            #Colisao: dois arredondamentos independentes (onset e offset da
-            #MESMA nota) caem no mesmo ponto do grid - nao e evidencia
-            #acustica de espuriedade (essa avaliacao ja aconteceu no
-            #Limpador, A1-A3), so um artefato aritmetico
             _, spacing = self._compass_and_spacing(piece, new_onset, divisions_per_beat)
             new_offset = new_onset + spacing
             note.reliability_duration = AMBIGUOUS_TIME_CONFIDENCE
@@ -136,20 +133,48 @@ class Quantizer:
         #genuina da mixagem) de colisao espuria (onsets brutos afastados,
         #so colidiram por dois arredondamentos independentes)
         notes = voice.notes
-        for i in range(len(notes) - 1):
+        result: list[Note] = []
+        i = 0
+        while i < len(notes):
             n1 = notes[i]
+
+            if i == len(notes) - 1:
+                result.append(n1)
+                i += 1
+                continue
+
             n2 = notes[i + 1]
 
             if abs(n1.onset - n2.onset) >= INSTANT_TOLERANCE_SECONDS:
+                result.append(n1)
+                i += 1
                 continue
 
             _, spacing = self._compass_and_spacing(piece, n1.onset, divisions_per_beat)
 
             if n1.raw_onset is not None and n2.raw_onset is not None:
                 if abs(n1.raw_onset - n2.raw_onset) < SMALL_THRESHOLD_FRACTION * spacing:
+                    result.append(n1)
+                    i += 1
                     continue  # acorde real - preserva sem alteracao
 
             new_onset = n1.onset + spacing
+
+            try:
+                piece.compass_at_instant(new_onset)
+            except ValueError:
+                #Nao ha compasso para receber o empurrao - a checagem e
+                #sobre o grid do compasso atual ter um proximo ponto, nao
+                #sobre "onde a peca termina" (esse conhecimento fica so em
+                #_cobrir_notas_alem_do_ultimo_compasso, Fase 6/8). Sem
+                #espaco para separar, funde as duas notas em uma so,
+                #reaproveitando Notador._merge_group (Fase 15) - ja
+                #validada para exatamente este tipo de situacao
+                merged = Notator()._merge_group([n1, n2])
+                result.append(merged)
+                i += 2
+                continue
+
             duration = n2.duration()
             n2.redefine_time(new_onset, new_onset + duration)
             n2.reliability_duration = min(n2.reliability_duration, AMBIGUOUS_TIME_CONFIDENCE)
@@ -162,10 +187,12 @@ class Quantizer:
                 measure.index,
                 n2
             )
+            result.append(n1)
+            i += 1
 
-        #Rede de seguranca barata: se o empurrao de alguma nota ultrapassou
-        #uma vizinha, restaura a ordem sem precisar de logica de cascata
-        voice.replace_notes(sorted(voice.notes, key=lambda n: n.onset))
+        #Rede de seguranca barata: se algum ajuste ultrapassou uma vizinha,
+        #restaura a ordem sem precisar de logica de cascata
+        voice.replace_notes(sorted(result, key=lambda n: n.onset))
 
     def _compass_and_spacing(self, piece: Piece, instant: float, divisions_per_beat: int) -> tuple[Compass, float]:
         compass = piece.compass_at_instant(instant)
@@ -200,9 +227,6 @@ class Quantizer:
             n1 = notes[i]
             n2 = notes[i + 1]
             if n1.overlap(n2):
-                #Sobreposicao real (acorde, ou colisao ja tratada por
-                #_resolve_note_collisions preservando simultaneidade genuina)
-                #- nao ha gap para processar aqui
                 continue
             if n1.is_ornament or n2.is_ornament:
                 continue

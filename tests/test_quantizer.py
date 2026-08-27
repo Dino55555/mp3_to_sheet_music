@@ -750,3 +750,63 @@ def test_processar_gaps_continua_estendendo_gap_positivo_pequeno_normalmente():
 
     assert voice.notes[0].offset == pytest.approx(voice.notes[1].onset)
     assert voice.notes[0].offset == pytest.approx(0.52)
+
+def test_resolve_note_collisions_empurra_normalmente_quando_ha_proximo_compasso():
+    quantizer = Quantizer()
+    signaler = Signaler()
+    piece = Piece(instrument=Instrument.piano())
+    piece.add_compass(Compass(1, 0.0, 4.0, TimeSignature(4, 4), KeySignature(0, "C", TonalMode.MAJOR)))
+    piece.add_compass(Compass(2, 4.0, 8.0, TimeSignature(4, 4), KeySignature(0, "C", TonalMode.MAJOR)))
+    voice = Voice()
+    n1 = Note(60, 3.75, 4.0, 0.8)
+    n1.raw_onset, n1.raw_offset = 3.65, 3.9
+    n2 = Note(64, 3.75, 4.0, 0.8)
+    n2.raw_onset, n2.raw_offset = 4.65, 4.9   # afastado - nao e acorde real
+    voice.add_note(n1)
+    voice.add_note(n2)
+    piece.add_voice(voice)
+
+    quantizer._resolve_note_collisions(voice, piece, 4, signaler)
+
+    assert len(voice.notes) == 2
+    assert voice.notes[1].onset == pytest.approx(4.0)
+
+def test_resolve_note_collisions_funde_notas_quando_empurrao_ultrapassaria_ultimo_compasso():
+    quantizer = Quantizer()
+    signaler = Signaler()
+    piece = _single_measure_piece()
+    voice = Voice()
+    n1 = Note(60, 3.75, 4.0, 0.8)
+    n1.raw_onset, n1.raw_offset = 3.65, 3.9
+    n2 = Note(64, 3.75, 4.2, 0.8)
+    n2.raw_onset, n2.raw_offset = 4.65, 5.1   # afastado - nao e acorde real
+    voice.add_note(n1)
+    voice.add_note(n2)
+    piece.add_voice(voice)
+
+    quantizer._resolve_note_collisions(voice, piece, 4, signaler)
+
+    assert len(voice.notes) == 1
+    merged = voice.notes[0]
+    assert merged.pitch == 60
+    assert merged.onset == pytest.approx(3.75)
+    assert merged.offset == pytest.approx(4.2)
+
+def test_resolve_note_collisions_notas_fundidas_preservam_pitch_e_confianca_conforme_unir_grupo():
+    quantizer = Quantizer()
+    signaler = Signaler()
+    piece = _single_measure_piece()
+    voice = Voice()
+    n1 = Note(60, 3.75, 4.0, 0.8, reliability_existence=0.9)
+    n1.raw_onset, n1.raw_offset = 3.65, 3.9
+    n2 = Note(64, 3.75, 4.2, 0.6, reliability_existence=0.7)
+    n2.raw_onset, n2.raw_offset = 4.65, 5.1
+    voice.add_note(n1)
+    voice.add_note(n2)
+    piece.add_voice(voice)
+
+    quantizer._resolve_note_collisions(voice, piece, 4, signaler)
+
+    merged = voice.notes[0]
+    assert merged.magnitude == pytest.approx(0.8)          # max
+    assert merged.reliability_existence == pytest.approx(0.7)   # min
