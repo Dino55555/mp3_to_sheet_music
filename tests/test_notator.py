@@ -178,19 +178,27 @@ def test_grafar_altura_nota_diatonica_ignora_direcao_melodica():
     assert spelling_ascending == PitchSpelling('F', 1, 4)
     assert spelling_descending == PitchSpelling('F', 1, 4)
 
-def test_grafar_altura_cromatica_ascendente_usa_sustenido():
+@pytest.mark.parametrize("pitch_class,expected_letter,expected_alteration", [
+    (1, 'C', 1), (3, 'D', 1), (6, 'F', 1), (8, 'G', 1), (10, 'A', 1),
+])
+def test_grafar_altura_cromatica_ascendente_usa_sustenido(pitch_class, expected_letter, expected_alteration):
     key_signature = KeySignature(0, "C", TonalMode.MAJOR)
 
-    spelling = spell_pitch(61, key_signature, 'ascending')
+    spelling = spell_pitch(60 + pitch_class, key_signature, 'ascending')
 
-    assert spelling == PitchSpelling('C', 1, 4)
+    assert spelling.letter_class == expected_letter
+    assert spelling.alteration == expected_alteration
 
-def test_grafar_altura_cromatica_descendente_usa_bemol():
+@pytest.mark.parametrize("pitch_class,expected_letter,expected_alteration", [
+    (1, 'D', -1), (3, 'E', -1), (6, 'G', -1), (8, 'A', -1), (10, 'B', -1),
+])
+def test_grafar_altura_cromatica_descendente_usa_bemol(pitch_class, expected_letter, expected_alteration):
     key_signature = KeySignature(0, "C", TonalMode.MAJOR)
 
-    spelling = spell_pitch(61, key_signature, 'descending')
+    spelling = spell_pitch(60 + pitch_class, key_signature, 'descending')
 
-    assert spelling == PitchSpelling('D', -1, 4)
+    assert spelling.letter_class == expected_letter
+    assert spelling.alteration == expected_alteration
 
 def test_grafar_altura_cromatica_sem_direcao_usa_sustenido_por_padrao():
     key_signature = KeySignature(0, "C", TonalMode.MAJOR)
@@ -292,3 +300,59 @@ def test_orquestrador_completo_ate_aqui_integra_corretamente():
         if letter is not None:
             assert note.graphy.letter_class == letter
             assert note.graphy.alteration == alterations[letter]
+
+def test_grafar_altura_cromatica_em_fa_maior_nao_levanta_key_error():
+    key_signature = KeySignature(-1, "F", TonalMode.MAJOR)   # 1 bemol
+
+    spelling = spell_pitch(71, key_signature, 'ascending')   # B4, cromatico em Fa maior
+
+    assert spelling.letter_class == 'B'
+    assert spelling.alteration == 0
+
+@pytest.mark.parametrize("pitch_class,direction,expected_letter,expected_alteration", [
+    (1, 'ascending', 'C', 1), (1, 'descending', 'D', -1),
+    (3, 'ascending', 'D', 1), (3, 'descending', 'E', -1),
+    (6, 'ascending', 'F', 1), (6, 'descending', 'G', -1),
+    (8, 'ascending', 'G', 1), (8, 'descending', 'A', -1),
+    (10, 'ascending', 'A', 1), (10, 'descending', 'B', -1),
+])
+def test_letra_cromatica_por_direcao_cobre_as_12_classes_sob_do_maior(pitch_class, direction, expected_letter, expected_alteration):
+    from music_theory import _chromatic_letter_by_direction
+    key_signature = KeySignature(0, "C", TonalMode.MAJOR)
+
+    letter, alteration = _chromatic_letter_by_direction(pitch_class, key_signature, direction)
+
+    assert letter == expected_letter
+    assert alteration == expected_alteration
+
+@pytest.mark.parametrize("pitch_class,direction,expected_letter,expected_alteration", [
+    (1, 'ascending', 'C', 1), (1, 'descending', 'D', -1),
+    (3, 'ascending', 'D', 1), (3, 'descending', 'E', -1),
+    (6, 'ascending', 'F', 1), (6, 'descending', 'G', -1),
+    (8, 'ascending', 'G', 1), (8, 'descending', 'A', -1),
+    (11, 'ascending', 'B', 0), (11, 'descending', 'C', -1),
+])
+def test_letra_cromatica_por_direcao_cobre_as_12_classes_sob_fa_maior(pitch_class, direction, expected_letter, expected_alteration):
+    from music_theory import _chromatic_letter_by_direction
+    key_signature = KeySignature(-1, "F", TonalMode.MAJOR)
+
+    letter, alteration = _chromatic_letter_by_direction(pitch_class, key_signature, direction)
+
+    assert letter == expected_letter
+    assert alteration == expected_alteration
+
+@pytest.mark.parametrize("pitch_class,direction,expected_letter,expected_alteration", [
+    (0, 'ascending', 'B', 1), (0, 'descending', 'C', 0),
+    (3, 'ascending', 'D', 1), (3, 'descending', 'E', -1),
+    (5, 'ascending', 'E', 1), (5, 'descending', 'F', 0),
+    (8, 'ascending', 'G', 1), (8, 'descending', 'A', -1),
+    (10, 'ascending', 'A', 1), (10, 'descending', 'B', -1),
+])
+def test_letra_cromatica_por_direcao_cobre_as_12_classes_sob_re_maior(pitch_class, direction, expected_letter, expected_alteration):
+    from music_theory import _chromatic_letter_by_direction
+    key_signature = KeySignature(2, "D", TonalMode.MAJOR)
+
+    letter, alteration = _chromatic_letter_by_direction(pitch_class, key_signature, direction)
+
+    assert letter == expected_letter
+    assert alteration == expected_alteration

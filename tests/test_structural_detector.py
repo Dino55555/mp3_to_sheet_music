@@ -596,7 +596,7 @@ def test_cobrir_notas_alem_do_ultimo_compasso_nao_altera_nada_dentro_do_limiar()
     piece = Piece(instrument=Instrument.piano())
     voice = Voice()
     voice.add_note(Note(60, 0.0, 1.0, 0.8))
-    voice.add_note(Note(62, 3.5, 4.5, 0.8))
+    voice.add_note(Note(62, 3.5, 4.0, 0.8))   #termina exatamente no fim do compasso - gap zero
     piece.add_voice(voice)
     measures = [
         Compass(1, 0.0, 4.0, TimeSignature(4, 4), KeySignature(0, "C", TonalMode.MAJOR), False)
@@ -605,6 +605,7 @@ def test_cobrir_notas_alem_do_ultimo_compasso_nao_altera_nada_dentro_do_limiar()
     result = detector._cover_notes_beyond_last_measure(piece, measures, signaler)
 
     assert len(result) == 1
+    assert result[0].end_time == pytest.approx(4.0)
     assert signaler.all() == []
 
 def test_compasso_de_cauda_marcado_como_tempo_livre():
@@ -685,3 +686,21 @@ def test_todas_as_notas_da_peca_pertencem_a_algum_compasso_apos_processar():
 
     for note in result.all_notes():
         assert result.compass_at_instant(note.onset) is not None
+
+def test_cobrir_notas_alem_do_ultimo_compasso_estende_compasso_existente_para_gap_pequeno_positivo():
+    detector = StructuralDetector()
+    signaler = Signaler()
+    piece = Piece(instrument=Instrument.piano())
+    voice = Voice()
+    voice.add_note(Note(60, 0.0, 1.0, 0.8))
+    voice.add_note(Note(62, 3.5, 4.5, 0.8))
+    piece.add_voice(voice)
+    measures = [
+        Compass(1, 0.0, 4.0, TimeSignature(4, 4), KeySignature(0, "C", TonalMode.MAJOR), False)
+    ]
+
+    result = detector._cover_notes_beyond_last_measure(piece, measures, signaler)
+
+    assert len(result) == 1
+    assert result[0].end_time == pytest.approx(4.5)
+    assert signaler.all() == []

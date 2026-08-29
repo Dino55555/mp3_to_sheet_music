@@ -184,10 +184,10 @@ class StructuralDetector:
     def _cover_notes_beyond_last_measure(
         self, piece: Piece, measures: list[Compass], signaler: Signaler
     ) -> list[Compass]:
-        #Par simetrico de _detect_and_adjust_pickup, no fim da peca: quando
-        #o Beat This! perde confianca ritmica antes do Basic Pitch parar de
-        #detectar notas, um compasso novo (nao uma extensao artificial do
-        #ultimo) cobre o conteudo remanescente, marcado como tempo livre
+        #Par simetrico de _detect_and_adjust_pickup, no fim da peca. A
+        #condicao de entrada e "existe nota fora da cobertura real?", nao
+        #"o gap e grande?" - as duas perguntas sao diferentes, e o gap so
+        #decide QUAL das duas correcoes aplicar, nao SE aplicar alguma
         if not measures:
             return measures
 
@@ -197,11 +197,20 @@ class StructuralDetector:
 
         last_note_offset = max(note.offset for note in notes)
         last_measure = measures[-1]
+
+        if last_note_offset <= last_measure.end_time:
+            return measures
+
         gap = last_note_offset - last_measure.end_time
 
         if gap <= TAIL_GAP_THRESHOLD_SECONDS:
+            #Folga pequena: extensao cosmetica do proprio ultimo compasso,
+            #em vez de criar um compasso novo so para uma folga minima
+            last_measure.end_time = last_note_offset
             return measures
 
+        #Folga grande: um compasso novo, nao esticar o existente (evita um
+        #compasso desproporcionalmente mais longo que os vizinhos)
         tail_measure = Compass(
             last_measure.index + 1,
             last_measure.end_time,

@@ -15,24 +15,9 @@ TONIC_NAMES: tuple[str, ...] = (
     "F#", "G", "G#", "A", "A#", "B",
 )
 
-# Círculo de quintas: quantidade de acidentes por tônica maior.
-# Positivo = sustenidos, negativo = bemóis, zero = nenhum acidente
-# (convenção MusicXML, fixada no Documento 7 da Fase 7).
-# Índice 6 (Fá#/Solb) é o único empate exato do círculo (6 sustenidos
-# vs. 6 bemóis); resolvido para o lado dos sustenidos (Fá#).
 _MAJOR_TONIC_ACCIDENTS: dict[int, int] = {
-    0: 0,     # C
-    7: 1,     # G
-    2: 2,     # D
-    9: 3,     # A
-    4: 4,     # E
-    11: 5,    # B
-    6: 6,     # F#
-    1: -5,    # Db
-    8: -4,    # Ab
-    3: -3,    # Eb
-    10: -2,   # Bb
-    5: -1,    # F
+    0: 0, 7: 1, 2: 2, 9: 3, 4: 4, 11: 5, 6: 6,
+    1: -5, 8: -4, 3: -3, 10: -2, 5: -1,
 }
 
 
@@ -49,7 +34,6 @@ class PitchClassHistogram:
 
     @staticmethod
     def from_notes(notes: list[Note]) -> "PitchClassHistogram":
-        #Soma a duração de cada nota no índice correspondente (pitch % 12)
         weights = [0.0] * 12
         for note in notes:
             weights[note.pitch % 12] += note.duration()
@@ -57,7 +41,6 @@ class PitchClassHistogram:
 
 
 def most_likely_major_tonic(histogram: PitchClassHistogram) -> int:
-    #Testa as 12 rotações da coleção diatônica maior contra o histograma
     best_tonic = 0
     best_score = -1.0
     for tonic in range(12):
@@ -76,7 +59,6 @@ def choose_mode(
     major_tonic: int,
     last_significant_note: Optional[int],
 ) -> Optional[tuple[int, TonalMode]]:
-    #Implementa B5+B7: pondera nota final e peso real da sensível elevada
     total_weight = sum(histogram.weights)
     minor_tonic = (major_tonic - 3) % 12
     raised_leading_tone = (minor_tonic + 11) % 12
@@ -91,7 +73,6 @@ def choose_mode(
         elif last_significant_note == minor_tonic:
             minor_weight += total_weight
 
-    #Peso real da sensível no histograma - nunca presumido
     minor_weight += histogram.weight_of(raised_leading_tone)
 
     if total_weight == 0.0:
@@ -110,8 +91,6 @@ def accidents_of_major_tonic(major_tonic: int) -> int:
     return _MAJOR_TONIC_ACCIDENTS[major_tonic % 12]
 
 
-# --- Fase 15: grafia de altura (C1/C4/C5) ---
-
 NATURAL_PITCH_CLASS: dict[str, int] = {
     'C': 0, 'D': 2, 'E': 4, 'F': 5, 'G': 7, 'A': 9, 'B': 11,
 }
@@ -119,19 +98,8 @@ NATURAL_PITCH_CLASS: dict[str, int] = {
 SHARP_ORDER: tuple[str, ...] = ('F', 'C', 'G', 'D', 'A', 'E', 'B')
 FLAT_ORDER: tuple[str, ...] = ('B', 'E', 'A', 'D', 'G', 'C', 'F')
 
-#As 5 classes de altura "pretas", mapeadas para a letra natural imediatamente
-#abaixo (uso em contexto ascendente / sem direção) e imediatamente acima
-#(uso em contexto descendente)
-SHARP_LETTER: dict[int, str] = {
-    1: 'C', 3: 'D', 6: 'F', 8: 'G', 10: 'A',
-}
-FLAT_LETTER: dict[int, str] = {
-    1: 'D', 3: 'E', 6: 'G', 8: 'A', 10: 'B',
-}
-
 
 def key_signature_alterations(key_signature: KeySignature) -> dict[str, int]:
-    #As 7 letras com sua alteração conforme a quantidade de acidentes da armadura
     alterations = {letter: 0 for letter in NATURAL_PITCH_CLASS}
     quantity = key_signature.accidents_qunatity
 
@@ -146,12 +114,39 @@ def key_signature_alterations(key_signature: KeySignature) -> dict[str, int]:
 
 
 def diatonic_letter_for(pitch_class: int, alterations: dict[str, int]) -> Optional[str]:
-    #Testa exatamente as 7 letras (nunca as 12 classes de altura diretamente)
     target = pitch_class % 12
     for letter, natural_class in NATURAL_PITCH_CLASS.items():
         if (natural_class + alterations.get(letter, 0)) % 12 == target:
             return letter
     return None
+
+
+def _chromatic_letter_by_direction(
+    pitch_class: int, key_signature: KeySignature, direction: Optional[str]
+) -> tuple[str, int]:
+    #Substitui as antigas tabelas fixas LETRA_SUSTENIDO/LETRA_BEMOL
+    #(corretas apenas sob Do maior): "cromatico" e relativo a armadura, nao
+    #uma propriedade fixa das 12 classes de altura. As 7 letras, ajustadas
+    #pela armadura, sempre cobrem exatamente as posicoes de uma escala
+    #maior (intervalos de 1 ou 2 semitons entre graus consecutivos) -
+    #entao qualquer classe fora dessas 7 sempre tem uma letra imediatamente
+    #abaixo e uma imediatamente acima, para qualquer armadura valida
+    alterations = key_signature_alterations(key_signature)
+    armor_classes = {
+        letter: (NATURAL_PITCH_CLASS[letter] + alterations[letter]) % 12
+        for letter in NATURAL_PITCH_CLASS
+    }
+
+    if direction == 'descending':
+        target_armor_class = (pitch_class + 1) % 12
+        extra_alteration = -1
+    else:
+        target_armor_class = (pitch_class - 1) % 12
+        extra_alteration = 1
+
+    letter = next(l for l, pc in armor_classes.items() if pc == target_armor_class)
+    alteration = alterations[letter] + extra_alteration
+    return letter, alteration
 
 
 def spell_pitch(
@@ -166,11 +161,5 @@ def spell_pitch(
         return PitchSpelling(letter, alterations.get(letter, 0), octave)
 
     #C4/C5: nota cromática - direção melódica decide entre sustenido e bemol
-    if melodic_direction == 'descending':
-        letter = FLAT_LETTER[pitch_class]
-        alteration = -1
-    else:
-        letter = SHARP_LETTER[pitch_class]
-        alteration = 1
-
+    letter, alteration = _chromatic_letter_by_direction(pitch_class, key_signature, melodic_direction)
     return PitchSpelling(letter, alteration, octave)
