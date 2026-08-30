@@ -101,7 +101,7 @@ def process_file(mp3_path: str, output_directory: str, config: Optional[Config] 
 
     #Fora do Orquestrador: exportar e saida, nao transformacao - nao
     #devolve uma Peca, nao implementa o mesmo protocolo
-    MusicXMLExporter().export(piece, musicxml_path, signaler, report_path)
+    MusicXMLExporter().export(piece, musicxml_path, signaler, report_path, config)
     package_mxl(musicxml_path, mxl_path)
 
     return ProcessingResult(

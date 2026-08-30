@@ -12,6 +12,7 @@ from models.pitch_spelling import PitchSpelling
 from models.signaling import (Signaling, SignalingCategory, SeverityLevel)
 from Compass.piece import Piece
 from Compass.instrument import Instrument
+from config import Config
 from signaling.signaler import Signaler
 from tests.fixtures import (
     piece_ready_to_export,
@@ -57,6 +58,31 @@ def test_offsets_acumulados_soma_duracoes_em_sequencia():
 
     assert offsets == {1: 0.0, 2: 4.0, 3: 8.0}
 
+def test_offsets_acumulados_nao_depende_de_duracao_em_segundos():
+    exporter = MusicXMLExporter()
+    piece = Piece(instrument=Instrument.piano())
+    #duracoes de compasso "feias", tipicas de BPM nao-redondo derivado de
+    #batida real - a soma acumulada deve continuar exata, sem envolver
+    #compasso.duracao_em_segundos() em nenhum momento
+    c1 = Compass(1, 0.0, 1.9387234, TimeSignature(4, 4), KeySignature(0, "C", TonalMode.MAJOR))
+    c2 = Compass(2, 1.9387234, 4.0512891, TimeSignature(4, 4), KeySignature(0, "C", TonalMode.MAJOR))
+    c3 = Compass(3, 4.0512891, 5.7734512, TimeSignature(3, 4), KeySignature(0, "C", TonalMode.MAJOR))
+    piece.add_compass(c1)
+    piece.add_compass(c2)
+    piece.add_compass(c3)
+
+    offsets = exporter._cumulative_offsets(piece)
+
+    assert offsets == {1: 0.0, 2: 4.0, 3: 8.0}
+
+def test_arredondar_para_passo_de_grid_recupera_fracao_exata_a_partir_de_ruido_de_ponto_flutuante():
+    exporter = MusicXMLExporter()
+    config = Config()   # divisions_per_beat=4, passo=0.25
+
+    assert exporter._round_to_grid_step(0.5721830985915494, config, False) == pytest.approx(0.5)
+    assert exporter._round_to_grid_step(1.2499999999999822, config, False) == pytest.approx(1.25)
+    assert exporter._round_to_grid_step(0.0788690476190478, config, False) == pytest.approx(0.0)
+
 def test_pitch_m21_constroi_pitch_correto_para_nota_diatonica():
     exporter = MusicXMLExporter()
     spelling = PitchSpelling('F', 0, 4)
@@ -85,7 +111,7 @@ def test_nota_m21_converte_duracao_para_quarterlength_corretamente():
     exporter = MusicXMLExporter()
     note = _note_with_graphy(60, 0.0, 1.5, 'C', 0, 4)
 
-    m21_note = exporter._m21_note(note, 2.0)
+    m21_note = exporter._m21_note(note, 2.0, Config(), False)
 
     assert m21_note.quarterLength == pytest.approx(3.0)
 
@@ -94,24 +120,47 @@ def test_nota_m21_adiciona_articulacao_staccato_quando_marcado():
     note = _note_with_graphy(60, 0.0, 0.5, 'C', 0, 4)
     note.staccato = True
 
-    m21_note = exporter._m21_note(note, 1.0)
+    m21_note = exporter._m21_note(note, 1.0, Config(), False)
 
     assert len(m21_note.articulations) == 1
     assert m21_note.articulations[0].name == 'staccato'
+
+def test_nota_m21_quarterlength_nunca_e_inexpressible_com_compasso_de_bpm_irregular():
+    from music21 import duration as m21_duration
+    exporter = MusicXMLExporter()
+    config = Config()
+
+    #duracoes exatas relatadas como problematicas contra audio real
+    problematic_durations_ql = [
+        0.5721830985915494,
+        0.0788690476190478,
+        1.5160876132930512,
+        1.5889865924092046,
+        1.0889865924092563,
+        2.4517658127080635,
+    ]
+
+    for raw_ql in problematic_durations_ql:
+        note = _note_with_graphy(60, 0.0, raw_ql, 'C', 0, 4)
+        m21_note = exporter._m21_note(note, 1.0, config, False)
+        d = m21_duration.Duration()
+        d.quarterLength = m21_note.quarterLength
+        assert d.type not in ('inexpressible', 'zero')
 
 def test_construir_parte_insere_clave_correta_conforme_papel_da_voz():
     exporter = MusicXMLExporter()
     piece = Piece(instrument=Instrument.piano())
     piece.add_compass(Compass(1, 0.0, 4.0, TimeSignature(4, 4), KeySignature(0, "C", TonalMode.MAJOR)))
     offsets = exporter._cumulative_offsets(piece)
+    config = Config()
 
     melody_voice = Voice(paper=PaperVoice.MELODY)
     melody_voice.add_note(_note_with_graphy(60, 0.0, 4.0, 'C', 0, 4))
     accompaniment_voice = Voice(paper=PaperVoice.ACCOMPANIMENT)
     accompaniment_voice.add_note(_note_with_graphy(48, 0.0, 4.0, 'C', 0, 3))
 
-    melody_part, _ = exporter._build_part(melody_voice, piece, offsets)
-    accompaniment_part, _ = exporter._build_part(accompaniment_voice, piece, offsets)
+    melody_part, _ = exporter._build_part(melody_voice, piece, offsets, config)
+    accompaniment_part, _ = exporter._build_part(accompaniment_voice, piece, offsets, config)
 
     melody_measure = melody_part.getElementsByClass(stream.Measure)[0]
     accompaniment_measure = accompaniment_part.getElementsByClass(stream.Measure)[0]
@@ -133,7 +182,7 @@ def test_construir_parte_insere_formula_apenas_quando_muda():
     voice.add_note(_note_with_graphy(64, 3.5, 5.0, 'E', 0, 4))
     offsets = exporter._cumulative_offsets(piece)
 
-    part, _ = exporter._build_part(voice, piece, offsets)
+    part, _ = exporter._build_part(voice, piece, offsets, Config())
     measures = part.getElementsByClass(stream.Measure)
 
     assert measures[0].timeSignature is not None
@@ -156,7 +205,7 @@ def test_construir_parte_insere_armadura_apenas_quando_muda():
     voice.add_note(_note_with_graphy(64, 4.0, 6.0, 'E', 0, 4))
     offsets = exporter._cumulative_offsets(piece)
 
-    part, _ = exporter._build_part(voice, piece, offsets)
+    part, _ = exporter._build_part(voice, piece, offsets, Config())
     measures = part.getElementsByClass(stream.Measure)
 
     assert measures[0].keySignature is not None
@@ -170,7 +219,7 @@ def test_construir_parte_nota_cruzando_compasso_vira_notas_ligadas_apos_makeNota
     voice = piece.voices[0]
     offsets = exporter._cumulative_offsets(piece)
 
-    part, _ = exporter._build_part(voice, piece, offsets)
+    part, _ = exporter._build_part(voice, piece, offsets, Config())
     measures = part.getElementsByClass(stream.Measure)
 
     assert len(measures) == 2
@@ -183,11 +232,29 @@ def test_construir_parte_nota_cruzando_compasso_vira_notas_ligadas_apos_makeNota
     assert m2_notes[0].tie.type == 'stop'
     assert m1_notes[-1].quarterLength + m2_notes[0].quarterLength == pytest.approx(2.0)
 
+def test_construir_parte_posicao_de_nota_e_exata_sob_bpm_irregular():
+    exporter = MusicXMLExporter()
+    piece = Piece(instrument=Instrument.piano())
+    #compasso com duracao "feia", tipico de BPM real nao-redondo
+    compass = Compass(1, 0.0, 1.8734129, TimeSignature(4, 4), KeySignature(0, "C", TonalMode.MAJOR))
+    piece.add_compass(compass)
+    voice = Voice(paper=PaperVoice.MELODY)
+    #nota comecando exatamente no 3o tempo (indice de grid 8 de 16, ql=2.0)
+    note_onset_seconds = compass.begin_time + (2.0 / 4.0) * (compass.duration())
+    note = _note_with_graphy(60, note_onset_seconds, compass.end_time, 'C', 0, 4)
+    voice.add_note(note)
+    offsets = exporter._cumulative_offsets(piece)
+
+    part, note_map = exporter._build_part(voice, piece, offsets, Config())
+
+    m21_note = note_map[id(note)]
+    assert m21_note.offset == pytest.approx(2.0)
+
 def test_construir_score_tem_uma_part_por_voz():
     exporter = MusicXMLExporter()
     piece = piece_ready_to_export()
 
-    score, note_map = exporter._build_score(piece)
+    score, note_map = exporter._build_score(piece, Config())
 
     assert len(score.getElementsByClass(stream.Part)) == 2
     assert len(note_map) == 7
@@ -199,7 +266,7 @@ def test_exportar_produz_arquivo_valido_no_disco(tmp_path):
     score_path = tmp_path / "saida.musicxml"
     report_path = tmp_path / "relatorio.txt"
 
-    exporter.export(piece, str(score_path), signaler, str(report_path))
+    exporter.export(piece, str(score_path), signaler, str(report_path), Config())
 
     assert score_path.exists()
     reloaded = converter.parse(str(score_path))
@@ -212,12 +279,45 @@ def test_exportar_arquivo_tem_numero_de_notas_esperado_por_parte(tmp_path):
     score_path = tmp_path / "saida.musicxml"
     report_path = tmp_path / "relatorio.txt"
 
-    exporter.export(piece, str(score_path), signaler, str(report_path))
+    exporter.export(piece, str(score_path), signaler, str(report_path), Config())
     reloaded = converter.parse(str(score_path))
     parts = list(reloaded.getElementsByClass(stream.Part))
 
     notes_per_part = sorted(len(list(part.recurse().notes)) for part in parts)
     assert notes_per_part == [3, 4]
+
+def test_exportar_musicxml_com_bpm_irregular_e_valido_via_music21(tmp_path):
+    exporter = MusicXMLExporter()
+    piece = Piece(instrument=Instrument.piano())
+    #serie de compassos com duracoes irregulares, tipico de rastreamento
+    #de batida real
+    compasses = []
+    start = 0.0
+    for i, duration in enumerate([1.9387234, 2.0512891, 1.7734512, 2.1123457]):
+        end = start + duration
+        compasses.append(Compass(i + 1, start, end, TimeSignature(4, 4), KeySignature(0, "C", TonalMode.MAJOR)))
+        start = end
+    for compass in compasses:
+        piece.add_compass(compass)
+
+    voice = Voice(paper=PaperVoice.MELODY)
+    for compass in compasses:
+        step = compass.duration() / 4.0
+        for beat_index, pitch in enumerate([60, 62, 64, 65]):
+            onset = compass.begin_time + beat_index * step
+            offset = onset + step
+            voice.add_note(_note_with_graphy(pitch, onset, offset, 'C', 0, 4))
+    piece.add_voice(voice)
+
+    signaler = Signaler()
+    score_path = tmp_path / "saida.musicxml"
+    report_path = tmp_path / "relatorio.txt"
+
+    exporter.export(piece, str(score_path), signaler, str(report_path), Config())
+
+    reloaded = converter.parse(str(score_path))
+    assert isinstance(reloaded, stream.Score)
+    assert len(list(reloaded.recurse().notes)) > 0
 
 def test_construir_parte_retorna_mapa_de_notas_com_id_correto():
     exporter = MusicXMLExporter()
@@ -228,7 +328,7 @@ def test_construir_parte_retorna_mapa_de_notas_com_id_correto():
     voice.add_note(note)
     offsets = exporter._cumulative_offsets(piece)
 
-    part, note_map = exporter._build_part(voice, piece, offsets)
+    part, note_map = exporter._build_part(voice, piece, offsets, Config())
 
     assert id(note) in note_map
     assert note_map[id(note)] in list(part.recurse().notes)
@@ -238,7 +338,7 @@ def test_inserir_indicacoes_de_feel_texto_para_tempo_livre():
     piece = peca_com_compasso_rubato_e_swing()
     voice = piece.voices[0]
     offsets = exporter._cumulative_offsets(piece)
-    part, _ = exporter._build_part(voice, piece, offsets)
+    part, _ = exporter._build_part(voice, piece, offsets, Config())
 
     exporter._insert_feel_indications(part, piece, offsets)
 
@@ -252,7 +352,7 @@ def test_inserir_indicacoes_de_feel_texto_para_swing():
     piece = peca_com_compasso_rubato_e_swing()
     voice = piece.voices[0]
     offsets = exporter._cumulative_offsets(piece)
-    part, _ = exporter._build_part(voice, piece, offsets)
+    part, _ = exporter._build_part(voice, piece, offsets, Config())
 
     exporter._insert_feel_indications(part, piece, offsets)
 
@@ -272,7 +372,7 @@ def test_inserir_indicacoes_de_feel_prioriza_tempo_livre_quando_ambos_presentes(
     voice = Voice(paper=PaperVoice.MELODY)
     voice.add_note(_note_with_graphy(60, 0.0, 4.0, 'C', 0, 4))
     offsets = exporter._cumulative_offsets(piece)
-    part, _ = exporter._build_part(voice, piece, offsets)
+    part, _ = exporter._build_part(voice, piece, offsets, Config())
 
     exporter._insert_feel_indications(part, piece, offsets)
 
@@ -286,7 +386,7 @@ def test_inserir_indicacoes_de_feel_ignora_compasso_sem_nenhum_dos_dois():
     piece = peca_com_compasso_rubato_e_swing()
     voice = piece.voices[0]
     offsets = exporter._cumulative_offsets(piece)
-    part, _ = exporter._build_part(voice, piece, offsets)
+    part, _ = exporter._build_part(voice, piece, offsets, Config())
 
     exporter._insert_feel_indications(part, piece, offsets)
 
@@ -309,7 +409,7 @@ def test_aplicar_marcacao_visual_define_cor_e_parenteses():
     note = _note_with_graphy(60, 0.0, 4.0, 'C', 0, 4)
     voice.add_note(note)
     offsets = exporter._cumulative_offsets(piece)
-    part, note_map = exporter._build_part(voice, piece, offsets)
+    part, note_map = exporter._build_part(voice, piece, offsets, Config())
 
     signaling = Signaling(SignalingCategory.IMPOSSIBLE_PASSAGE, SeverityLevel.REQUIRES_DECISION, "teste", 1, note)
     exporter._apply_visual_marking(note_map, [signaling])
@@ -326,7 +426,7 @@ def test_aplicar_marcacao_visual_ignora_sinalizacao_sem_nota():
     note = _note_with_graphy(60, 0.0, 4.0, 'C', 0, 4)
     voice.add_note(note)
     offsets = exporter._cumulative_offsets(piece)
-    part, note_map = exporter._build_part(voice, piece, offsets)
+    part, note_map = exporter._build_part(voice, piece, offsets, Config())
 
     signaling = Signaling(SignalingCategory.AMBIGUOUS_KEY, SeverityLevel.VERIFY, "teste", 1, None)
     exporter._apply_visual_marking(note_map, [signaling])
@@ -349,7 +449,7 @@ def test_exportar_gera_arquivo_de_relatorio_alem_do_musicxml(tmp_path):
     score_path = tmp_path / "saida.musicxml"
     report_path = tmp_path / "relatorio.txt"
 
-    exporter.export(piece, str(score_path), signaler, str(report_path))
+    exporter.export(piece, str(score_path), signaler, str(report_path), Config())
 
     assert score_path.exists()
     assert report_path.exists()
@@ -360,7 +460,6 @@ def test_exportar_gera_arquivo_de_relatorio_alem_do_musicxml(tmp_path):
 
 def test_orquestrador_completo_ate_aqui_integra_corretamente(tmp_path):
     from models.raw_signals import RawSignals
-    from config import Config
     from orchestrator import Orchestrator
     from cleaning.cleaner import Cleaner
     from structure.structural_detector import StructuralDetector
@@ -392,9 +491,6 @@ def test_orquestrador_completo_ate_aqui_integra_corretamente(tmp_path):
     orchestrator.add_stage(PlayabilityChecker())
     result = orchestrator.process(piece)
 
-    #o pipeline ja gera 1 sinalizacao REQUIRES_DECISION organicamente
-    #(o salto impossivel); complementamos de proposito para cobrir os
-    #tres niveis nesta verificacao de integracao ponta a ponta
     melody_voice = next(v for v in result.voices if v.paper is PaperVoice.MELODY)
     first_note = melody_voice.notes[0]
     signaler.register(SignalingCategory.INFERRED_NOTE, SeverityLevel.INFORMATIONAL, "nota inferida de teste", 1, first_note)
@@ -403,14 +499,13 @@ def test_orquestrador_completo_ate_aqui_integra_corretamente(tmp_path):
     exporter = MusicXMLExporter()
     score_path = tmp_path / "saida.musicxml"
     report_path = tmp_path / "relatorio.txt"
-    exporter.export(result, str(score_path), signaler, str(report_path))
+    exporter.export(result, str(score_path), signaler, str(report_path), config)
 
     assert score_path.exists()
     assert report_path.exists()
 
     reloaded = converter.parse(str(score_path))
     notes = sorted(reloaded.recurse().notes, key=lambda n: n.pitch.midi)
-    #a nota C4 (informativa) fica azul; a nota C7 (requer decisao) fica vermelha
     assert notes[0].style.color == SEVERITY_COLORS[SeverityLevel.INFORMATIONAL]
     assert notes[-1].style.color == SEVERITY_COLORS[SeverityLevel.REQUIRES_DECISION]
 
