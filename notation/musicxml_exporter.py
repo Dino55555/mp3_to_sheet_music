@@ -39,19 +39,10 @@ class MusicXMLExporter:
         return quarterlength_per_group / seconds_per_group
 
     def _round_to_grid_step(self, value_ql: float, config: Config, is_compound: bool) -> float:
-        #A mesma divisao por compasso.duracao() usada para converter
-        #segundos em quarterLength nao cancela exatamente em ponto
-        #flutuante quando a duracao do compasso vem de batidas reais
-        #(nao-redondas) - esta funcao recupera a fracao exata que a
-        #aritmetica ja garantia, usando a mesma resolucao de grid que o
-        #Quantizador (Fase 11) usa para construir a grade
         step = (1.5 if is_compound else 1.0) / config.divisions_per_beat
         return round(value_ql / step) * step
 
     def _cumulative_offsets(self, piece: Piece) -> dict[int, float]:
-        #Aritmetica inteira/racional pura - nunca divide por
-        #compasso.duracao_em_segundos(), entao nao ha erro de ponto
-        #flutuante para se acumular ao longo da peca inteira
         offsets: dict[int, float] = {}
         cumulative = 0.0
         for compass in piece.compasses:
@@ -69,10 +60,17 @@ class MusicXMLExporter:
 
     def _m21_note(self, note: Note, factor: float, config: Config, is_compound: bool) -> m21_note_module.Note:
         m21_note_obj = m21_note_module.Note(self._m21_pitch(note.graphy))
-        raw_ql = note.duration() * factor
-        m21_note_obj.quarterLength = self._round_to_grid_step(raw_ql, config, is_compound)
         if note.staccato:
             m21_note_obj.articulations.append(m21_articulations.Staccato())
+
+        if note.is_ornament:
+            #Grace note: nao ocupa quarterLength no fluxo temporal do
+            #compasso - "quanto tempo isso ocupa?" nao se aplica, entao
+            #nenhum arredondamento de grid acontece para ornamentos
+            return m21_note_obj.getGrace()
+
+        raw_ql = note.duration() * factor
+        m21_note_obj.quarterLength = self._round_to_grid_step(raw_ql, config, is_compound)
         return m21_note_obj
 
     def _build_part(
@@ -80,6 +78,8 @@ class MusicXMLExporter:
     ) -> tuple[m21_stream.Part, dict[int, m21_note_module.Note]]:
         part = m21_stream.Part()
         note_map: dict[int, m21_note_module.Note] = {}
+        note_offsets: dict[int, float] = {}
+        pending_ornaments: list[tuple[Note, float, float, bool]] = []
 
         m21_clef_obj = m21_clef.TrebleClef() if voice.clef is Clef.SOL else m21_clef.BassClef()
         part.insert(0, m21_clef_obj)
@@ -99,13 +99,39 @@ class MusicXMLExporter:
                 part.insert(offset, m21_key.KeySignature(compass.armor.accidents_qunatity))
 
             for note in voice.notes_on_interval(compass.begin_time, compass.end_time):
+                if note.is_ornament:
+                    #Adiada para a segunda passada: precisa do offset ja
+                    #calculado da nota principal, que pode nao ter sido
+                    #processada ainda nesta passada
+                    pending_ornaments.append((note, offset, factor, is_compound))
+                    continue
+
                 raw_position = (note.onset - compass.begin_time) * factor
                 note_offset = offset + self._round_to_grid_step(raw_position, config, is_compound)
                 m21_note_obj = self._m21_note(note, factor, config, is_compound)
                 note_map[id(note)] = m21_note_obj
+                note_offsets[id(note)] = note_offset
                 part.insert(note_offset, m21_note_obj)
 
             previous_compass = compass
+
+        #Segunda passada: grace notes vao no mesmo offset da nota principal
+        #(Voz.ornamento_de, Fase 12) - nunca deslocam as notas seguintes,
+        #ja que nao ocupam quarterLength
+        for note, fallback_offset, factor, is_compound in pending_ornaments:
+            m21_note_obj = self._m21_note(note, factor, config, is_compound)
+            note_map[id(note)] = m21_note_obj
+
+            principal_offset = note_offsets.get(note.ornament_of)
+            if principal_offset is None:
+                #Nota principal nao encontrada (nao deveria acontecer em
+                #uso normal) - usa a propria posicao quantizada da nota
+                #como salvaguarda, para nao perder a nota silenciosamente
+                compass = piece.compass_at_instant(note.onset)
+                raw_position = (note.onset - compass.begin_time) * factor
+                principal_offset = fallback_offset + self._round_to_grid_step(raw_position, config, is_compound)
+
+            part.insert(principal_offset, m21_note_obj)
 
         part.makeNotation(inPlace=True)
         return part, note_map

@@ -125,27 +125,27 @@ def test_nota_m21_adiciona_articulacao_staccato_quando_marcado():
     assert len(m21_note.articulations) == 1
     assert m21_note.articulations[0].name == 'staccato'
 
-def test_nota_m21_quarterlength_nunca_e_inexpressible_com_compasso_de_bpm_irregular():
-    from music21 import duration as m21_duration
+def test_nota_m21_ornamento_vira_grace_note():
     exporter = MusicXMLExporter()
-    config = Config()
+    #o valor real que expos a lacuna: duracao curta demais para qualquer
+    #fracao de grid, mas correta como ornamento
+    note = _note_with_graphy(60, 0.0, 0.0788690476190478, 'C', 0, 4)
+    note.is_ornament = True
 
-    #duracoes exatas relatadas como problematicas contra audio real
-    problematic_durations_ql = [
-        0.5721830985915494,
-        0.0788690476190478,
-        1.5160876132930512,
-        1.5889865924092046,
-        1.0889865924092563,
-        2.4517658127080635,
-    ]
+    m21_note = exporter._m21_note(note, 1.0, Config(), False)
 
-    for raw_ql in problematic_durations_ql:
-        note = _note_with_graphy(60, 0.0, raw_ql, 'C', 0, 4)
-        m21_note = exporter._m21_note(note, 1.0, config, False)
-        d = m21_duration.Duration()
-        d.quarterLength = m21_note.quarterLength
-        assert d.type not in ('inexpressible', 'zero')
+    assert m21_note.duration.isGrace is True
+    assert m21_note.quarterLength == pytest.approx(0.0)
+
+def test_nota_m21_ornamento_nao_passa_por_arredondamento_de_grid():
+    exporter = MusicXMLExporter()
+    #duracao que, se nao fosse ornamento, arredondaria para algo != 0
+    note = _note_with_graphy(60, 0.0, 0.3, 'C', 0, 4)
+    note.is_ornament = True
+
+    m21_note = exporter._m21_note(note, 1.0, Config(), False)
+
+    assert m21_note.quarterLength == pytest.approx(0.0)
 
 def test_construir_parte_insere_clave_correta_conforme_papel_da_voz():
     exporter = MusicXMLExporter()
@@ -513,3 +513,72 @@ def test_orquestrador_completo_ate_aqui_integra_corretamente(tmp_path):
     assert "REQUER DECISÃO" in report_content
     assert "VERIFICAR" in report_content
     assert "INFORMATIVO" in report_content
+
+def test_construir_parte_grace_note_nao_desloca_offset_das_notas_seguintes():
+    exporter = MusicXMLExporter()
+    piece = Piece(instrument=Instrument.piano())
+    piece.add_compass(Compass(1, 0.0, 4.0, TimeSignature(4, 4), KeySignature(0, "C", TonalMode.MAJOR)))
+    voice = Voice(paper=PaperVoice.MELODY)
+    n1 = _note_with_graphy(60, 0.0, 1.0, 'C', 0, 4)
+    n2 = _note_with_graphy(62, 1.0, 2.0, 'D', 0, 4)
+    ornament = _note_with_graphy(61, 0.95, 1.0, 'C', 1, 4)
+    ornament.is_ornament = True
+    ornament.ornament_of = id(n2)
+    voice.add_note(n1)
+    voice.add_note(n2)
+    voice.add_note(ornament)
+    offsets = exporter._cumulative_offsets(piece)
+
+    part, note_map = exporter._build_part(voice, piece, offsets, Config())
+
+    m21_n2 = note_map[id(n2)]
+    assert m21_n2.offset == pytest.approx(1.0)
+
+def test_construir_parte_grace_note_posicionada_no_offset_da_nota_principal():
+    exporter = MusicXMLExporter()
+    piece = Piece(instrument=Instrument.piano())
+    piece.add_compass(Compass(1, 0.0, 4.0, TimeSignature(4, 4), KeySignature(0, "C", TonalMode.MAJOR)))
+    voice = Voice(paper=PaperVoice.MELODY)
+    n1 = _note_with_graphy(60, 0.0, 1.0, 'C', 0, 4)
+    n2 = _note_with_graphy(62, 1.0, 2.0, 'D', 0, 4)
+    ornament = _note_with_graphy(61, 0.95, 1.0, 'C', 1, 4)
+    ornament.is_ornament = True
+    ornament.ornament_of = id(n2)
+    voice.add_note(n1)
+    voice.add_note(n2)
+    voice.add_note(ornament)
+    offsets = exporter._cumulative_offsets(piece)
+
+    part, note_map = exporter._build_part(voice, piece, offsets, Config())
+
+    m21_ornament = note_map[id(ornament)]
+    m21_n2 = note_map[id(n2)]
+    assert m21_ornament.offset == pytest.approx(m21_n2.offset)
+    assert m21_ornament.duration.isGrace is True
+
+def test_exportar_musicxml_com_ornamento_e_valido_via_music21(tmp_path):
+    exporter = MusicXMLExporter()
+    piece = Piece(instrument=Instrument.piano())
+    piece.add_compass(Compass(1, 0.0, 4.0, TimeSignature(4, 4), KeySignature(0, "C", TonalMode.MAJOR)))
+    voice = Voice(paper=PaperVoice.MELODY)
+    n1 = _note_with_graphy(60, 0.0, 1.0, 'C', 0, 4)
+    n2 = _note_with_graphy(62, 1.0, 2.0, 'D', 0, 4)
+    ornament = _note_with_graphy(61, 0.95, 1.0, 'C', 1, 4)
+    ornament.is_ornament = True
+    ornament.ornament_of = id(n2)
+    voice.add_note(n1)
+    voice.add_note(n2)
+    voice.add_note(ornament)
+    piece.add_voice(voice)
+
+    signaler = Signaler()
+    score_path = tmp_path / "saida.musicxml"
+    report_path = tmp_path / "relatorio.txt"
+
+    exporter.export(piece, str(score_path), signaler, str(report_path), Config())
+
+    reloaded = converter.parse(str(score_path))
+    notes = list(reloaded.recurse().notes)
+    assert len(notes) == 3
+    grace_notes = [n for n in notes if n.duration.isGrace]
+    assert len(grace_notes) == 1

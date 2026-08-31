@@ -810,3 +810,15 @@ def test_resolve_note_collisions_notas_fundidas_preservam_pitch_e_confianca_conf
     merged = voice.notes[0]
     assert merged.magnitude == pytest.approx(0.8)          # max
     assert merged.reliability_existence == pytest.approx(0.7)   # min
+
+def test_classificar_ornamentos_registra_ornamento_de_com_id_da_vizinha():
+    quantizer = Quantizer()
+    piece, voice = grace_note_voice()
+
+    quantizer._classify_ornaments(voice, piece, 4)
+
+    ornament_note = voice.notes[1]
+    assert ornament_note.is_ornament is True
+    assert ornament_note.ornament_of is not None
+    referenced_note = next(n for n in voice.notes if id(n) == ornament_note.ornament_of)
+    assert referenced_note is not ornament_note

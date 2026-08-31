@@ -215,6 +215,7 @@ class Quantizer:
             closest = min(candidates, key=lambda n: note.interval_in_semitones(n))
             if note.interval_in_semitones(closest) <= ORNAMENT_INTERVAL_THRESHOLD_SEMITONES:
                 note.is_ornament = True
+                note.ornament_of = id(closest)
 
     def _detect_trills(self, voice: Voice) -> None:
         return

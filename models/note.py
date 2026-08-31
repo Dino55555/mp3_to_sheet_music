@@ -13,6 +13,7 @@ class Note:
 
     voice: Optional["Voice"] = None
     is_ornament: bool = False
+    ornament_of: Optional[int] = None
     vocal_origin_identified: bool = False
     staccato: bool = False
     graphy: Optional[object] = None
@@ -36,9 +37,6 @@ class Note:
             )
 
     def redefine_time(self, onset: float, offset: float) -> None:
-        #Atribui onset/offset juntos, atomicamente, validando o par completo
-        #antes de aplicar - evita estados intermediarios invalidos que uma
-        #atribuicao de campo isolada poderia produzir
         self._validate_temporal_pair(onset, offset)
         self.onset = onset
         self.offset = offset
