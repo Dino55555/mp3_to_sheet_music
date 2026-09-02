@@ -582,3 +582,12 @@ def test_exportar_musicxml_com_ornamento_e_valido_via_music21(tmp_path):
     assert len(notes) == 3
     grace_notes = [n for n in notes if n.duration.isGrace]
     assert len(grace_notes) == 1
+
+def test_arredondar_para_passo_de_grid_nunca_colapsa_metade_exata_para_zero():
+    exporter = MusicXMLExporter()
+    config = Config()   # passo = 0.25
+
+    #duracao exatamente na metade de um passo de grid - nao e ornamento
+    #(_classificar_ornamentos usa < estrito), mas round() bancario
+    #colapsaria para 0.0 se nao fosse corrigido
+    assert exporter._round_to_grid_step(0.125, config, False) == pytest.approx(0.25)

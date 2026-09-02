@@ -1,4 +1,5 @@
 from __future__ import annotations
+import math
 from music21 import stream as m21_stream
 from music21 import note as m21_note_module
 from music21 import meter as m21_meter
@@ -40,7 +41,7 @@ class MusicXMLExporter:
 
     def _round_to_grid_step(self, value_ql: float, config: Config, is_compound: bool) -> float:
         step = (1.5 if is_compound else 1.0) / config.divisions_per_beat
-        return round(value_ql / step) * step
+        return math.floor(value_ql / step + 0.5) * step
 
     def _cumulative_offsets(self, piece: Piece) -> dict[int, float]:
         offsets: dict[int, float] = {}
@@ -175,3 +176,5 @@ class MusicXMLExporter:
             score.insert(0, part)
             combined_note_map.update(note_map)
         return score, combined_note_map
+
+    
