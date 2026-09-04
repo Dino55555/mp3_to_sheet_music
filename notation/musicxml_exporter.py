@@ -65,13 +65,24 @@ class MusicXMLExporter:
             m21_note_obj.articulations.append(m21_articulations.Staccato())
 
         if note.is_ornament:
-            #Grace note: nao ocupa quarterLength no fluxo temporal do
-            #compasso - "quanto tempo isso ocupa?" nao se aplica, entao
-            #nenhum arredondamento de grid acontece para ornamentos
             return m21_note_obj.getGrace()
 
         raw_ql = note.duration() * factor
-        m21_note_obj.quarterLength = self._round_to_grid_step(raw_ql, config, is_compound)
+        rounded_ql = self._round_to_grid_step(raw_ql, config, is_compound)
+
+        step = (1.5 if is_compound else 1.0) / config.divisions_per_beat
+        if rounded_ql < step:
+            #Rede de seguranca final: depois de ja termos consertado colisao
+            #dentro da mesma nota, colisao entre notas distintas e
+            #arredondamento bancario, o audio real ainda produz, vez ou outra,
+            #um residuo que nenhuma das tres correcoes anteriores cobre - em
+            #vez de continuar cacando a proxima fonte especifica (o Demucs
+            #sendo nao-deterministico garante que sempre havera uma proxima),
+            #esta e uma garantia incondicional: nada mais curto que um passo
+            #de grid chega ao music21
+            rounded_ql = step
+
+        m21_note_obj.quarterLength = rounded_ql
         return m21_note_obj
 
     def _build_part(

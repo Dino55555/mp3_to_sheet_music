@@ -1,0 +1,30 @@
+import sys, tempfile, math
+sys.path.insert(0, ".")
+from signal_extractor.separation import SourceSeparator
+from signal_extractor.note_extraction import NoteExtractor
+
+audio_path = "mp3/Music2.mp3"
+
+with tempfile.TemporaryDirectory() as temp_dir:
+    vocal_path, instrumental_path = SourceSeparator().separate(audio_path, temp_dir)
+    vocal_notes = NoteExtractor().extract(vocal_path)
+
+print(f"Total de notas no stem vocal (direto do Basic Pitch, sem nosso pipeline): {len(vocal_notes)}")
+
+max_time = max(n.offset for n in vocal_notes) if vocal_notes else 0
+window = 10.0
+num_windows = math.ceil(max_time / window) if max_time else 0
+counts = [0] * num_windows
+for n in vocal_notes:
+    idx = int(n.onset // window)
+    if idx < num_windows:
+        counts[idx] += 1
+
+print("\nNotas por janela de 10s:")
+for i, c in enumerate(counts):
+    marker = "  <-- baixa densidade" if c < 3 else ""
+    print(f"  {i*10:4d}s - {(i+1)*10:4d}s: {c} notas{marker}")
+
+print("\nPrimeiras 15 notas detectadas (onset, pitch, duracao):")
+for n in sorted(vocal_notes, key=lambda x: x.onset)[:15]:
+    print(f"  onset={n.onset:.2f}s pitch={n.pitch} dur={n.duration():.2f}s magnitude={n.magnitude:.2f}")

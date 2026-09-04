@@ -1,0 +1,58 @@
+import sys, tempfile
+sys.path.insert(0, ".")
+from complete_pipeline import default_stages
+from signal_extractor.extraction_pipeline import extract_notes_from_mix
+from signal_extractor.rhythmic_detection import BeatDetector
+from signal_extractor.note_extraction import build_initial_piece
+from config import Config
+from signaling.signaler import Signaler
+from orchestrator import Orchestrator
+from notation.musicxml_exporter import MusicXMLExporter
+
+audio_path = "mp3/FictionJunction" \
+".mp3"   # troque para cada musica
+config = Config()
+
+with tempfile.TemporaryDirectory() as temp_dir:
+    notes = extract_notes_from_mix(audio_path, temp_dir)
+raw_signals = BeatDetector().detect(audio_path)
+
+print(f"Notas extraidas antes do pipeline: {len(notes)}")
+print(f"Batidas detectadas: {len(raw_signals.beats)}")
+vocal_notes = sum(1 for n in notes if n.vocal_origin_identified)
+print(f"Notas de origem vocal: {vocal_notes} / {len(notes)}")
+
+piece = build_initial_piece(notes, config.instrument)
+piece.raw_signals = raw_signals
+
+signaler = Signaler()
+orchestrator = Orchestrator(config, signaler)
+for stage in default_stages():
+    orchestrator.add_stage(stage)
+piece = orchestrator.process(piece)
+
+print(f"\nNumero de compassos: {len(piece.compasses)}")
+free_time_count = sum(1 for c in piece.compasses if c.free_time)
+print(f"Compassos em tempo livre: {free_time_count} / {len(piece.compasses)}")
+
+for voice in piece.voices:
+    print(f"\nVoz: paper={voice.paper}, num_notas={len(voice.notes)}")
+
+print(f"\nTotal de notas na peca apos pipeline: {len(piece.all_notes())}")
+
+# checar quarterLength de verdade, nao so segundos
+exporter = MusicXMLExporter()
+from collections import Counter
+ql_counts = Counter()
+for voice in piece.voices:
+    for note in voice.notes:
+        if note.graphy is None:
+            continue
+        compass = piece.compass_at_instant(note.onset)
+        factor = exporter._quarterlength_factor_per_second(compass)
+        raw_ql = note.duration() * factor
+        rounded_ql = exporter._round_to_grid_step(raw_ql, config, compass.formula.is_compound)
+        ql_counts[rounded_ql] += 1
+print("\nDistribuicao de quarterLength (as 10 mais comuns):")
+for ql, count in ql_counts.most_common(10):
+    print(f"  ql={ql}: {count} notas")
