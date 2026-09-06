@@ -1,0 +1,43 @@
+import sys, tempfile, shutil
+sys.path.insert(0, ".")
+from signal_extractor.separation import SourceSeparator
+from signal_extractor.note_extraction import NoteExtractor
+from signal_extractor.note_extraction import build_initial_piece
+from cleaning.cleaner import Cleaner
+from config import Config
+from signaling.signaler import Signaler
+from Compass.instrument import Instrument
+
+audio_path = "mp3/Music2.mp3"
+
+# separar uma vez e guardar o vocals.wav permanentemente, para reuso
+persistent_dir = "vocals_cache"
+import os
+os.makedirs(persistent_dir, exist_ok=True)
+vocal_cache_path = os.path.join(persistent_dir, "music2_vocals.wav")
+
+if not os.path.exists(vocal_cache_path):
+    with tempfile.TemporaryDirectory() as temp_dir:
+        vocal_path, _ = SourceSeparator().separate(audio_path, temp_dir)
+        shutil.copy(vocal_path, vocal_cache_path)
+    print(f"vocals.wav salvo em {vocal_cache_path} - reuse isso nos proximos testes")
+else:
+    print(f"usando vocals.wav ja salvo em {vocal_cache_path}")
+
+notes = NoteExtractor().extract(vocal_cache_path)
+print(f"Notas cruas do Basic Pitch: {len(notes)}")
+
+# rodar so o Limpador, sobre as MESMAS notas cruas
+piece = build_initial_piece(notes, Instrument.piano())
+signaler = Signaler()
+cleaned_piece = Cleaner().process(piece, Config(), signaler)
+print(f"Notas apos Limpador (com harmonicos estendidos): {len(cleaned_piece.all_notes())}")
+
+# checar especificamente as notas de oitava agressiva
+high_notes = [n for n in notes if n.pitch >= 90]
+print(f"\nNotas com pitch >= 90 (MIDI) antes do Limpador: {len(high_notes)}")
+for n in high_notes:
+    print(f"  pitch={n.pitch}, onset={n.onset:.3f}, offset={n.offset:.3f}, magnitude={n.magnitude:.2f}")
+
+high_notes_after = [n for n in cleaned_piece.all_notes() if n.pitch >= 90]
+print(f"\nNotas com pitch >= 90 (MIDI) depois do Limpador: {len(high_notes_after)}")

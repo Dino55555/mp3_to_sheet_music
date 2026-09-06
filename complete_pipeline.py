@@ -22,6 +22,7 @@ from signal_extractor.extraction_pipeline import extract_notes_from_mix
 from signal_extractor.rhythmic_detection import BeatDetector
 from signal_extractor.note_extraction import build_initial_piece
 from mxl_packaging import package_mxl
+from vibrato.vibrato_detector import VibratoDetector
 
 
 class InvalidInputError(Exception):
@@ -111,3 +112,17 @@ def process_file(mp3_path: str, output_directory: str, config: Optional[Config] 
         total_notes=len(piece.all_notes()),
         count_by_severity=_count_by_severity(signaler.all()),
     )
+
+def default_stages() -> list[PipelineStage]:
+    #Unico lugar do projeto que declara a ordem definitiva das 9 etapas
+    return [
+        Cleaner(),
+        StructuralDetector(),
+        VibratoDetector(),
+        VoiceSeparator(),
+        OctaveCorrector(),
+        Quantizer(),
+        CompletenessDetector(),
+        PlayabilityChecker(),
+        Notator(),
+    ]

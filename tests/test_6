@@ -1,0 +1,11 @@
+import sys
+sys.path.insert(0, ".")
+from signal_extractor.note_extraction import NoteExtractor
+
+notes = NoteExtractor().extract("vocals_cache/music2_vocals.wav")
+
+print("Todas as notas entre 16.5s e 18.5s (qualquer altura):")
+for n in sorted(notes, key=lambda x: x.onset):
+    if 16.5 <= n.onset <= 18.5:
+        print(f"  pitch={n.pitch}, onset={n.onset:.3f}, offset={n.offset:.3f}, "
+              f"duracao={n.duration():.3f}, magnitude={n.magnitude:.2f}")

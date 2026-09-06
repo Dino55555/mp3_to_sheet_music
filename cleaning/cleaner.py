@@ -7,7 +7,7 @@ from config import Config
 from signaling.signaler import Signaler
 from music_theory import (PitchClassHistogram, most_likely_major_tonic, choose_mode, MAJOR_SCALE_STEPS, NATURAL_MINOR_SCALE_STEPS)
 
-HARMONIC_INTERVALS: tuple[int, int] = (7, 12)
+HARMONIC_INTERVALS: tuple[int, int] = (7, 12, 19, 24, 28, 31)
 HARMONIC_PENALTY: float = 0.2
 TIME_TOLERANCE: float = 0.05
 SHORT_NOTE_DURATION_THRESHOLD_SECONDS: float = 0.15

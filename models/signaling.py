@@ -15,6 +15,7 @@ class SignalingCategory(Enum):
     UNRESOLVED_COUNTERPOINT = "unresolved_counterpoint"
     IMPOSSIBLE_PASSAGE = "impossible_passage"
     FREE_TIME_APPROXIMATION = "free_time_approximation"
+    POSSIBLE_VIBRATO_FRAGMENTATION = "possible_vibrato_fragmentation"
 
 class SeverityLevel(IntEnum):
     REQUIRES_DECISION = 0

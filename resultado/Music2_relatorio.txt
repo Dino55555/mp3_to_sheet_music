@@ -1,7 +1,7 @@
 Relatório de Sinalizações
 =========================
 
-REQUER DECISÃO (1800)
+REQUER DECISÃO (1764)
 Compasso 2: Salto melódico rápido demais para a mão se reposicionar a tempo
 Compasso 2: Salto melódico rápido demais para a mão se reposicionar a tempo
 Compasso 2: Salto melódico rápido demais para a mão se reposicionar a tempo
@@ -12,6 +12,7 @@ Compasso 2: Salto melódico rápido demais para a mão se reposicionar a tempo
 Compasso 2: Salto melódico rápido demais para a mão se reposicionar a tempo
 Compasso 2: Salto melódico rápido demais para a mão se reposicionar a tempo
 Compasso 3: Acorde com alcance maior do que uma mão consegue cobrir
+Compasso 3: Salto melódico rápido demais para a mão se reposicionar a tempo
 Compasso 3: Salto melódico rápido demais para a mão se reposicionar a tempo
 Compasso 3: Salto melódico rápido demais para a mão se reposicionar a tempo
 Compasso 3: Salto melódico rápido demais para a mão se reposicionar a tempo
@@ -55,7 +56,7 @@ Compasso 6: Salto melódico rápido demais para a mão se reposicionar a tempo
 Compasso 6: Salto melódico rápido demais para a mão se reposicionar a tempo
 Compasso 6: Salto melódico rápido demais para a mão se reposicionar a tempo
 Compasso 6: Salto melódico rápido demais para a mão se reposicionar a tempo
-Compasso 7: Salto melódico rápido demais para a mão se reposicionar a tempo
+Compasso 7: Acorde com alcance maior do que uma mão consegue cobrir
 Compasso 7: Salto melódico rápido demais para a mão se reposicionar a tempo
 Compasso 7: Salto melódico rápido demais para a mão se reposicionar a tempo
 Compasso 7: Salto melódico rápido demais para a mão se reposicionar a tempo
@@ -112,6 +113,7 @@ Compasso 10: Salto melódico rápido demais para a mão se reposicionar a tempo
 Compasso 11: Acorde com alcance maior do que uma mão consegue cobrir
 Compasso 11: Salto melódico rápido demais para a mão se reposicionar a tempo
 Compasso 11: Salto melódico rápido demais para a mão se reposicionar a tempo
+Compasso 11: Salto melódico rápido demais para a mão se reposicionar a tempo
 Compasso 11: Acorde com alcance maior do que uma mão consegue cobrir
 Compasso 11: Acorde com alcance maior do que uma mão consegue cobrir
 Compasso 11: Acorde com alcance maior do que uma mão consegue cobrir
@@ -136,7 +138,7 @@ Compasso 11: Salto melódico rápido demais para a mão se reposicionar a tempo
 Compasso 11: Salto melódico rápido demais para a mão se reposicionar a tempo
 Compasso 11: Salto melódico rápido demais para a mão se reposicionar a tempo
 Compasso 11: Salto melódico rápido demais para a mão se reposicionar a tempo
-Compasso 11: Salto melódico rápido demais para a mão se reposicionar a tempo
+Compasso 12: Salto melódico rápido demais para a mão se reposicionar a tempo
 Compasso 12: Acorde com alcance maior do que uma mão consegue cobrir
 Compasso 12: Salto melódico rápido demais para a mão se reposicionar a tempo
 Compasso 12: Salto melódico rápido demais para a mão se reposicionar a tempo
@@ -275,7 +277,6 @@ Compasso 17: Salto melódico rápido demais para a mão se reposicionar a tempo
 Compasso 17: Salto melódico rápido demais para a mão se reposicionar a tempo
 Compasso 17: Salto melódico rápido demais para a mão se reposicionar a tempo
 Compasso 17: Salto melódico rápido demais para a mão se reposicionar a tempo
-Compasso 17: Salto melódico rápido demais para a mão se reposicionar a tempo
 Compasso 18: Acorde com alcance maior do que uma mão consegue cobrir
 Compasso 18: Acorde com alcance maior do que uma mão consegue cobrir
 Compasso 18: Acorde com alcance maior do que uma mão consegue cobrir
@@ -317,14 +318,13 @@ Compasso 19: Salto melódico rápido demais para a mão se reposicionar a tempo
 Compasso 19: Salto melódico rápido demais para a mão se reposicionar a tempo
 Compasso 19: Salto melódico rápido demais para a mão se reposicionar a tempo
 Compasso 19: Salto melódico rápido demais para a mão se reposicionar a tempo
-Compasso 20: Acorde com alcance maior do que uma mão consegue cobrir
-Compasso 20: Acorde com alcance maior do que uma mão consegue cobrir
-Compasso 20: Acorde com alcance maior do que uma mão consegue cobrir
-Compasso 20: Acorde com alcance maior do que uma mão consegue cobrir
-Compasso 20: Acorde com alcance maior do que uma mão consegue cobrir
-Compasso 20: Acorde com alcance maior do que uma mão consegue cobrir
-Compasso 20: Acorde com alcance maior do que uma mão consegue cobrir
 Compasso 20: Salto melódico rápido demais para a mão se reposicionar a tempo
+Compasso 20: Acorde com alcance maior do que uma mão consegue cobrir
+Compasso 20: Acorde com alcance maior do que uma mão consegue cobrir
+Compasso 20: Acorde com alcance maior do que uma mão consegue cobrir
+Compasso 20: Acorde com alcance maior do que uma mão consegue cobrir
+Compasso 20: Acorde com alcance maior do que uma mão consegue cobrir
+Compasso 20: Acorde com alcance maior do que uma mão consegue cobrir
 Compasso 20: Salto melódico rápido demais para a mão se reposicionar a tempo
 Compasso 20: Salto melódico rápido demais para a mão se reposicionar a tempo
 Compasso 20: Salto melódico rápido demais para a mão se reposicionar a tempo
@@ -390,6 +390,7 @@ Compasso 22: Salto melódico rápido demais para a mão se reposicionar a tempo
 Compasso 22: Salto melódico rápido demais para a mão se reposicionar a tempo
 Compasso 22: Salto melódico rápido demais para a mão se reposicionar a tempo
 Compasso 22: Salto melódico rápido demais para a mão se reposicionar a tempo
+Compasso 22: Salto melódico rápido demais para a mão se reposicionar a tempo
 Compasso 23: Acorde com alcance maior do que uma mão consegue cobrir
 Compasso 23: Acorde com alcance maior do que uma mão consegue cobrir
 Compasso 23: Acorde com alcance maior do que uma mão consegue cobrir
@@ -407,9 +408,11 @@ Compasso 23: Salto melódico rápido demais para a mão se reposicionar a tempo
 Compasso 23: Salto melódico rápido demais para a mão se reposicionar a tempo
 Compasso 23: Salto melódico rápido demais para a mão se reposicionar a tempo
 Compasso 23: Salto melódico rápido demais para a mão se reposicionar a tempo
+Compasso 24: Salto melódico rápido demais para a mão se reposicionar a tempo
 Compasso 24: Acorde com alcance maior do que uma mão consegue cobrir
 Compasso 24: Acorde com alcance maior do que uma mão consegue cobrir
 Compasso 24: Acorde com alcance maior do que uma mão consegue cobrir
+Compasso 24: Acorde com alcance maior do que uma mão consegue cobrir
 Compasso 24: Salto melódico rápido demais para a mão se reposicionar a tempo
 Compasso 24: Salto melódico rápido demais para a mão se reposicionar a tempo
 Compasso 24: Salto melódico rápido demais para a mão se reposicionar a tempo
@@ -425,11 +428,9 @@ Compasso 24: Salto melódico rápido demais para a mão se reposicionar a tempo
 Compasso 24: Salto melódico rápido demais para a mão se reposicionar a tempo
 Compasso 24: Salto melódico rápido demais para a mão se reposicionar a tempo
 Compasso 24: Salto melódico rápido demais para a mão se reposicionar a tempo
+Compasso 25: Salto melódico rápido demais para a mão se reposicionar a tempo
 Compasso 25: Acorde com alcance maior do que uma mão consegue cobrir
 Compasso 25: Acorde com alcance maior do que uma mão consegue cobrir
-Compasso 25: Salto melódico rápido demais para a mão se reposicionar a tempo
-Compasso 25: Salto melódico rápido demais para a mão se reposicionar a tempo
-Compasso 25: Salto melódico rápido demais para a mão se reposicionar a tempo
 Compasso 25: Salto melódico rápido demais para a mão se reposicionar a tempo
 Compasso 25: Salto melódico rápido demais para a mão se reposicionar a tempo
 Compasso 25: Salto melódico rápido demais para a mão se reposicionar a tempo
@@ -463,6 +464,7 @@ Compasso 27: Salto melódico rápido demais para a mão se reposicionar a tempo
 Compasso 27: Salto melódico rápido demais para a mão se reposicionar a tempo
 Compasso 27: Salto melódico rápido demais para a mão se reposicionar a tempo
 Compasso 27: Salto melódico rápido demais para a mão se reposicionar a tempo
+Compasso 27: Salto melódico rápido demais para a mão se reposicionar a tempo
 Compasso 28: Acorde com alcance maior do que uma mão consegue cobrir
 Compasso 28: Acorde com alcance maior do que uma mão consegue cobrir
 Compasso 28: Acorde com alcance maior do que uma mão consegue cobrir
@@ -478,6 +480,7 @@ Compasso 28: Salto melódico rápido demais para a mão se reposicionar a tempo
 Compasso 28: Salto melódico rápido demais para a mão se reposicionar a tempo
 Compasso 28: Salto melódico rápido demais para a mão se reposicionar a tempo
 Compasso 28: Salto melódico rápido demais para a mão se reposicionar a tempo
+Compasso 29: Salto melódico rápido demais para a mão se reposicionar a tempo
 Compasso 29: Acorde com alcance maior do que uma mão consegue cobrir
 Compasso 29: Acorde com alcance maior do que uma mão consegue cobrir
 Compasso 29: Acorde com alcance maior do que uma mão consegue cobrir
@@ -539,7 +542,6 @@ Compasso 32: Salto melódico rápido demais para a mão se reposicionar a tempo
 Compasso 32: Salto melódico rápido demais para a mão se reposicionar a tempo
 Compasso 32: Salto melódico rápido demais para a mão se reposicionar a tempo
 Compasso 33: Salto melódico rápido demais para a mão se reposicionar a tempo
-Compasso 33: Salto melódico rápido demais para a mão se reposicionar a tempo
 Compasso 33: Acorde com alcance maior do que uma mão consegue cobrir
 Compasso 33: Acorde com alcance maior do que uma mão consegue cobrir
 Compasso 33: Salto melódico rápido demais para a mão se reposicionar a tempo
@@ -556,7 +558,6 @@ Compasso 33: Salto melódico rápido demais para a mão se reposicionar a tempo
 Compasso 33: Salto melódico rápido demais para a mão se reposicionar a tempo
 Compasso 33: Salto melódico rápido demais para a mão se reposicionar a tempo
 Compasso 33: Salto melódico rápido demais para a mão se reposicionar a tempo
-Compasso 34: Salto melódico rápido demais para a mão se reposicionar a tempo
 Compasso 34: Acorde com alcance maior do que uma mão consegue cobrir
 Compasso 34: Acorde com alcance maior do que uma mão consegue cobrir
 Compasso 34: Acorde com alcance maior do que uma mão consegue cobrir
@@ -575,6 +576,7 @@ Compasso 34: Salto melódico rápido demais para a mão se reposicionar a tempo
 Compasso 34: Salto melódico rápido demais para a mão se reposicionar a tempo
 Compasso 34: Salto melódico rápido demais para a mão se reposicionar a tempo
 Compasso 34: Salto melódico rápido demais para a mão se reposicionar a tempo
+Compasso 35: Salto melódico rápido demais para a mão se reposicionar a tempo
 Compasso 35: Salto melódico rápido demais para a mão se reposicionar a tempo
 Compasso 35: Acorde com alcance maior do que uma mão consegue cobrir
 Compasso 35: Acorde com alcance maior do que uma mão consegue cobrir
@@ -615,7 +617,6 @@ Compasso 36: Salto melódico rápido demais para a mão se reposicionar a tempo
 Compasso 36: Salto melódico rápido demais para a mão se reposicionar a tempo
 Compasso 36: Salto melódico rápido demais para a mão se reposicionar a tempo
 Compasso 36: Salto melódico rápido demais para a mão se reposicionar a tempo
-Compasso 37: Salto melódico rápido demais para a mão se reposicionar a tempo
 Compasso 37: Acorde com alcance maior do que uma mão consegue cobrir
 Compasso 37: Acorde com alcance maior do que uma mão consegue cobrir
 Compasso 37: Acorde com alcance maior do que uma mão consegue cobrir
@@ -696,6 +697,7 @@ Compasso 41: Salto melódico rápido demais para a mão se reposicionar a tempo
 Compasso 41: Salto melódico rápido demais para a mão se reposicionar a tempo
 Compasso 41: Salto melódico rápido demais para a mão se reposicionar a tempo
 Compasso 42: Acorde com alcance maior do que uma mão consegue cobrir
+Compasso 42: Acorde com alcance maior do que uma mão consegue cobrir
 Compasso 42: Salto melódico rápido demais para a mão se reposicionar a tempo
 Compasso 42: Salto melódico rápido demais para a mão se reposicionar a tempo
 Compasso 42: Salto melódico rápido demais para a mão se reposicionar a tempo
@@ -713,9 +715,9 @@ Compasso 43: Salto melódico rápido demais para a mão se reposicionar a tempo
 Compasso 43: Salto melódico rápido demais para a mão se reposicionar a tempo
 Compasso 43: Salto melódico rápido demais para a mão se reposicionar a tempo
 Compasso 43: Salto melódico rápido demais para a mão se reposicionar a tempo
-Compasso 43: Salto melódico rápido demais para a mão se reposicionar a tempo
 Compasso 44: Salto melódico rápido demais para a mão se reposicionar a tempo
 Compasso 44: Acorde com alcance maior do que uma mão consegue cobrir
+Compasso 44: Salto melódico rápido demais para a mão se reposicionar a tempo
 Compasso 44: Salto melódico rápido demais para a mão se reposicionar a tempo
 Compasso 44: Salto melódico rápido demais para a mão se reposicionar a tempo
 Compasso 44: Salto melódico rápido demais para a mão se reposicionar a tempo
@@ -740,6 +742,7 @@ Compasso 46: Salto melódico rápido demais para a mão se reposicionar a tempo
 Compasso 46: Salto melódico rápido demais para a mão se reposicionar a tempo
 Compasso 46: Salto melódico rápido demais para a mão se reposicionar a tempo
 Compasso 46: Salto melódico rápido demais para a mão se reposicionar a tempo
+Compasso 47: Salto melódico rápido demais para a mão se reposicionar a tempo
 Compasso 47: Acorde com alcance maior do que uma mão consegue cobrir
 Compasso 47: Acorde com alcance maior do que uma mão consegue cobrir
 Compasso 47: Acorde com alcance maior do que uma mão consegue cobrir
@@ -786,6 +789,7 @@ Compasso 49: Salto melódico rápido demais para a mão se reposicionar a tempo
 Compasso 49: Salto melódico rápido demais para a mão se reposicionar a tempo
 Compasso 49: Salto melódico rápido demais para a mão se reposicionar a tempo
 Compasso 50: Salto melódico rápido demais para a mão se reposicionar a tempo
+Compasso 50: Salto melódico rápido demais para a mão se reposicionar a tempo
 Compasso 51: Acorde com alcance maior do que uma mão consegue cobrir
 Compasso 51: Acorde com alcance maior do que uma mão consegue cobrir
 Compasso 51: Acorde com alcance maior do que uma mão consegue cobrir
@@ -831,8 +835,6 @@ Compasso 53: Salto melódico rápido demais para a mão se reposicionar a tempo
 Compasso 53: Salto melódico rápido demais para a mão se reposicionar a tempo
 Compasso 53: Salto melódico rápido demais para a mão se reposicionar a tempo
 Compasso 53: Salto melódico rápido demais para a mão se reposicionar a tempo
-Compasso 53: Salto melódico rápido demais para a mão se reposicionar a tempo
-Compasso 53: Acorde com alcance maior do que uma mão consegue cobrir
 Compasso 53: Acorde com alcance maior do que uma mão consegue cobrir
 Compasso 53: Acorde com alcance maior do que uma mão consegue cobrir
 Compasso 53: Acorde com alcance maior do que uma mão consegue cobrir
@@ -869,7 +871,7 @@ Compasso 54: Salto melódico rápido demais para a mão se reposicionar a tempo
 Compasso 54: Salto melódico rápido demais para a mão se reposicionar a tempo
 Compasso 54: Salto melódico rápido demais para a mão se reposicionar a tempo
 Compasso 54: Salto melódico rápido demais para a mão se reposicionar a tempo
-Compasso 54: Salto melódico rápido demais para a mão se reposicionar a tempo
+Compasso 55: Salto melódico rápido demais para a mão se reposicionar a tempo
 Compasso 55: Salto melódico rápido demais para a mão se reposicionar a tempo
 Compasso 55: Acorde com alcance maior do que uma mão consegue cobrir
 Compasso 55: Acorde com alcance maior do que uma mão consegue cobrir
@@ -889,10 +891,10 @@ Compasso 55: Salto melódico rápido demais para a mão se reposicionar a tempo
 Compasso 55: Salto melódico rápido demais para a mão se reposicionar a tempo
 Compasso 55: Salto melódico rápido demais para a mão se reposicionar a tempo
 Compasso 55: Salto melódico rápido demais para a mão se reposicionar a tempo
-Compasso 56: Acorde com alcance maior do que uma mão consegue cobrir
-Compasso 56: Acorde com alcance maior do que uma mão consegue cobrir
-Compasso 56: Acorde com alcance maior do que uma mão consegue cobrir
 Compasso 56: Salto melódico rápido demais para a mão se reposicionar a tempo
+Compasso 56: Acorde com alcance maior do que uma mão consegue cobrir
+Compasso 56: Acorde com alcance maior do que uma mão consegue cobrir
+Compasso 56: Acorde com alcance maior do que uma mão consegue cobrir
 Compasso 56: Salto melódico rápido demais para a mão se reposicionar a tempo
 Compasso 56: Salto melódico rápido demais para a mão se reposicionar a tempo
 Compasso 56: Salto melódico rápido demais para a mão se reposicionar a tempo
@@ -983,11 +985,9 @@ Compasso 60: Salto melódico rápido demais para a mão se reposicionar a tempo
 Compasso 60: Salto melódico rápido demais para a mão se reposicionar a tempo
 Compasso 60: Salto melódico rápido demais para a mão se reposicionar a tempo
 Compasso 60: Salto melódico rápido demais para a mão se reposicionar a tempo
-Compasso 61: Salto melódico rápido demais para a mão se reposicionar a tempo
 Compasso 61: Acorde com alcance maior do que uma mão consegue cobrir
 Compasso 61: Acorde com alcance maior do que uma mão consegue cobrir
 Compasso 61: Acorde com alcance maior do que uma mão consegue cobrir
-Compasso 61: Salto melódico rápido demais para a mão se reposicionar a tempo
 Compasso 61: Salto melódico rápido demais para a mão se reposicionar a tempo
 Compasso 61: Salto melódico rápido demais para a mão se reposicionar a tempo
 Compasso 61: Salto melódico rápido demais para a mão se reposicionar a tempo
@@ -1061,7 +1061,6 @@ Compasso 64: Salto melódico rápido demais para a mão se reposicionar a tempo
 Compasso 64: Salto melódico rápido demais para a mão se reposicionar a tempo
 Compasso 64: Salto melódico rápido demais para a mão se reposicionar a tempo
 Compasso 64: Salto melódico rápido demais para a mão se reposicionar a tempo
-Compasso 65: Salto melódico rápido demais para a mão se reposicionar a tempo
 Compasso 65: Acorde com alcance maior do que uma mão consegue cobrir
 Compasso 65: Acorde com alcance maior do que uma mão consegue cobrir
 Compasso 65: Acorde com alcance maior do que uma mão consegue cobrir
@@ -1081,8 +1080,6 @@ Compasso 65: Salto melódico rápido demais para a mão se reposicionar a tempo
 Compasso 65: Salto melódico rápido demais para a mão se reposicionar a tempo
 Compasso 65: Salto melódico rápido demais para a mão se reposicionar a tempo
 Compasso 65: Salto melódico rápido demais para a mão se reposicionar a tempo
-Compasso 65: Salto melódico rápido demais para a mão se reposicionar a tempo
-Compasso 66: Salto melódico rápido demais para a mão se reposicionar a tempo
 Compasso 66: Acorde com alcance maior do que uma mão consegue cobrir
 Compasso 66: Acorde com alcance maior do que uma mão consegue cobrir
 Compasso 66: Acorde com alcance maior do que uma mão consegue cobrir
@@ -1125,7 +1122,6 @@ Compasso 67: Salto melódico rápido demais para a mão se reposicionar a tempo
 Compasso 67: Salto melódico rápido demais para a mão se reposicionar a tempo
 Compasso 68: Acorde com alcance maior do que uma mão consegue cobrir
 Compasso 68: Acorde com alcance maior do que uma mão consegue cobrir
-Compasso 68: Salto melódico rápido demais para a mão se reposicionar a tempo
 Compasso 68: Salto melódico rápido demais para a mão se reposicionar a tempo
 Compasso 68: Salto melódico rápido demais para a mão se reposicionar a tempo
 Compasso 68: Salto melódico rápido demais para a mão se reposicionar a tempo
@@ -1144,8 +1140,6 @@ Compasso 69: Salto melódico rápido demais para a mão se reposicionar a tempo
 Compasso 69: Salto melódico rápido demais para a mão se reposicionar a tempo
 Compasso 69: Salto melódico rápido demais para a mão se reposicionar a tempo
 Compasso 70: Acorde com alcance maior do que uma mão consegue cobrir
-Compasso 70: Acorde com alcance maior do que uma mão consegue cobrir
-Compasso 70: Salto melódico rápido demais para a mão se reposicionar a tempo
 Compasso 70: Salto melódico rápido demais para a mão se reposicionar a tempo
 Compasso 70: Salto melódico rápido demais para a mão se reposicionar a tempo
 Compasso 70: Salto melódico rápido demais para a mão se reposicionar a tempo
@@ -1173,12 +1167,8 @@ Compasso 72: Salto melódico rápido demais para a mão se reposicionar a tempo
 Compasso 72: Salto melódico rápido demais para a mão se reposicionar a tempo
 Compasso 72: Salto melódico rápido demais para a mão se reposicionar a tempo
 Compasso 72: Salto melódico rápido demais para a mão se reposicionar a tempo
-Compasso 72: Salto melódico rápido demais para a mão se reposicionar a tempo
 Compasso 73: Acorde com alcance maior do que uma mão consegue cobrir
 Compasso 73: Acorde com alcance maior do que uma mão consegue cobrir
-Compasso 73: Acorde com alcance maior do que uma mão consegue cobrir
-Compasso 73: Salto melódico rápido demais para a mão se reposicionar a tempo
-Compasso 73: Salto melódico rápido demais para a mão se reposicionar a tempo
 Compasso 73: Salto melódico rápido demais para a mão se reposicionar a tempo
 Compasso 73: Salto melódico rápido demais para a mão se reposicionar a tempo
 Compasso 73: Salto melódico rápido demais para a mão se reposicionar a tempo
@@ -1210,7 +1200,6 @@ Compasso 74: Salto melódico rápido demais para a mão se reposicionar a tempo
 Compasso 74: Salto melódico rápido demais para a mão se reposicionar a tempo
 Compasso 75: Acorde com alcance maior do que uma mão consegue cobrir
 Compasso 75: Acorde com alcance maior do que uma mão consegue cobrir
-Compasso 75: Acorde com alcance maior do que uma mão consegue cobrir
 Compasso 75: Salto melódico rápido demais para a mão se reposicionar a tempo
 Compasso 75: Salto melódico rápido demais para a mão se reposicionar a tempo
 Compasso 75: Salto melódico rápido demais para a mão se reposicionar a tempo
@@ -1223,10 +1212,6 @@ Compasso 75: Salto melódico rápido demais para a mão se reposicionar a tempo
 Compasso 75: Salto melódico rápido demais para a mão se reposicionar a tempo
 Compasso 75: Salto melódico rápido demais para a mão se reposicionar a tempo
 Compasso 75: Salto melódico rápido demais para a mão se reposicionar a tempo
-Compasso 75: Salto melódico rápido demais para a mão se reposicionar a tempo
-Compasso 75: Salto melódico rápido demais para a mão se reposicionar a tempo
-Compasso 75: Salto melódico rápido demais para a mão se reposicionar a tempo
-Compasso 76: Salto melódico rápido demais para a mão se reposicionar a tempo
 Compasso 76: Salto melódico rápido demais para a mão se reposicionar a tempo
 Compasso 76: Salto melódico rápido demais para a mão se reposicionar a tempo
 Compasso 76: Acorde com alcance maior do que uma mão consegue cobrir
@@ -1290,9 +1275,6 @@ Compasso 78: Salto melódico rápido demais para a mão se reposicionar a tempo
 Compasso 78: Salto melódico rápido demais para a mão se reposicionar a tempo
 Compasso 78: Salto melódico rápido demais para a mão se reposicionar a tempo
 Compasso 78: Salto melódico rápido demais para a mão se reposicionar a tempo
-Compasso 78: Salto melódico rápido demais para a mão se reposicionar a tempo
-Compasso 79: Salto melódico rápido demais para a mão se reposicionar a tempo
-Compasso 79: Salto melódico rápido demais para a mão se reposicionar a tempo
 Compasso 79: Acorde com alcance maior do que uma mão consegue cobrir
 Compasso 79: Acorde com alcance maior do que uma mão consegue cobrir
 Compasso 79: Acorde com alcance maior do que uma mão consegue cobrir
@@ -1317,7 +1299,6 @@ Compasso 80: Acorde com alcance maior do que uma mão consegue cobrir
 Compasso 80: Acorde com alcance maior do que uma mão consegue cobrir
 Compasso 80: Acorde com alcance maior do que uma mão consegue cobrir
 Compasso 80: Acorde com alcance maior do que uma mão consegue cobrir
-Compasso 80: Salto melódico rápido demais para a mão se reposicionar a tempo
 Compasso 80: Salto melódico rápido demais para a mão se reposicionar a tempo
 Compasso 80: Salto melódico rápido demais para a mão se reposicionar a tempo
 Compasso 80: Salto melódico rápido demais para a mão se reposicionar a tempo
@@ -1352,7 +1333,6 @@ Compasso 81: Salto melódico rápido demais para a mão se reposicionar a tempo
 Compasso 81: Salto melódico rápido demais para a mão se reposicionar a tempo
 Compasso 81: Salto melódico rápido demais para a mão se reposicionar a tempo
 Compasso 81: Salto melódico rápido demais para a mão se reposicionar a tempo
-Compasso 82: Salto melódico rápido demais para a mão se reposicionar a tempo
 Compasso 82: Acorde com alcance maior do que uma mão consegue cobrir
 Compasso 82: Acorde com alcance maior do que uma mão consegue cobrir
 Compasso 82: Acorde com alcance maior do que uma mão consegue cobrir
@@ -1373,10 +1353,8 @@ Compasso 82: Salto melódico rápido demais para a mão se reposicionar a tempo
 Compasso 82: Salto melódico rápido demais para a mão se reposicionar a tempo
 Compasso 82: Salto melódico rápido demais para a mão se reposicionar a tempo
 Compasso 83: Acorde com alcance maior do que uma mão consegue cobrir
-Compasso 83: Salto melódico rápido demais para a mão se reposicionar a tempo
 Compasso 83: Acorde com alcance maior do que uma mão consegue cobrir
 Compasso 83: Acorde com alcance maior do que uma mão consegue cobrir
-Compasso 83: Acorde com alcance maior do que uma mão consegue cobrir
 Compasso 83: Salto melódico rápido demais para a mão se reposicionar a tempo
 Compasso 83: Salto melódico rápido demais para a mão se reposicionar a tempo
 Compasso 83: Salto melódico rápido demais para a mão se reposicionar a tempo
@@ -1393,8 +1371,6 @@ Compasso 83: Salto melódico rápido demais para a mão se reposicionar a tempo
 Compasso 83: Salto melódico rápido demais para a mão se reposicionar a tempo
 Compasso 83: Salto melódico rápido demais para a mão se reposicionar a tempo
 Compasso 83: Salto melódico rápido demais para a mão se reposicionar a tempo
-Compasso 83: Salto melódico rápido demais para a mão se reposicionar a tempo
-Compasso 84: Salto melódico rápido demais para a mão se reposicionar a tempo
 Compasso 84: Acorde com alcance maior do que uma mão consegue cobrir
 Compasso 84: Salto melódico rápido demais para a mão se reposicionar a tempo
 Compasso 84: Salto melódico rápido demais para a mão se reposicionar a tempo
@@ -1407,6 +1383,8 @@ Compasso 84: Salto melódico rápido demais para a mão se reposicionar a tempo
 Compasso 84: Salto melódico rápido demais para a mão se reposicionar a tempo
 Compasso 84: Salto melódico rápido demais para a mão se reposicionar a tempo
 Compasso 84: Salto melódico rápido demais para a mão se reposicionar a tempo
+Compasso 84: Salto melódico rápido demais para a mão se reposicionar a tempo
+Compasso 85: Salto melódico rápido demais para a mão se reposicionar a tempo
 Compasso 85: Acorde com alcance maior do que uma mão consegue cobrir
 Compasso 85: Acorde com alcance maior do que uma mão consegue cobrir
 Compasso 85: Acorde com alcance maior do que uma mão consegue cobrir
@@ -1426,7 +1404,6 @@ Compasso 85: Salto melódico rápido demais para a mão se reposicionar a tempo
 Compasso 85: Salto melódico rápido demais para a mão se reposicionar a tempo
 Compasso 85: Salto melódico rápido demais para a mão se reposicionar a tempo
 Compasso 85: Salto melódico rápido demais para a mão se reposicionar a tempo
-Compasso 86: Salto melódico rápido demais para a mão se reposicionar a tempo
 Compasso 86: Salto melódico rápido demais para a mão se reposicionar a tempo
 Compasso 86: Acorde com alcance maior do que uma mão consegue cobrir
 Compasso 86: Acorde com alcance maior do que uma mão consegue cobrir
@@ -1449,7 +1426,6 @@ Compasso 86: Salto melódico rápido demais para a mão se reposicionar a tempo
 Compasso 87: Acorde com alcance maior do que uma mão consegue cobrir
 Compasso 87: Acorde com alcance maior do que uma mão consegue cobrir
 Compasso 87: Acorde com alcance maior do que uma mão consegue cobrir
-Compasso 87: Salto melódico rápido demais para a mão se reposicionar a tempo
 Compasso 87: Salto melódico rápido demais para a mão se reposicionar a tempo
 Compasso 87: Salto melódico rápido demais para a mão se reposicionar a tempo
 Compasso 87: Salto melódico rápido demais para a mão se reposicionar a tempo
@@ -1505,6 +1481,8 @@ Compasso 89: Salto melódico rápido demais para a mão se reposicionar a tempo
 Compasso 89: Salto melódico rápido demais para a mão se reposicionar a tempo
 Compasso 89: Salto melódico rápido demais para a mão se reposicionar a tempo
 Compasso 89: Salto melódico rápido demais para a mão se reposicionar a tempo
+Compasso 90: Salto melódico rápido demais para a mão se reposicionar a tempo
+Compasso 90: Salto melódico rápido demais para a mão se reposicionar a tempo
 Compasso 90: Acorde com alcance maior do que uma mão consegue cobrir
 Compasso 90: Acorde com alcance maior do que uma mão consegue cobrir
 Compasso 90: Acorde com alcance maior do que uma mão consegue cobrir
@@ -1563,12 +1541,11 @@ Compasso 92: Salto melódico rápido demais para a mão se reposicionar a tempo
 Compasso 92: Salto melódico rápido demais para a mão se reposicionar a tempo
 Compasso 92: Salto melódico rápido demais para a mão se reposicionar a tempo
 Compasso 92: Salto melódico rápido demais para a mão se reposicionar a tempo
-Compasso 92: Salto melódico rápido demais para a mão se reposicionar a tempo
-Compasso 92: Salto melódico rápido demais para a mão se reposicionar a tempo
+Compasso 93: Salto melódico rápido demais para a mão se reposicionar a tempo
+Compasso 93: Salto melódico rápido demais para a mão se reposicionar a tempo
 Compasso 93: Salto melódico rápido demais para a mão se reposicionar a tempo
 Compasso 93: Acorde com alcance maior do que uma mão consegue cobrir
 Compasso 93: Acorde com alcance maior do que uma mão consegue cobrir
-Compasso 93: Acorde com alcance maior do que uma mão consegue cobrir
 Compasso 93: Salto melódico rápido demais para a mão se reposicionar a tempo
 Compasso 93: Salto melódico rápido demais para a mão se reposicionar a tempo
 Compasso 93: Salto melódico rápido demais para a mão se reposicionar a tempo
@@ -1582,7 +1559,7 @@ Compasso 93: Salto melódico rápido demais para a mão se reposicionar a tempo
 Compasso 93: Salto melódico rápido demais para a mão se reposicionar a tempo
 Compasso 93: Salto melódico rápido demais para a mão se reposicionar a tempo
 Compasso 93: Salto melódico rápido demais para a mão se reposicionar a tempo
-Compasso 93: Salto melódico rápido demais para a mão se reposicionar a tempo
+Compasso 94: Salto melódico rápido demais para a mão se reposicionar a tempo
 Compasso 94: Salto melódico rápido demais para a mão se reposicionar a tempo
 Compasso 94: Acorde com alcance maior do que uma mão consegue cobrir
 Compasso 94: Acorde com alcance maior do que uma mão consegue cobrir
@@ -1604,7 +1581,6 @@ Compasso 94: Salto melódico rápido demais para a mão se reposicionar a tempo
 Compasso 95: Salto melódico rápido demais para a mão se reposicionar a tempo
 Compasso 95: Acorde com alcance maior do que uma mão consegue cobrir
 Compasso 95: Acorde com alcance maior do que uma mão consegue cobrir
-Compasso 95: Acorde com alcance maior do que uma mão consegue cobrir
 Compasso 95: Salto melódico rápido demais para a mão se reposicionar a tempo
 Compasso 95: Salto melódico rápido demais para a mão se reposicionar a tempo
 Compasso 95: Salto melódico rápido demais para a mão se reposicionar a tempo
@@ -1620,8 +1596,6 @@ Compasso 95: Salto melódico rápido demais para a mão se reposicionar a tempo
 Compasso 95: Salto melódico rápido demais para a mão se reposicionar a tempo
 Compasso 95: Salto melódico rápido demais para a mão se reposicionar a tempo
 Compasso 95: Salto melódico rápido demais para a mão se reposicionar a tempo
-Compasso 96: Salto melódico rápido demais para a mão se reposicionar a tempo
-Compasso 96: Salto melódico rápido demais para a mão se reposicionar a tempo
 Compasso 96: Acorde com alcance maior do que uma mão consegue cobrir
 Compasso 96: Acorde com alcance maior do que uma mão consegue cobrir
 Compasso 96: Acorde com alcance maior do que uma mão consegue cobrir
@@ -1642,7 +1616,6 @@ Compasso 96: Salto melódico rápido demais para a mão se reposicionar a tempo
 Compasso 96: Salto melódico rápido demais para a mão se reposicionar a tempo
 Compasso 96: Salto melódico rápido demais para a mão se reposicionar a tempo
 Compasso 96: Salto melódico rápido demais para a mão se reposicionar a tempo
-Compasso 97: Salto melódico rápido demais para a mão se reposicionar a tempo
 Compasso 97: Acorde com alcance maior do que uma mão consegue cobrir
 Compasso 97: Acorde com alcance maior do que uma mão consegue cobrir
 Compasso 97: Acorde com alcance maior do que uma mão consegue cobrir
@@ -1660,14 +1633,10 @@ Compasso 97: Salto melódico rápido demais para a mão se reposicionar a tempo
 Compasso 97: Salto melódico rápido demais para a mão se reposicionar a tempo
 Compasso 97: Salto melódico rápido demais para a mão se reposicionar a tempo
 Compasso 97: Salto melódico rápido demais para a mão se reposicionar a tempo
-Compasso 97: Salto melódico rápido demais para a mão se reposicionar a tempo
-Compasso 98: Salto melódico rápido demais para a mão se reposicionar a tempo
 Compasso 98: Acorde com alcance maior do que uma mão consegue cobrir
 Compasso 98: Acorde com alcance maior do que uma mão consegue cobrir
 Compasso 98: Acorde com alcance maior do que uma mão consegue cobrir
 Compasso 98: Acorde com alcance maior do que uma mão consegue cobrir
-Compasso 98: Salto melódico rápido demais para a mão se reposicionar a tempo
-Compasso 98: Salto melódico rápido demais para a mão se reposicionar a tempo
 Compasso 98: Salto melódico rápido demais para a mão se reposicionar a tempo
 Compasso 98: Salto melódico rápido demais para a mão se reposicionar a tempo
 Compasso 98: Salto melódico rápido demais para a mão se reposicionar a tempo
@@ -1723,8 +1692,6 @@ Compasso 100: Salto melódico rápido demais para a mão se reposicionar a tempo
 Compasso 100: Salto melódico rápido demais para a mão se reposicionar a tempo
 Compasso 100: Salto melódico rápido demais para a mão se reposicionar a tempo
 Compasso 100: Salto melódico rápido demais para a mão se reposicionar a tempo
-Compasso 100: Salto melódico rápido demais para a mão se reposicionar a tempo
-Compasso 101: Salto melódico rápido demais para a mão se reposicionar a tempo
 Compasso 101: Acorde com alcance maior do que uma mão consegue cobrir
 Compasso 101: Acorde com alcance maior do que uma mão consegue cobrir
 Compasso 101: Salto melódico rápido demais para a mão se reposicionar a tempo
@@ -1760,7 +1727,6 @@ Compasso 102: Salto melódico rápido demais para a mão se reposicionar a tempo
 Compasso 102: Salto melódico rápido demais para a mão se reposicionar a tempo
 Compasso 102: Salto melódico rápido demais para a mão se reposicionar a tempo
 Compasso 102: Salto melódico rápido demais para a mão se reposicionar a tempo
-Compasso 102: Salto melódico rápido demais para a mão se reposicionar a tempo
 Compasso 103: Acorde com alcance maior do que uma mão consegue cobrir
 Compasso 103: Acorde com alcance maior do que uma mão consegue cobrir
 Compasso 103: Acorde com alcance maior do que uma mão consegue cobrir
@@ -1781,8 +1747,6 @@ Compasso 103: Salto melódico rápido demais para a mão se reposicionar a tempo
 Compasso 103: Salto melódico rápido demais para a mão se reposicionar a tempo
 Compasso 104: Acorde com alcance maior do que uma mão consegue cobrir
 Compasso 104: Acorde com alcance maior do que uma mão consegue cobrir
-Compasso 104: Acorde com alcance maior do que uma mão consegue cobrir
-Compasso 104: Salto melódico rápido demais para a mão se reposicionar a tempo
 Compasso 104: Salto melódico rápido demais para a mão se reposicionar a tempo
 Compasso 104: Salto melódico rápido demais para a mão se reposicionar a tempo
 Compasso 104: Salto melódico rápido demais para a mão se reposicionar a tempo
@@ -1803,7 +1767,8 @@ Compasso 104: Salto melódico rápido demais para a mão se reposicionar a tempo
 Compasso 104: Salto melódico rápido demais para a mão se reposicionar a tempo
 Compasso 104: Salto melódico rápido demais para a mão se reposicionar a tempo
 
-VERIFICAR (785)
+VERIFICAR (795)
+Compasso 1: Possível nota faltando: padrão repetitivo com confirmação insuficiente
 Compasso 2: Quantização de baixa confiança: nota entre dois pontos do grid
 Compasso 2: Quantização de baixa confiança: nota entre dois pontos do grid
 Compasso 2: Quantização de baixa confiança: nota entre dois pontos do grid
@@ -1811,6 +1776,7 @@ Compasso 2: Onset ajustado após colisão de quantização entre notas distintas
 Compasso 2: Onset ajustado após colisão de quantização entre notas distintas
 Compasso 2: Onset ajustado após colisão de quantização entre notas distintas
 Compasso 2: Onset ajustado após colisão de quantização entre notas distintas
+Compasso 2: Possível nota faltando: padrão repetitivo com confirmação insuficiente
 Compasso 2: Possível nota faltando: padrão repetitivo com confirmação insuficiente
 Compasso 3: Onset ajustado após colisão de quantização entre notas distintas
 Compasso 3: Onset ajustado após colisão de quantização entre notas distintas
@@ -1821,9 +1787,13 @@ Compasso 4: Onset ajustado após colisão de quantização entre notas distintas
 Compasso 4: Possível nota faltando: padrão repetitivo com confirmação insuficiente
 Compasso 4: Possível nota faltando: padrão repetitivo com confirmação insuficiente
 Compasso 4: Possível nota faltando: padrão repetitivo com confirmação insuficiente
+Compasso 4: Possível nota faltando: padrão repetitivo com confirmação insuficiente
+Compasso 4: Possível nota faltando: padrão repetitivo com confirmação insuficiente
 Compasso 5: Quantização de baixa confiança: nota entre dois pontos do grid
 Compasso 5: Onset ajustado após colisão de quantização entre notas distintas
 Compasso 5: Onset ajustado após colisão de quantização entre notas distintas
+Compasso 5: Possível nota faltando: padrão repetitivo com confirmação insuficiente
+Compasso 5: Possível nota faltando: padrão repetitivo com confirmação insuficiente
 Compasso 5: Possível nota faltando: padrão repetitivo com confirmação insuficiente
 Compasso 6: Quantização de baixa confiança: nota entre dois pontos do grid
 Compasso 6: Onset ajustado após colisão de quantização entre notas distintas
@@ -1831,30 +1801,30 @@ Compasso 6: Onset ajustado após colisão de quantização entre notas distintas
 Compasso 6: Onset ajustado após colisão de quantização entre notas distintas
 Compasso 6: Onset ajustado após colisão de quantização entre notas distintas
 Compasso 6: Possível nota faltando: padrão repetitivo com confirmação insuficiente
+Compasso 6: Possível nota faltando: padrão repetitivo com confirmação insuficiente
 Compasso 7: Onset ajustado após colisão de quantização entre notas distintas
 Compasso 7: Onset ajustado após colisão de quantização entre notas distintas
 Compasso 7: Onset ajustado após colisão de quantização entre notas distintas
-Compasso 7: Possível nota faltando: padrão repetitivo com confirmação insuficiente
 Compasso 8: Quantização de baixa confiança: nota entre dois pontos do grid
 Compasso 8: Quantização de baixa confiança: nota entre dois pontos do grid
 Compasso 8: Onset ajustado após colisão de quantização entre notas distintas
 Compasso 8: Onset ajustado após colisão de quantização entre notas distintas
 Compasso 8: Onset ajustado após colisão de quantização entre notas distintas
 Compasso 8: Onset ajustado após colisão de quantização entre notas distintas
-Compasso 8: Possível nota faltando: padrão repetitivo com confirmação insuficiente
 Compasso 8: Possível nota faltando: padrão repetitivo com confirmação insuficiente
 Compasso 9: Quantização de baixa confiança: nota entre dois pontos do grid
 Compasso 9: Onset ajustado após colisão de quantização entre notas distintas
 Compasso 9: Onset ajustado após colisão de quantização entre notas distintas
 Compasso 9: Onset ajustado após colisão de quantização entre notas distintas
 Compasso 9: Possível nota faltando: padrão repetitivo com confirmação insuficiente
-Compasso 9: Possível nota faltando: padrão repetitivo com confirmação insuficiente
 Compasso 10: Quantização de baixa confiança: nota entre dois pontos do grid
 Compasso 10: Onset ajustado após colisão de quantização entre notas distintas
 Compasso 10: Onset ajustado após colisão de quantização entre notas distintas
 Compasso 10: Onset ajustado após colisão de quantização entre notas distintas
 Compasso 10: Onset ajustado após colisão de quantização entre notas distintas
+Compasso 10: Onset ajustado após colisão de quantização entre notas distintas
 Compasso 10: Possível nota faltando: padrão repetitivo com confirmação insuficiente
+Compasso 11: Tonalidade ambígua: mantida a armadura do compasso anterior
 Compasso 11: Quantização de baixa confiança: nota entre dois pontos do grid
 Compasso 11: Quantização de baixa confiança: nota entre dois pontos do grid
 Compasso 11: Quantização de baixa confiança: nota entre dois pontos do grid
@@ -1862,13 +1832,14 @@ Compasso 11: Quantização de baixa confiança: nota entre dois pontos do grid
 Compasso 11: Quantização de baixa confiança: nota entre dois pontos do grid
 Compasso 11: Quantização de baixa confiança: nota entre dois pontos do grid
 Compasso 11: Quantização de baixa confiança: nota entre dois pontos do grid
+Compasso 11: Onset ajustado após colisão de quantização entre notas distintas
 Compasso 11: Onset ajustado após colisão de quantização entre notas distintas
 Compasso 11: Onset ajustado após colisão de quantização entre notas distintas
 Compasso 11: Onset ajustado após colisão de quantização entre notas distintas
 Compasso 11: Onset ajustado após colisão de quantização entre notas distintas
 Compasso 11: Onset ajustado após colisão de quantização entre notas distintas
 Compasso 11: Possível nota faltando: padrão repetitivo com confirmação insuficiente
-Compasso 11: Possível nota faltando: padrão repetitivo com confirmação insuficiente
+Compasso 12: Quantização de baixa confiança: nota entre dois pontos do grid
 Compasso 12: Quantização de baixa confiança: nota entre dois pontos do grid
 Compasso 12: Quantização de baixa confiança: nota entre dois pontos do grid
 Compasso 12: Quantização de baixa confiança: nota entre dois pontos do grid
@@ -1877,7 +1848,7 @@ Compasso 12: Onset ajustado após colisão de quantização entre notas distinta
 Compasso 12: Onset ajustado após colisão de quantização entre notas distintas
 Compasso 12: Onset ajustado após colisão de quantização entre notas distintas
 Compasso 12: Possível nota faltando: padrão repetitivo com confirmação insuficiente
-Compasso 12: Possível nota faltando: padrão repetitivo com confirmação insuficiente
+Compasso 13: Tonalidade ambígua: mantida a armadura do compasso anterior
 Compasso 13: Quantização de baixa confiança: nota entre dois pontos do grid
 Compasso 13: Quantização de baixa confiança: nota entre dois pontos do grid
 Compasso 13: Quantização de baixa confiança: nota entre dois pontos do grid
@@ -1886,12 +1857,12 @@ Compasso 13: Onset ajustado após colisão de quantização entre notas distinta
 Compasso 13: Onset ajustado após colisão de quantização entre notas distintas
 Compasso 13: Possível nota faltando: padrão repetitivo com confirmação insuficiente
 Compasso 14: Quantização de baixa confiança: nota entre dois pontos do grid
-Compasso 14: Quantização de baixa confiança: nota entre dois pontos do grid
 Compasso 14: Onset ajustado após colisão de quantização entre notas distintas
 Compasso 14: Onset ajustado após colisão de quantização entre notas distintas
 Compasso 14: Onset ajustado após colisão de quantização entre notas distintas
 Compasso 14: Onset ajustado após colisão de quantização entre notas distintas
 Compasso 14: Onset ajustado após colisão de quantização entre notas distintas
+Compasso 14: Possível nota faltando: padrão repetitivo com confirmação insuficiente
 Compasso 14: Possível nota faltando: padrão repetitivo com confirmação insuficiente
 Compasso 15: Quantização de baixa confiança: nota entre dois pontos do grid
 Compasso 15: Quantização de baixa confiança: nota entre dois pontos do grid
@@ -1901,8 +1872,6 @@ Compasso 15: Quantização de baixa confiança: nota entre dois pontos do grid
 Compasso 15: Quantização de baixa confiança: nota entre dois pontos do grid
 Compasso 15: Onset ajustado após colisão de quantização entre notas distintas
 Compasso 15: Onset ajustado após colisão de quantização entre notas distintas
-Compasso 15: Possível nota faltando: padrão repetitivo com confirmação insuficiente
-Compasso 15: Possível nota faltando: padrão repetitivo com confirmação insuficiente
 Compasso 15: Possível nota faltando: padrão repetitivo com confirmação insuficiente
 Compasso 15: Possível nota faltando: padrão repetitivo com confirmação insuficiente
 Compasso 16: Tonalidade ambígua: mantida a armadura do compasso anterior
@@ -1922,8 +1891,6 @@ Compasso 16: Onset ajustado após colisão de quantização entre notas distinta
 Compasso 16: Onset ajustado após colisão de quantização entre notas distintas
 Compasso 16: Onset ajustado após colisão de quantização entre notas distintas
 Compasso 17: Tonalidade ambígua: mantida a armadura do compasso anterior
-Compasso 17: Quantização de baixa confiança: nota entre dois pontos do grid
-Compasso 17: Quantização de baixa confiança: nota entre dois pontos do grid
 Compasso 17: Quantização de baixa confiança: nota entre dois pontos do grid
 Compasso 17: Quantização de baixa confiança: nota entre dois pontos do grid
 Compasso 17: Quantização de baixa confiança: nota entre dois pontos do grid
@@ -1988,11 +1955,11 @@ Compasso 21: Quantização de baixa confiança: nota entre dois pontos do grid
 Compasso 21: Quantização de baixa confiança: nota entre dois pontos do grid
 Compasso 21: Quantização de baixa confiança: nota entre dois pontos do grid
 Compasso 21: Quantização de baixa confiança: nota entre dois pontos do grid
-Compasso 21: Quantização de baixa confiança: nota entre dois pontos do grid
 Compasso 21: Onset ajustado após colisão de quantização entre notas distintas
 Compasso 21: Onset ajustado após colisão de quantização entre notas distintas
 Compasso 21: Onset ajustado após colisão de quantização entre notas distintas
 Compasso 21: Possível nota faltando: padrão repetitivo com confirmação insuficiente
+Compasso 22: Quantização de baixa confiança: nota entre dois pontos do grid
 Compasso 22: Onset ajustado após colisão de quantização entre notas distintas
 Compasso 22: Possível nota faltando: padrão repetitivo com confirmação insuficiente
 Compasso 22: Possível nota faltando: padrão repetitivo com confirmação insuficiente
@@ -2007,6 +1974,8 @@ Compasso 23: Onset ajustado após colisão de quantização entre notas distinta
 Compasso 23: Onset ajustado após colisão de quantização entre notas distintas
 Compasso 23: Onset ajustado após colisão de quantização entre notas distintas
 Compasso 23: Onset ajustado após colisão de quantização entre notas distintas
+Compasso 23: Possível nota faltando: padrão repetitivo com confirmação insuficiente
+Compasso 24: Quantização de baixa confiança: nota entre dois pontos do grid
 Compasso 24: Quantização de baixa confiança: nota entre dois pontos do grid
 Compasso 24: Quantização de baixa confiança: nota entre dois pontos do grid
 Compasso 24: Quantização de baixa confiança: nota entre dois pontos do grid
@@ -2022,10 +1991,12 @@ Compasso 25: Onset ajustado após colisão de quantização entre notas distinta
 Compasso 25: Onset ajustado após colisão de quantização entre notas distintas
 Compasso 25: Onset ajustado após colisão de quantização entre notas distintas
 Compasso 25: Onset ajustado após colisão de quantização entre notas distintas
-Compasso 25: Possível nota faltando: padrão repetitivo com confirmação insuficiente
+Compasso 25: Onset ajustado após colisão de quantização entre notas distintas
 Compasso 25: Possível nota faltando: padrão repetitivo com confirmação insuficiente
 Compasso 26: Tonalidade ambígua: mantida a armadura do compasso anterior
+Compasso 26: Quantização de baixa confiança: nota entre dois pontos do grid
 Compasso 26: Onset ajustado após colisão de quantização entre notas distintas
+Compasso 26: Possível nota faltando: padrão repetitivo com confirmação insuficiente
 Compasso 26: Possível nota faltando: padrão repetitivo com confirmação insuficiente
 Compasso 27: Quantização de baixa confiança: nota entre dois pontos do grid
 Compasso 27: Quantização de baixa confiança: nota entre dois pontos do grid
@@ -2038,6 +2009,8 @@ Compasso 28: Onset ajustado após colisão de quantização entre notas distinta
 Compasso 28: Onset ajustado após colisão de quantização entre notas distintas
 Compasso 28: Onset ajustado após colisão de quantização entre notas distintas
 Compasso 28: Onset ajustado após colisão de quantização entre notas distintas
+Compasso 28: Possível nota faltando: padrão repetitivo com confirmação insuficiente
+Compasso 29: Quantização de baixa confiança: nota entre dois pontos do grid
 Compasso 29: Quantização de baixa confiança: nota entre dois pontos do grid
 Compasso 29: Quantização de baixa confiança: nota entre dois pontos do grid
 Compasso 29: Quantização de baixa confiança: nota entre dois pontos do grid
@@ -2066,6 +2039,8 @@ Compasso 33: Quantização de baixa confiança: nota entre dois pontos do grid
 Compasso 33: Quantização de baixa confiança: nota entre dois pontos do grid
 Compasso 33: Onset ajustado após colisão de quantização entre notas distintas
 Compasso 33: Possível nota faltando: padrão repetitivo com confirmação insuficiente
+Compasso 33: Possível nota faltando: padrão repetitivo com confirmação insuficiente
+Compasso 33: Possível nota faltando: padrão repetitivo com confirmação insuficiente
 Compasso 34: Quantização de baixa confiança: nota entre dois pontos do grid
 Compasso 34: Quantização de baixa confiança: nota entre dois pontos do grid
 Compasso 34: Quantização de baixa confiança: nota entre dois pontos do grid
@@ -2075,6 +2050,7 @@ Compasso 34: Onset ajustado após colisão de quantização entre notas distinta
 Compasso 34: Onset ajustado após colisão de quantização entre notas distintas
 Compasso 34: Onset ajustado após colisão de quantização entre notas distintas
 Compasso 34: Possível nota faltando: padrão repetitivo com confirmação insuficiente
+Compasso 34: Possível nota faltando: padrão repetitivo com confirmação insuficiente
 Compasso 35: Tonalidade ambígua: mantida a armadura do compasso anterior
 Compasso 35: Quantização de baixa confiança: nota entre dois pontos do grid
 Compasso 35: Quantização de baixa confiança: nota entre dois pontos do grid
@@ -2082,18 +2058,18 @@ Compasso 35: Quantização de baixa confiança: nota entre dois pontos do grid
 Compasso 35: Quantização de baixa confiança: nota entre dois pontos do grid
 Compasso 35: Quantização de baixa confiança: nota entre dois pontos do grid
 Compasso 35: Quantização de baixa confiança: nota entre dois pontos do grid
+Compasso 35: Quantização de baixa confiança: nota entre dois pontos do grid
+Compasso 35: Quantização de baixa confiança: nota entre dois pontos do grid
 Compasso 35: Onset ajustado após colisão de quantização entre notas distintas
 Compasso 35: Onset ajustado após colisão de quantização entre notas distintas
 Compasso 35: Onset ajustado após colisão de quantização entre notas distintas
+Compasso 36: Quantização de baixa confiança: nota entre dois pontos do grid
 Compasso 36: Quantização de baixa confiança: nota entre dois pontos do grid
 Compasso 36: Quantização de baixa confiança: nota entre dois pontos do grid
 Compasso 36: Quantização de baixa confiança: nota entre dois pontos do grid
 Compasso 36: Onset ajustado após colisão de quantização entre notas distintas
 Compasso 36: Possível nota faltando: padrão repetitivo com confirmação insuficiente
-Compasso 36: Possível nota faltando: padrão repetitivo com confirmação insuficiente
-Compasso 36: Possível nota faltando: padrão repetitivo com confirmação insuficiente
 Compasso 37: Tonalidade ambígua: mantida a armadura do compasso anterior
-Compasso 37: Quantização de baixa confiança: nota entre dois pontos do grid
 Compasso 37: Quantização de baixa confiança: nota entre dois pontos do grid
 Compasso 37: Quantização de baixa confiança: nota entre dois pontos do grid
 Compasso 37: Onset ajustado após colisão de quantização entre notas distintas
@@ -2105,6 +2081,7 @@ Compasso 38: Quantização de baixa confiança: nota entre dois pontos do grid
 Compasso 38: Quantização de baixa confiança: nota entre dois pontos do grid
 Compasso 38: Quantização de baixa confiança: nota entre dois pontos do grid
 Compasso 38: Onset ajustado após colisão de quantização entre notas distintas
+Compasso 38: Possível nota faltando: padrão repetitivo com confirmação insuficiente
 Compasso 38: Possível nota faltando: padrão repetitivo com confirmação insuficiente
 Compasso 39: Tonalidade ambígua: mantida a armadura do compasso anterior
 Compasso 39: Quantização de baixa confiança: nota entre dois pontos do grid
@@ -2118,31 +2095,24 @@ Compasso 39: Onset ajustado após colisão de quantização entre notas distinta
 Compasso 39: Onset ajustado após colisão de quantização entre notas distintas
 Compasso 39: Possível nota faltando: padrão repetitivo com confirmação insuficiente
 Compasso 39: Possível nota faltando: padrão repetitivo com confirmação insuficiente
-Compasso 39: Possível nota faltando: padrão repetitivo com confirmação insuficiente
 Compasso 40: Tonalidade ambígua: mantida a armadura do compasso anterior
 Compasso 40: Quantização de baixa confiança: nota entre dois pontos do grid
 Compasso 40: Possível nota faltando: padrão repetitivo com confirmação insuficiente
 Compasso 40: Possível nota faltando: padrão repetitivo com confirmação insuficiente
+Compasso 40: Possível nota faltando: padrão repetitivo com confirmação insuficiente
 Compasso 41: Quantização de baixa confiança: nota entre dois pontos do grid
 Compasso 41: Quantização de baixa confiança: nota entre dois pontos do grid
-Compasso 41: Onset ajustado após colisão de quantização entre notas distintas
 Compasso 41: Onset ajustado após colisão de quantização entre notas distintas
 Compasso 42: Tonalidade ambígua: mantida a armadura do compasso anterior
 Compasso 42: Quantização de baixa confiança: nota entre dois pontos do grid
 Compasso 42: Quantização de baixa confiança: nota entre dois pontos do grid
-Compasso 42: Quantização de baixa confiança: nota entre dois pontos do grid
-Compasso 42: Quantização de baixa confiança: nota entre dois pontos do grid
 Compasso 42: Onset ajustado após colisão de quantização entre notas distintas
 Compasso 42: Onset ajustado após colisão de quantização entre notas distintas
 Compasso 42: Onset ajustado após colisão de quantização entre notas distintas
-Compasso 42: Onset ajustado após colisão de quantização entre notas distintas
-Compasso 42: Onset ajustado após colisão de quantização entre notas distintas
+Compasso 42: Possível nota faltando: padrão repetitivo com confirmação insuficiente
 Compasso 43: Tonalidade ambígua: mantida a armadura do compasso anterior
-Compasso 43: Quantização de baixa confiança: nota entre dois pontos do grid
 Compasso 43: Onset ajustado após colisão de quantização entre notas distintas
 Compasso 43: Onset ajustado após colisão de quantização entre notas distintas
-Compasso 43: Onset ajustado após colisão de quantização entre notas distintas
-Compasso 44: Quantização de baixa confiança: nota entre dois pontos do grid
 Compasso 44: Quantização de baixa confiança: nota entre dois pontos do grid
 Compasso 44: Quantização de baixa confiança: nota entre dois pontos do grid
 Compasso 44: Quantização de baixa confiança: nota entre dois pontos do grid
@@ -2160,7 +2130,8 @@ Compasso 47: Tonalidade ambígua: mantida a armadura do compasso anterior
 Compasso 47: Quantização de baixa confiança: nota entre dois pontos do grid
 Compasso 47: Quantização de baixa confiança: nota entre dois pontos do grid
 Compasso 47: Quantização de baixa confiança: nota entre dois pontos do grid
-Compasso 47: Onset ajustado após colisão de quantização entre notas distintas
+Compasso 47: Quantização de baixa confiança: nota entre dois pontos do grid
+Compasso 47: Quantização de baixa confiança: nota entre dois pontos do grid
 Compasso 47: Onset ajustado após colisão de quantização entre notas distintas
 Compasso 47: Onset ajustado após colisão de quantização entre notas distintas
 Compasso 47: Onset ajustado após colisão de quantização entre notas distintas
@@ -2172,8 +2143,6 @@ Compasso 48: Onset ajustado após colisão de quantização entre notas distinta
 Compasso 48: Possível nota faltando: padrão repetitivo com confirmação insuficiente
 Compasso 49: Tonalidade ambígua: mantida a armadura do compasso anterior
 Compasso 50: Tonalidade ambígua: mantida a armadura do compasso anterior
-Compasso 50: Possível nota faltando: padrão repetitivo com confirmação insuficiente
-Compasso 50: Possível nota faltando: padrão repetitivo com confirmação insuficiente
 Compasso 51: Quantização de baixa confiança: nota entre dois pontos do grid
 Compasso 51: Quantização de baixa confiança: nota entre dois pontos do grid
 Compasso 51: Quantização de baixa confiança: nota entre dois pontos do grid
@@ -2184,19 +2153,16 @@ Compasso 51: Onset ajustado após colisão de quantização entre notas distinta
 Compasso 51: Onset ajustado após colisão de quantização entre notas distintas
 Compasso 51: Onset ajustado após colisão de quantização entre notas distintas
 Compasso 51: Onset ajustado após colisão de quantização entre notas distintas
-Compasso 51: Possível nota faltando: padrão repetitivo com confirmação insuficiente
 Compasso 51: Possível nota faltando: padrão repetitivo com confirmação insuficiente
 Compasso 51: Possível nota faltando: padrão repetitivo com confirmação insuficiente
 Compasso 52: Tonalidade ambígua: mantida a armadura do compasso anterior
 Compasso 52: Quantização de baixa confiança: nota entre dois pontos do grid
 Compasso 52: Quantização de baixa confiança: nota entre dois pontos do grid
+Compasso 52: Quantização de baixa confiança: nota entre dois pontos do grid
 Compasso 52: Onset ajustado após colisão de quantização entre notas distintas
 Compasso 52: Onset ajustado após colisão de quantização entre notas distintas
 Compasso 52: Onset ajustado após colisão de quantização entre notas distintas
 Compasso 52: Onset ajustado após colisão de quantização entre notas distintas
-Compasso 52: Onset ajustado após colisão de quantização entre notas distintas
-Compasso 52: Possível nota faltando: padrão repetitivo com confirmação insuficiente
-Compasso 53: Quantização de baixa confiança: nota entre dois pontos do grid
 Compasso 53: Quantização de baixa confiança: nota entre dois pontos do grid
 Compasso 53: Quantização de baixa confiança: nota entre dois pontos do grid
 Compasso 53: Quantização de baixa confiança: nota entre dois pontos do grid
@@ -2205,11 +2171,11 @@ Compasso 53: Quantização de baixa confiança: nota entre dois pontos do grid
 Compasso 53: Onset ajustado após colisão de quantização entre notas distintas
 Compasso 53: Onset ajustado após colisão de quantização entre notas distintas
 Compasso 53: Onset ajustado após colisão de quantização entre notas distintas
+Compasso 53: Possível nota faltando: padrão repetitivo com confirmação insuficiente
 Compasso 54: Tonalidade ambígua: mantida a armadura do compasso anterior
 Compasso 54: Quantização de baixa confiança: nota entre dois pontos do grid
 Compasso 54: Quantização de baixa confiança: nota entre dois pontos do grid
 Compasso 54: Quantização de baixa confiança: nota entre dois pontos do grid
-Compasso 54: Quantização de baixa confiança: nota entre dois pontos do grid
 Compasso 54: Onset ajustado após colisão de quantização entre notas distintas
 Compasso 54: Onset ajustado após colisão de quantização entre notas distintas
 Compasso 54: Onset ajustado após colisão de quantização entre notas distintas
@@ -2218,11 +2184,14 @@ Compasso 54: Onset ajustado após colisão de quantização entre notas distinta
 Compasso 54: Onset ajustado após colisão de quantização entre notas distintas
 Compasso 54: Possível nota faltando: padrão repetitivo com confirmação insuficiente
 Compasso 54: Possível nota faltando: padrão repetitivo com confirmação insuficiente
+Compasso 54: Possível nota faltando: padrão repetitivo com confirmação insuficiente
 Compasso 55: Quantização de baixa confiança: nota entre dois pontos do grid
 Compasso 55: Quantização de baixa confiança: nota entre dois pontos do grid
 Compasso 55: Quantização de baixa confiança: nota entre dois pontos do grid
 Compasso 55: Quantização de baixa confiança: nota entre dois pontos do grid
 Compasso 55: Quantização de baixa confiança: nota entre dois pontos do grid
+Compasso 55: Quantização de baixa confiança: nota entre dois pontos do grid
+Compasso 55: Onset ajustado após colisão de quantização entre notas distintas
 Compasso 55: Onset ajustado após colisão de quantização entre notas distintas
 Compasso 55: Onset ajustado após colisão de quantização entre notas distintas
 Compasso 55: Onset ajustado após colisão de quantização entre notas distintas
@@ -2235,6 +2204,7 @@ Compasso 56: Onset ajustado após colisão de quantização entre notas distinta
 Compasso 56: Onset ajustado após colisão de quantização entre notas distintas
 Compasso 56: Onset ajustado após colisão de quantização entre notas distintas
 Compasso 56: Possível nota faltando: padrão repetitivo com confirmação insuficiente
+Compasso 56: Possível nota faltando: padrão repetitivo com confirmação insuficiente
 Compasso 57: Quantização de baixa confiança: nota entre dois pontos do grid
 Compasso 57: Quantização de baixa confiança: nota entre dois pontos do grid
 Compasso 57: Quantização de baixa confiança: nota entre dois pontos do grid
@@ -2242,6 +2212,7 @@ Compasso 57: Quantização de baixa confiança: nota entre dois pontos do grid
 Compasso 57: Quantização de baixa confiança: nota entre dois pontos do grid
 Compasso 57: Onset ajustado após colisão de quantização entre notas distintas
 Compasso 57: Onset ajustado após colisão de quantização entre notas distintas
+Compasso 57: Possível nota faltando: padrão repetitivo com confirmação insuficiente
 Compasso 58: Quantização de baixa confiança: nota entre dois pontos do grid
 Compasso 58: Quantização de baixa confiança: nota entre dois pontos do grid
 Compasso 58: Quantização de baixa confiança: nota entre dois pontos do grid
@@ -2252,10 +2223,15 @@ Compasso 58: Possível nota faltando: padrão repetitivo com confirmação insuf
 Compasso 58: Possível nota faltando: padrão repetitivo com confirmação insuficiente
 Compasso 58: Possível nota faltando: padrão repetitivo com confirmação insuficiente
 Compasso 58: Possível nota faltando: padrão repetitivo com confirmação insuficiente
+Compasso 58: Possível nota faltando: padrão repetitivo com confirmação insuficiente
+Compasso 59: Quantização de baixa confiança: nota entre dois pontos do grid
 Compasso 59: Quantização de baixa confiança: nota entre dois pontos do grid
 Compasso 59: Quantização de baixa confiança: nota entre dois pontos do grid
 Compasso 59: Quantização de baixa confiança: nota entre dois pontos do grid
 Compasso 59: Onset ajustado após colisão de quantização entre notas distintas
+Compasso 59: Possível nota faltando: padrão repetitivo com confirmação insuficiente
+Compasso 59: Possível nota faltando: padrão repetitivo com confirmação insuficiente
+Compasso 59: Possível nota faltando: padrão repetitivo com confirmação insuficiente
 Compasso 59: Possível nota faltando: padrão repetitivo com confirmação insuficiente
 Compasso 59: Possível nota faltando: padrão repetitivo com confirmação insuficiente
 Compasso 59: Possível nota faltando: padrão repetitivo com confirmação insuficiente
@@ -2273,7 +2249,6 @@ Compasso 61: Onset ajustado após colisão de quantização entre notas distinta
 Compasso 61: Onset ajustado após colisão de quantização entre notas distintas
 Compasso 61: Onset ajustado após colisão de quantização entre notas distintas
 Compasso 61: Possível nota faltando: padrão repetitivo com confirmação insuficiente
-Compasso 61: Possível nota faltando: padrão repetitivo com confirmação insuficiente
 Compasso 62: Tonalidade ambígua: mantida a armadura do compasso anterior
 Compasso 62: Quantização de baixa confiança: nota entre dois pontos do grid
 Compasso 62: Quantização de baixa confiança: nota entre dois pontos do grid
@@ -2282,14 +2257,11 @@ Compasso 62: Onset ajustado após colisão de quantização entre notas distinta
 Compasso 62: Onset ajustado após colisão de quantização entre notas distintas
 Compasso 62: Onset ajustado após colisão de quantização entre notas distintas
 Compasso 62: Onset ajustado após colisão de quantização entre notas distintas
-Compasso 62: Possível nota faltando: padrão repetitivo com confirmação insuficiente
-Compasso 62: Possível nota faltando: padrão repetitivo com confirmação insuficiente
-Compasso 62: Possível nota faltando: padrão repetitivo com confirmação insuficiente
+Compasso 63: Quantização de baixa confiança: nota entre dois pontos do grid
 Compasso 63: Quantização de baixa confiança: nota entre dois pontos do grid
 Compasso 63: Quantização de baixa confiança: nota entre dois pontos do grid
 Compasso 63: Quantização de baixa confiança: nota entre dois pontos do grid
 Compasso 63: Onset ajustado após colisão de quantização entre notas distintas
-Compasso 63: Possível nota faltando: padrão repetitivo com confirmação insuficiente
 Compasso 63: Possível nota faltando: padrão repetitivo com confirmação insuficiente
 Compasso 64: Tonalidade ambígua: mantida a armadura do compasso anterior
 Compasso 64: Quantização de baixa confiança: nota entre dois pontos do grid
@@ -2299,11 +2271,14 @@ Compasso 65: Quantização de baixa confiança: nota entre dois pontos do grid
 Compasso 65: Quantização de baixa confiança: nota entre dois pontos do grid
 Compasso 65: Quantização de baixa confiança: nota entre dois pontos do grid
 Compasso 65: Quantização de baixa confiança: nota entre dois pontos do grid
+Compasso 65: Quantização de baixa confiança: nota entre dois pontos do grid
 Compasso 65: Onset ajustado após colisão de quantização entre notas distintas
+Compasso 65: Possível nota faltando: padrão repetitivo com confirmação insuficiente
 Compasso 65: Possível nota faltando: padrão repetitivo com confirmação insuficiente
 Compasso 66: Quantização de baixa confiança: nota entre dois pontos do grid
 Compasso 66: Onset ajustado após colisão de quantização entre notas distintas
 Compasso 66: Onset ajustado após colisão de quantização entre notas distintas
+Compasso 66: Possível nota faltando: padrão repetitivo com confirmação insuficiente
 Compasso 66: Possível nota faltando: padrão repetitivo com confirmação insuficiente
 Compasso 66: Possível nota faltando: padrão repetitivo com confirmação insuficiente
 Compasso 67: Quantização de baixa confiança: nota entre dois pontos do grid
@@ -2318,6 +2293,8 @@ Compasso 68: Tonalidade ambígua: mantida a armadura do compasso anterior
 Compasso 68: Quantização de baixa confiança: nota entre dois pontos do grid
 Compasso 68: Onset ajustado após colisão de quantização entre notas distintas
 Compasso 68: Onset ajustado após colisão de quantização entre notas distintas
+Compasso 68: Possível nota faltando: padrão repetitivo com confirmação insuficiente
+Compasso 68: Possível nota faltando: padrão repetitivo com confirmação insuficiente
 Compasso 68: Possível nota faltando: padrão repetitivo com confirmação insuficiente
 Compasso 69: Tonalidade ambígua: mantida a armadura do compasso anterior
 Compasso 69: Quantização de baixa confiança: nota entre dois pontos do grid
@@ -2341,12 +2318,13 @@ Compasso 74: Onset ajustado após colisão de quantização entre notas distinta
 Compasso 74: Possível nota faltando: padrão repetitivo com confirmação insuficiente
 Compasso 75: Onset ajustado após colisão de quantização entre notas distintas
 Compasso 75: Possível nota faltando: padrão repetitivo com confirmação insuficiente
+Compasso 75: Possível nota faltando: padrão repetitivo com confirmação insuficiente
 Compasso 76: Tonalidade ambígua: mantida a armadura do compasso anterior
 Compasso 76: Quantização de baixa confiança: nota entre dois pontos do grid
 Compasso 76: Quantização de baixa confiança: nota entre dois pontos do grid
 Compasso 76: Quantização de baixa confiança: nota entre dois pontos do grid
 Compasso 76: Quantização de baixa confiança: nota entre dois pontos do grid
-Compasso 76: Quantização de baixa confiança: nota entre dois pontos do grid
+Compasso 76: Onset ajustado após colisão de quantização entre notas distintas
 Compasso 76: Onset ajustado após colisão de quantização entre notas distintas
 Compasso 76: Onset ajustado após colisão de quantização entre notas distintas
 Compasso 76: Onset ajustado após colisão de quantização entre notas distintas
@@ -2369,6 +2347,8 @@ Compasso 78: Onset ajustado após colisão de quantização entre notas distinta
 Compasso 78: Possível nota faltando: padrão repetitivo com confirmação insuficiente
 Compasso 78: Possível nota faltando: padrão repetitivo com confirmação insuficiente
 Compasso 78: Possível nota faltando: padrão repetitivo com confirmação insuficiente
+Compasso 78: Possível nota faltando: padrão repetitivo com confirmação insuficiente
+Compasso 78: Possível nota faltando: padrão repetitivo com confirmação insuficiente
 Compasso 79: Quantização de baixa confiança: nota entre dois pontos do grid
 Compasso 79: Quantização de baixa confiança: nota entre dois pontos do grid
 Compasso 79: Quantização de baixa confiança: nota entre dois pontos do grid
@@ -2379,7 +2359,6 @@ Compasso 79: Onset ajustado após colisão de quantização entre notas distinta
 Compasso 79: Onset ajustado após colisão de quantização entre notas distintas
 Compasso 79: Possível nota faltando: padrão repetitivo com confirmação insuficiente
 Compasso 79: Possível nota faltando: padrão repetitivo com confirmação insuficiente
-Compasso 80: Quantização de baixa confiança: nota entre dois pontos do grid
 Compasso 80: Quantização de baixa confiança: nota entre dois pontos do grid
 Compasso 80: Quantização de baixa confiança: nota entre dois pontos do grid
 Compasso 80: Quantização de baixa confiança: nota entre dois pontos do grid
@@ -2409,10 +2388,6 @@ Compasso 82: Onset ajustado após colisão de quantização entre notas distinta
 Compasso 82: Onset ajustado após colisão de quantização entre notas distintas
 Compasso 82: Possível nota faltando: padrão repetitivo com confirmação insuficiente
 Compasso 82: Possível nota faltando: padrão repetitivo com confirmação insuficiente
-Compasso 82: Possível nota faltando: padrão repetitivo com confirmação insuficiente
-Compasso 83: Tonalidade ambígua: mantida a armadura do compasso anterior
-Compasso 83: Quantização de baixa confiança: nota entre dois pontos do grid
-Compasso 83: Quantização de baixa confiança: nota entre dois pontos do grid
 Compasso 83: Quantização de baixa confiança: nota entre dois pontos do grid
 Compasso 83: Quantização de baixa confiança: nota entre dois pontos do grid
 Compasso 83: Onset ajustado após colisão de quantização entre notas distintas
@@ -2420,14 +2395,15 @@ Compasso 83: Onset ajustado após colisão de quantização entre notas distinta
 Compasso 83: Onset ajustado após colisão de quantização entre notas distintas
 Compasso 83: Onset ajustado após colisão de quantização entre notas distintas
 Compasso 83: Onset ajustado após colisão de quantização entre notas distintas
-Compasso 84: Quantização de baixa confiança: nota entre dois pontos do grid
+Compasso 83: Possível nota faltando: padrão repetitivo com confirmação insuficiente
 Compasso 84: Quantização de baixa confiança: nota entre dois pontos do grid
 Compasso 84: Onset ajustado após colisão de quantização entre notas distintas
 Compasso 84: Onset ajustado após colisão de quantização entre notas distintas
-Compasso 84: Possível nota faltando: padrão repetitivo com confirmação insuficiente
 Compasso 85: Tonalidade ambígua: mantida a armadura do compasso anterior
 Compasso 85: Quantização de baixa confiança: nota entre dois pontos do grid
 Compasso 85: Quantização de baixa confiança: nota entre dois pontos do grid
+Compasso 85: Quantização de baixa confiança: nota entre dois pontos do grid
+Compasso 85: Onset ajustado após colisão de quantização entre notas distintas
 Compasso 85: Onset ajustado após colisão de quantização entre notas distintas
 Compasso 85: Onset ajustado após colisão de quantização entre notas distintas
 Compasso 85: Onset ajustado após colisão de quantização entre notas distintas
@@ -2442,7 +2418,6 @@ Compasso 86: Quantização de baixa confiança: nota entre dois pontos do grid
 Compasso 86: Onset ajustado após colisão de quantização entre notas distintas
 Compasso 86: Onset ajustado após colisão de quantização entre notas distintas
 Compasso 86: Onset ajustado após colisão de quantização entre notas distintas
-Compasso 86: Onset ajustado após colisão de quantização entre notas distintas
 Compasso 87: Tonalidade ambígua: mantida a armadura do compasso anterior
 Compasso 87: Quantização de baixa confiança: nota entre dois pontos do grid
 Compasso 87: Quantização de baixa confiança: nota entre dois pontos do grid
@@ -2453,9 +2428,6 @@ Compasso 87: Onset ajustado após colisão de quantização entre notas distinta
 Compasso 87: Onset ajustado após colisão de quantização entre notas distintas
 Compasso 87: Onset ajustado após colisão de quantização entre notas distintas
 Compasso 87: Possível nota faltando: padrão repetitivo com confirmação insuficiente
-Compasso 87: Possível nota faltando: padrão repetitivo com confirmação insuficiente
-Compasso 87: Possível nota faltando: padrão repetitivo com confirmação insuficiente
-Compasso 87: Possível nota faltando: padrão repetitivo com confirmação insuficiente
 Compasso 88: Quantização de baixa confiança: nota entre dois pontos do grid
 Compasso 88: Quantização de baixa confiança: nota entre dois pontos do grid
 Compasso 88: Quantização de baixa confiança: nota entre dois pontos do grid
@@ -2465,6 +2437,7 @@ Compasso 88: Onset ajustado após colisão de quantização entre notas distinta
 Compasso 88: Onset ajustado após colisão de quantização entre notas distintas
 Compasso 88: Onset ajustado após colisão de quantização entre notas distintas
 Compasso 88: Onset ajustado após colisão de quantização entre notas distintas
+Compasso 88: Possível nota faltando: padrão repetitivo com confirmação insuficiente
 Compasso 89: Tonalidade ambígua: mantida a armadura do compasso anterior
 Compasso 89: Quantização de baixa confiança: nota entre dois pontos do grid
 Compasso 89: Quantização de baixa confiança: nota entre dois pontos do grid
@@ -2474,12 +2447,14 @@ Compasso 89: Onset ajustado após colisão de quantização entre notas distinta
 Compasso 89: Onset ajustado após colisão de quantização entre notas distintas
 Compasso 89: Onset ajustado após colisão de quantização entre notas distintas
 Compasso 89: Possível nota faltando: padrão repetitivo com confirmação insuficiente
+Compasso 89: Possível nota faltando: padrão repetitivo com confirmação insuficiente
 Compasso 90: Quantização de baixa confiança: nota entre dois pontos do grid
 Compasso 90: Quantização de baixa confiança: nota entre dois pontos do grid
 Compasso 90: Quantização de baixa confiança: nota entre dois pontos do grid
 Compasso 90: Onset ajustado após colisão de quantização entre notas distintas
 Compasso 90: Onset ajustado após colisão de quantização entre notas distintas
 Compasso 90: Onset ajustado após colisão de quantização entre notas distintas
+Compasso 90: Possível nota faltando: padrão repetitivo com confirmação insuficiente
 Compasso 91: Quantização de baixa confiança: nota entre dois pontos do grid
 Compasso 91: Quantização de baixa confiança: nota entre dois pontos do grid
 Compasso 91: Onset ajustado após colisão de quantização entre notas distintas
@@ -2488,7 +2463,7 @@ Compasso 91: Onset ajustado após colisão de quantização entre notas distinta
 Compasso 91: Onset ajustado após colisão de quantização entre notas distintas
 Compasso 91: Possível nota faltando: padrão repetitivo com confirmação insuficiente
 Compasso 91: Possível nota faltando: padrão repetitivo com confirmação insuficiente
-Compasso 92: Quantização de baixa confiança: nota entre dois pontos do grid
+Compasso 91: Possível nota faltando: padrão repetitivo com confirmação insuficiente
 Compasso 92: Quantização de baixa confiança: nota entre dois pontos do grid
 Compasso 92: Quantização de baixa confiança: nota entre dois pontos do grid
 Compasso 92: Quantização de baixa confiança: nota entre dois pontos do grid
@@ -2498,7 +2473,8 @@ Compasso 92: Quantização de baixa confiança: nota entre dois pontos do grid
 Compasso 92: Onset ajustado após colisão de quantização entre notas distintas
 Compasso 92: Onset ajustado após colisão de quantização entre notas distintas
 Compasso 92: Onset ajustado após colisão de quantização entre notas distintas
-Compasso 92: Onset ajustado após colisão de quantização entre notas distintas
+Compasso 92: Possível nota faltando: padrão repetitivo com confirmação insuficiente
+Compasso 92: Possível nota faltando: padrão repetitivo com confirmação insuficiente
 Compasso 93: Tonalidade ambígua: mantida a armadura do compasso anterior
 Compasso 93: Quantização de baixa confiança: nota entre dois pontos do grid
 Compasso 93: Onset ajustado após colisão de quantização entre notas distintas
@@ -2506,39 +2482,43 @@ Compasso 93: Onset ajustado após colisão de quantização entre notas distinta
 Compasso 93: Onset ajustado após colisão de quantização entre notas distintas
 Compasso 93: Onset ajustado após colisão de quantização entre notas distintas
 Compasso 93: Onset ajustado após colisão de quantização entre notas distintas
+Compasso 93: Onset ajustado após colisão de quantização entre notas distintas
+Compasso 93: Onset ajustado após colisão de quantização entre notas distintas
 Compasso 94: Quantização de baixa confiança: nota entre dois pontos do grid
 Compasso 94: Quantização de baixa confiança: nota entre dois pontos do grid
 Compasso 94: Quantização de baixa confiança: nota entre dois pontos do grid
-Compasso 94: Quantização de baixa confiança: nota entre dois pontos do grid
-Compasso 94: Quantização de baixa confiança: nota entre dois pontos do grid
+Compasso 94: Onset ajustado após colisão de quantização entre notas distintas
+Compasso 94: Onset ajustado após colisão de quantização entre notas distintas
+Compasso 94: Onset ajustado após colisão de quantização entre notas distintas
+Compasso 94: Onset ajustado após colisão de quantização entre notas distintas
+Compasso 94: Onset ajustado após colisão de quantização entre notas distintas
+Compasso 94: Possível nota faltando: padrão repetitivo com confirmação insuficiente
 Compasso 95: Tonalidade ambígua: mantida a armadura do compasso anterior
 Compasso 95: Quantização de baixa confiança: nota entre dois pontos do grid
 Compasso 95: Quantização de baixa confiança: nota entre dois pontos do grid
 Compasso 95: Quantização de baixa confiança: nota entre dois pontos do grid
+Compasso 95: Quantização de baixa confiança: nota entre dois pontos do grid
 Compasso 95: Onset ajustado após colisão de quantização entre notas distintas
 Compasso 95: Onset ajustado após colisão de quantização entre notas distintas
 Compasso 95: Onset ajustado após colisão de quantização entre notas distintas
 Compasso 95: Onset ajustado após colisão de quantização entre notas distintas
 Compasso 95: Onset ajustado após colisão de quantização entre notas distintas
 Compasso 95: Onset ajustado após colisão de quantização entre notas distintas
-Compasso 95: Onset ajustado após colisão de quantização entre notas distintas
-Compasso 96: Quantização de baixa confiança: nota entre dois pontos do grid
-Compasso 96: Quantização de baixa confiança: nota entre dois pontos do grid
+Compasso 95: Possível nota faltando: padrão repetitivo com confirmação insuficiente
 Compasso 96: Quantização de baixa confiança: nota entre dois pontos do grid
 Compasso 97: Tonalidade ambígua: mantida a armadura do compasso anterior
-Compasso 97: Quantização de baixa confiança: nota entre dois pontos do grid
 Compasso 97: Quantização de baixa confiança: nota entre dois pontos do grid
 Compasso 97: Quantização de baixa confiança: nota entre dois pontos do grid
 Compasso 97: Onset ajustado após colisão de quantização entre notas distintas
 Compasso 97: Onset ajustado após colisão de quantização entre notas distintas
 Compasso 97: Possível nota faltando: padrão repetitivo com confirmação insuficiente
+Compasso 97: Possível nota faltando: padrão repetitivo com confirmação insuficiente
 Compasso 98: Quantização de baixa confiança: nota entre dois pontos do grid
 Compasso 98: Quantização de baixa confiança: nota entre dois pontos do grid
 Compasso 98: Quantização de baixa confiança: nota entre dois pontos do grid
 Compasso 98: Quantização de baixa confiança: nota entre dois pontos do grid
-Compasso 98: Quantização de baixa confiança: nota entre dois pontos do grid
-Compasso 98: Quantização de baixa confiança: nota entre dois pontos do grid
-Compasso 98: Onset ajustado após colisão de quantização entre notas distintas
+Compasso 98: Possível nota faltando: padrão repetitivo com confirmação insuficiente
+Compasso 98: Possível nota faltando: padrão repetitivo com confirmação insuficiente
 Compasso 98: Possível nota faltando: padrão repetitivo com confirmação insuficiente
 Compasso 99: Quantização de baixa confiança: nota entre dois pontos do grid
 Compasso 99: Quantização de baixa confiança: nota entre dois pontos do grid
@@ -2549,13 +2529,12 @@ Compasso 99: Onset ajustado após colisão de quantização entre notas distinta
 Compasso 99: Onset ajustado após colisão de quantização entre notas distintas
 Compasso 99: Possível nota faltando: padrão repetitivo com confirmação insuficiente
 Compasso 99: Possível nota faltando: padrão repetitivo com confirmação insuficiente
-Compasso 100: Quantização de baixa confiança: nota entre dois pontos do grid
+Compasso 99: Possível nota faltando: padrão repetitivo com confirmação insuficiente
 Compasso 100: Quantização de baixa confiança: nota entre dois pontos do grid
 Compasso 100: Quantização de baixa confiança: nota entre dois pontos do grid
 Compasso 100: Quantização de baixa confiança: nota entre dois pontos do grid
 Compasso 100: Quantização de baixa confiança: nota entre dois pontos do grid
 Compasso 100: Onset ajustado após colisão de quantização entre notas distintas
-Compasso 100: Possível nota faltando: padrão repetitivo com confirmação insuficiente
 Compasso 100: Possível nota faltando: padrão repetitivo com confirmação insuficiente
 Compasso 101: Quantização de baixa confiança: nota entre dois pontos do grid
 Compasso 101: Quantização de baixa confiança: nota entre dois pontos do grid
@@ -2570,17 +2549,13 @@ Compasso 102: Quantização de baixa confiança: nota entre dois pontos do grid
 Compasso 102: Quantização de baixa confiança: nota entre dois pontos do grid
 Compasso 102: Onset ajustado após colisão de quantização entre notas distintas
 Compasso 102: Possível nota faltando: padrão repetitivo com confirmação insuficiente
-Compasso 102: Possível nota faltando: padrão repetitivo com confirmação insuficiente
 Compasso 103: Quantização de baixa confiança: nota entre dois pontos do grid
 Compasso 103: Quantização de baixa confiança: nota entre dois pontos do grid
-Compasso 103: Quantização de baixa confiança: nota entre dois pontos do grid
 Compasso 103: Onset ajustado após colisão de quantização entre notas distintas
 Compasso 103: Onset ajustado após colisão de quantização entre notas distintas
 Compasso 103: Onset ajustado após colisão de quantização entre notas distintas
 Compasso 103: Onset ajustado após colisão de quantização entre notas distintas
 Compasso 103: Onset ajustado após colisão de quantização entre notas distintas
-Compasso 103: Onset ajustado após colisão de quantização entre notas distintas
-Compasso 103: Possível nota faltando: padrão repetitivo com confirmação insuficiente
 Compasso 103: Possível nota faltando: padrão repetitivo com confirmação insuficiente
 Compasso 104: Quantização de baixa confiança: nota entre dois pontos do grid
 Compasso 104: Quantização de baixa confiança: nota entre dois pontos do grid
@@ -2588,9 +2563,9 @@ Compasso 104: Quantização de baixa confiança: nota entre dois pontos do grid
 Compasso 104: Quantização de baixa confiança: nota entre dois pontos do grid
 Compasso 104: Onset ajustado após colisão de quantização entre notas distintas
 Compasso 104: Onset ajustado após colisão de quantização entre notas distintas
-Compasso 104: Possível nota faltando: padrão repetitivo com confirmação insuficiente
 
-INFORMATIVO (82)
+INFORMATIVO (74)
+Compasso 7: Duração ajustada após colisão de quantização
 Compasso 8: Duração ajustada após colisão de quantização
 Compasso 11: Duração ajustada após colisão de quantização
 Compasso 11: Duração ajustada após colisão de quantização
@@ -2599,7 +2574,6 @@ Compasso 13: Duração ajustada após colisão de quantização
 Compasso 15: Duração ajustada após colisão de quantização
 Compasso 17: Duração ajustada após colisão de quantização
 Compasso 17: Duração ajustada após colisão de quantização
-Compasso 18: Duração ajustada após colisão de quantização
 Compasso 18: Duração ajustada após colisão de quantização
 Compasso 19: Duração ajustada após colisão de quantização
 Compasso 20: Duração ajustada após colisão de quantização
@@ -2619,34 +2593,31 @@ Compasso 20: Duração ajustada após colisão de quantização
 Compasso 20: Duração ajustada após colisão de quantização
 Compasso 20: Duração ajustada após colisão de quantização
 Compasso 20: Duração ajustada após colisão de quantização
-Compasso 24: Duração ajustada após colisão de quantização
+Compasso 20: Duração ajustada após colisão de quantização
+Compasso 25: Duração ajustada após colisão de quantização
 Compasso 25: Duração ajustada após colisão de quantização
 Compasso 27: Duração ajustada após colisão de quantização
-Compasso 28: Duração ajustada após colisão de quantização
+Compasso 27: Duração ajustada após colisão de quantização
 Compasso 29: Duração ajustada após colisão de quantização
-Compasso 34: Duração ajustada após colisão de quantização
-Compasso 37: Duração ajustada após colisão de quantização
+Compasso 29: Duração ajustada após colisão de quantização
+Compasso 35: Duração ajustada após colisão de quantização
 Compasso 37: Duração ajustada após colisão de quantização
 Compasso 38: Duração ajustada após colisão de quantização
 Compasso 41: Duração ajustada após colisão de quantização
 Compasso 41: Duração ajustada após colisão de quantização
-Compasso 42: Duração ajustada após colisão de quantização
+Compasso 44: Duração ajustada após colisão de quantização
 Compasso 45: Duração ajustada após colisão de quantização
 Compasso 47: Duração ajustada após colisão de quantização
 Compasso 47: Duração ajustada após colisão de quantização
-Compasso 47: Duração ajustada após colisão de quantização
 Compasso 51: Duração ajustada após colisão de quantização
 Compasso 51: Duração ajustada após colisão de quantização
 Compasso 51: Duração ajustada após colisão de quantização
-Compasso 51: Duração ajustada após colisão de quantização
-Compasso 52: Duração ajustada após colisão de quantização
 Compasso 53: Duração ajustada após colisão de quantização
-Compasso 53: Duração ajustada após colisão de quantização
+Compasso 55: Duração ajustada após colisão de quantização
 Compasso 57: Duração ajustada após colisão de quantização
 Compasso 60: Duração ajustada após colisão de quantização
 Compasso 61: Duração ajustada após colisão de quantização
 Compasso 62: Duração ajustada após colisão de quantização
-Compasso 65: Duração ajustada após colisão de quantização
 Compasso 70: Duração ajustada após colisão de quantização
 Compasso 73: Duração ajustada após colisão de quantização
 Compasso 73: Duração ajustada após colisão de quantização
@@ -2655,21 +2626,16 @@ Compasso 75: Duração ajustada após colisão de quantização
 Compasso 76: Duração ajustada após colisão de quantização
 Compasso 76: Duração ajustada após colisão de quantização
 Compasso 76: Duração ajustada após colisão de quantização
-Compasso 76: Duração ajustada após colisão de quantização
 Compasso 77: Duração ajustada após colisão de quantização
 Compasso 82: Duração ajustada após colisão de quantização
-Compasso 86: Duração ajustada após colisão de quantização
+Compasso 84: Duração ajustada após colisão de quantização
 Compasso 87: Duração ajustada após colisão de quantização
-Compasso 88: Duração ajustada após colisão de quantização
-Compasso 89: Nota inferida a partir de padrão repetitivo
-Compasso 91: Nota inferida a partir de padrão repetitivo
+Compasso 93: Duração ajustada após colisão de quantização
+Compasso 94: Duração ajustada após colisão de quantização
 Compasso 94: Duração ajustada após colisão de quantização
 Compasso 95: Duração ajustada após colisão de quantização
-Compasso 95: Duração ajustada após colisão de quantização
-Compasso 98: Duração ajustada após colisão de quantização
+Compasso 97: Duração ajustada após colisão de quantização
 Compasso 100: Duração ajustada após colisão de quantização
 Compasso 101: Duração ajustada após colisão de quantização
-Compasso 101: Duração ajustada após colisão de quantização
-Compasso 104: Duração ajustada após colisão de quantização
 Compasso 104: Duração ajustada após colisão de quantização
 Compasso 104: Duração ajustada após colisão de quantização

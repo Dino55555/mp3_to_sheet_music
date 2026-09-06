@@ -21,6 +21,7 @@ from playability.playability_checker import PlayabilityChecker
 from notation.notator import Notator
 from tests.fixtures import generate_simple_melody_wav
 import signal_extractor.rhythmic_detection as rhythmic_detection_module
+from vibrato.vibrato_detector import VibratoDetector
 
 @pytest.fixture
 def use_local_checkpoint(monkeypatch):
@@ -50,16 +51,6 @@ def test_nomes_de_saida_deriva_do_nome_base_do_mp3():
     assert musicxml_path == os.path.join("/saida", "musica.musicxml")
     assert mxl_path == os.path.join("/saida", "musica.mxl")
     assert report_path == os.path.join("/saida", "musica_relatorio.txt")
-
-def test_etapas_padrao_retorna_oito_etapas_na_ordem_certa():
-    stages = default_stages()
-
-    assert len(stages) == 8
-    expected_types = [
-        Cleaner, StructuralDetector, VoiceSeparator, OctaveCorrector,
-        Quantizer, CompletenessDetector, PlayabilityChecker, Notator,
-    ]
-    assert [type(stage) for stage in stages] == expected_types
 
 def test_processar_arquivo_inexistente_levanta_erro_de_entrada_invalida(tmp_path):
     with pytest.raises(InvalidInputError):
@@ -123,3 +114,13 @@ def test_processar_arquivo_completo_resultado_reflete_sinalizacoes_reais(tmp_pat
         for level, count in result.count_by_severity.items():
             if count > 0:
                 assert f"{level_titles[level]} ({count})" in report_content
+
+def test_etapas_padrao_retorna_nove_etapas_na_ordem_certa():
+    stages = default_stages()
+
+    assert len(stages) == 9
+    expected_types = [
+        Cleaner, StructuralDetector, VibratoDetector, VoiceSeparator, OctaveCorrector,
+        Quantizer, CompletenessDetector, PlayabilityChecker, Notator,
+    ]
+    assert [type(stage) for stage in stages] == expected_types

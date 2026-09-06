@@ -1,0 +1,78 @@
+import sys, tempfile, traceback
+sys.path.insert(0, ".")
+from config import Config
+from signaling.signaler import Signaler
+from signaling.signaler import SignalingCategory
+from orchestrator import Orchestrator
+from signal_extractor.extraction_pipeline import extract_notes_from_mix
+from signal_extractor.rhythmic_detection import BeatDetector
+from signal_extractor.note_extraction import build_initial_piece
+from cleaning.cleaner import Cleaner
+from structure.structural_detector import StructuralDetector
+from vibrato.vibrato_detector import VibratoDetector
+from voices.voice_separator import VoiceSeparator
+from voices.octave_corrector import OctaveCorrector
+from rhythm.quantizer import Quantizer
+from completeness.completeness_detector import CompletenessDetector
+from playability.playability_checker import PlayabilityChecker
+from notation.notator import Notator
+
+audio_path = "mp3/Music2.mp3"
+config = Config()
+
+print("=== Extração e detecção de batidas ===")
+with tempfile.TemporaryDirectory() as temp_dir:
+    notes = extract_notes_from_mix(audio_path, temp_dir)
+raw_signals = BeatDetector().detect(audio_path)
+print(f"Notas extraídas: {len(notes)}")
+print(f"Batidas detectadas: {len(raw_signals.beats)}")
+
+piece = build_initial_piece(notes, config.instrument)
+piece.raw_signals = raw_signals
+
+signaler = Signaler()
+
+# rodando etapa por etapa, não via process_file, para inspecionar o
+# estado logo apos o SeparadorDeVozes especificamente
+stages_before_separation = [Cleaner(), StructuralDetector(), VibratoDetector()]
+for stage in stages_before_separation:
+    piece = stage.process(piece, config, signaler)
+
+print(f"\n=== Antes do SeparadorDeVozes ===")
+print(f"Numero de vozes: {len(piece.voices)}")
+for v in piece.voices:
+    print(f"  Voz: paper={v.paper}, num_notas={len(v.notes)}")
+
+piece = VoiceSeparator().process(piece, config, signaler)
+
+print(f"\n=== Logo apos o SeparadorDeVozes ===")
+print(f"Numero de vozes: {len(piece.voices)}")
+for v in piece.voices:
+    print(f"  Voz: paper={v.paper}, num_notas={len(v.notes)}")
+
+counterpoint_signals = [s for s in signaler.all() if s.category == SignalingCategory.UNRESOLVED_COUNTERPOINT]
+print(f"\nSinalizacoes de CONTRAPONTO_NAO_RESOLVIDO ate aqui: {len(counterpoint_signals)}")
+
+# continuar o resto do pipeline, capturando qualquer excecao
+remaining_stages = [
+    OctaveCorrector(), Quantizer(), CompletenessDetector(),
+    PlayabilityChecker(), Notator(),
+]
+print(f"\n=== Rodando o restante do pipeline ===")
+try:
+    for stage in remaining_stages:
+        piece = stage.process(piece, config, signaler)
+    print("Pipeline completou sem excecao.")
+except Exception as e:
+    print(f"PIPELINE QUEBROU: {type(e).__name__}: {e}")
+    traceback.print_exc()
+
+print(f"\n=== Estado final ===")
+print(f"Numero de vozes: {len(piece.voices)}")
+for v in piece.voices:
+    print(f"  Voz: paper={v.paper}, num_notas={len(v.notes)}")
+print(f"Total de notas na peca: {len(piece.all_notes())}")
+print(f"Numero de compassos: {len(piece.compasses)}")
+
+all_counterpoint = [s for s in signaler.all() if s.category == SignalingCategory.UNRESOLVED_COUNTERPOINT]
+print(f"\nTotal de sinalizacoes de CONTRAPONTO_NAO_RESOLVIDO na execucao inteira: {len(all_counterpoint)}")
